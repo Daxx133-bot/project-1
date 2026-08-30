@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="d3" for="edge" attr.name="avg_latency_ms" attr.type="double" />
+  <key id="d2" for="edge" attr.name="avg_latency_us" attr.type="double" />
+  <key id="d1" for="edge" attr.name="call_count" attr.type="long" />
+  <key id="d0" for="edge" attr.name="weight" attr.type="long" />
+  <graph edgedefault="directed">
+    <node id="nginx-web-server" />
+    <node id="compose-post-service" />
+    <node id="home-timeline-service" />
+    <node id="text-service" />
+    <node id="user-mention-service" />
+    <node id="url-shorten-service" />
+    <node id="media-service" />
+    <node id="unique-id-service" />
+    <node id="post-storage-service" />
+    <node id="social-graph-service" />
+    <node id="user-service" />
+    <node id="user-timeline-service" />
+    <edge source="nginx-web-server" target="compose-post-service">
+      <data key="d0">395</data>
+      <data key="d1">395</data>
+      <data key="d2">17619.5</data>
+      <data key="d3">17.62</data>
+    </edge>
+    <edge source="nginx-web-server" target="home-timeline-service">
+      <data key="d0">810</data>
+      <data key="d1">810</data>
+      <data key="d2">6388.65</data>
+      <data key="d3">6.39</data>
+    </edge>
+    <edge source="nginx-web-server" target="user-timeline-service">
+      <data key="d0">624</data>
+      <data key="d1">624</data>
+      <data key="d2">7135.12</data>
+      <data key="d3">7.14</data>
+    </edge>
+    <edge source="nginx-web-server" target="social-graph-service">
+      <data key="d0">602</data>
+      <data key="d1">602</data>
+      <data key="d2">99916.73</data>
+      <data key="d3">99.92</data>
+    </edge>
+    <edge source="nginx-web-server" target="user-service">
+      <data key="d0">1</data>
+      <data key="d1">1</data>
+      <data key="d2">2114.0</data>
+      <data key="d3">2.11</data>
+    </edge>
+    <edge source="compose-post-service" target="home-timeline-service">
+      <data key="d0">400</data>
+      <data key="d1">400</data>
+      <data key="d2">2709.45</data>
+      <data key="d3">2.71</data>
+    </edge>
+    <edge source="compose-post-service" target="media-service">
+      <data key="d0">400</data>
+      <data key="d1">400</data>
+      <data key="d2">17.34</data>
+      <data key="d3">0.02</data>
+    </edge>
+    <edge source="compose-post-service" target="text-service">
+      <data key="d0">400</data>
+      <data key="d1">400</data>
+      <data key="d2">4732.85</data>
+      <data key="d3">4.73</data>
+    </edge>
+    <edge source="compose-post-service" target="unique-id-service">
+      <data key="d0">400</data>
+      <data key="d1">400</data>
+      <data key="d2">36.69</data>
+      <data key="d3">0.04</data>
+    </edge>
+    <edge source="compose-post-service" target="post-storage-service">
+      <data key="d0">400</data>
+      <data key="d1">400</data>
+      <data key="d2">1488.85</data>
+      <data key="d3">1.49</data>
+    </edge>
+    <edge source="compose-post-service" target="user-service">
+      <data key="d0">400</data>
+      <data key="d1">400</data>
+      <data key="d2">32.9</data>
+      <data key="d3">0.03</data>
+    </edge>
+    <edge source="compose-post-service" target="user-timeline-service">
+      <data key="d0">400</data>
+      <data key="d1">400</data>
+      <data key="d2">2343.37</data>
+      <data key="d3">2.34</data>
+    </edge>
+    <edge source="home-timeline-service" target="social-graph-service">
+      <data key="d0">400</data>
+      <data key="d1">400</data>
+      <data key="d2">835.25</data>
+      <data key="d3">0.84</data>
+    </edge>
+    <edge source="home-timeline-service" target="post-storage-service">
+      <data key="d0">827</data>
+      <data key="d1">827</data>
+      <data key="d2">2778.77</data>
+      <data key="d3">2.78</data>
+    </edge>
+    <edge source="text-service" target="user-mention-service">
+      <data key="d0">400</data>
+      <data key="d1">400</data>
+      <data key="d2">1111.87</data>
+      <data key="d3">1.11</data>
+    </edge>
+    <edge source="text-service" target="url-shorten-service">
+      <data key="d0">400</data>
+      <data key="d1">400</data>
+      <data key="d2">1693.61</data>
+      <data key="d3">1.69</data>
+    </edge>
+    <edge source="social-graph-service" target="user-service">
+      <data key="d0">1200</data>
+      <data key="d1">1200</data>
+      <data key="d2">656.17</data>
+      <data key="d3">0.66</data>
+    </edge>
+    <edge source="user-service" target="social-graph-service">
+      <data key="d0">1</data>
+      <data key="d1">1</data>
+      <data key="d2">470.0</data>
+      <data key="d3">0.47</data>
+    </edge>
+    <edge source="user-timeline-service" target="post-storage-service">
+      <data key="d0">631</data>
+      <data key="d1">631</data>
+      <data key="d2">187.98</data>
+      <data key="d3">0.19</data>
+    </edge>
+  </graph>
+</graphml>

@@ -1,0 +1,27 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Pytest / Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Experiment temporary outputs / logs (optional to keep, but raw data is large)
+sdg/raw_traces/
+measurement/results/*.json
+measurement/results/*.csv
+analysis/plots/*.png
+analysis/output/
+centrality/output/

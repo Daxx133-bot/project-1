@@ -1,0 +1,46 @@
+# ============================================================================
+# Dockerfile.wrk2 — Build wrk2 inside a container
+# ============================================================================
+# wrk2 is a Linux-only C tool that requires luajit and libssl. This Dockerfile
+# builds it from source so we can run it on any platform (including Windows
+# via Docker Desktop).
+#
+# Usage:
+#   docker build -t dsb-wrk2 -f infra/Dockerfile.wrk2 <path-to-DeathStarBench/socialNetwork>
+#   docker run --rm --network host dsb-wrk2 \
+#       -t 4 -c 50 -d 30s -R 50 -L \
+#       -s /wrk2/scripts/social-network/mixed-workload.lua \
+#       http://localhost:8080
+# ============================================================================
+
+FROM ubuntu:22.04
+
+# Install build dependencies for wrk2
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    git \
+    libssl-dev \
+    libz-dev \
+    luarocks \
+    lua5.1 \
+    liblua5.1-0-dev \
+    && luarocks install luasocket \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy the wrk2 source from the DSB socialNetwork directory
+# (The build context should be the socialNetwork directory)
+COPY wrk2/ /wrk2/
+
+# Build wrk2
+WORKDIR /wrk2
+RUN make -j$(nproc) && \
+    cp wrk /usr/local/bin/wrk
+
+# Copy the Lua workload scripts
+COPY socialNetwork/wrk2/scripts/ /wrk2/scripts/
+
+# Default entrypoint: run wrk2
+ENTRYPOINT ["wrk"]
+
+# Default args: show help
+CMD ["--help"]
