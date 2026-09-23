@@ -1,305 +1,409 @@
-#!/usr/bin/env python3
 """
-hybrid_weight_optimizer.py — Grid-Search Optimal Weights for Hybrid Criticality Metric
-========================================================================================
-Searches all (w1, w2, w3) weight combinations (in steps of 0.1, where w1+w2+w3=1.0)
-to find the weights that maximise Spearman rank correlation between hybrid_criticality
-and error_rate_delta from the experiment log.
+hybrid_weight_optimizer.py — leakage-free weight selection and structural baselines.
 
-This script is a key part of the academic contribution: it proves that the chosen
-weights are empirically optimal, not arbitrarily selected.
+WHAT CHANGED AND WHY
+--------------------
+The previous version of this file grid-searched (w1, w2, w3) to maximise Spearman rho
+against the outcome variable, then that same rho was reported in the manuscript as a
+validation result. There was no held-out split. The reported figure was a maximum over
+~66 candidate triplets presented as a single test, computed on a dataset that was 45%
+fabricated. See _audit/AUDIT_REPORT.md section E.2.
 
-Inputs:
-  - sdg/output/sdg.json                        (Social Network graph)
-  - centrality/output/centrality_table.csv     (pre-computed centrality metrics)
-  - measurement/results/experiment_log.csv     (fault injection results)
+This version removes that path entirely. There is no default behaviour: you must pass
+--protocol explicitly, and each protocol is honest by construction.
 
-Outputs:
-  - centrality/output/hybrid_weight_grid.csv   (all triplets with their rho, p-value)
-  - Prints optimal weights and before/after rank table
+  --protocol fixed
+      Weights come from centrality/metric_constants.py::FIXED_WEIGHTS and are NEVER
+      touched by outcome data. No search happens. The module refuses to run any search
+      under this protocol.
+
+  --protocol cross-arch
+      The grid search runs on the TUNING architecture only (Social Network). The winning
+      triplet is frozen and written to a lockfile. Evaluation on the HELD-OUT
+      architecture (Hotel Reservation) is a separate command that reads the lockfile and
+      refuses to run if the lockfile is absent, or if it has already been evaluated once.
+      One architecture is tuned on; the other is spent exactly once.
+
+Both protocols refuse to touch quarantined data.
+
+This module also provides two structural baseline metrics that do not depend on any
+outcome data, for comparison against the hybrid metric:
+
+  descendant_count(v)        — size of the set reachable from v in the directed graph
+  dominator_subtree_size(v)  — number of nodes v dominates, from the entry node
 
 Usage:
-    python centrality/hybrid_weight_optimizer.py
-    python centrality/hybrid_weight_optimizer.py --step 0.05   # finer grid
-    python centrality/hybrid_weight_optimizer.py \\
-        --graph sdg/output/hotel/sdg.json \\
-        --centrality centrality/output/hotel/centrality_table.csv \\
-        --results measurement/results/hotel/experiment_log.csv
+    python centrality/hybrid_weight_optimizer.py --protocol fixed --graph sdg/output/sdg.json
+    python centrality/hybrid_weight_optimizer.py --protocol cross-arch --stage tune \\
+        --graph sdg/output/sdg.json --results data/raw/sn_controlled_sep18-20.csv
+    python centrality/hybrid_weight_optimizer.py --protocol cross-arch --stage evaluate \\
+        --graph sdg/output/hotel/sdg.json --results data/raw/hr_controlled_sep18-20.csv
 """
+
+from __future__ import annotations
 
 import argparse
 import json
 import sys
+from datetime import datetime, timezone
 from itertools import product
 from pathlib import Path
+from typing import Optional
 
 import networkx as nx
-import numpy as np
 import pandas as pd
 from scipy import stats
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-def get_project_root() -> Path:
-    """Return the project root (parent of /centrality)."""
-    return Path(__file__).resolve().parent.parent
+from centrality.metric_constants import (  # noqa: E402
+    FIXED_WEIGHTS,
+    GRID_STEP,
+    HELDOUT_ARCHITECTURE,
+    TUNING_ARCHITECTURE,
+    HybridWeights,
+)
+
+ROOT = Path(__file__).resolve().parent.parent
+LOCKFILE = ROOT / "centrality" / "output" / "tuned_weights.lock.json"
 
 
-def load_graph(path: Path) -> nx.DiGraph:
-    """Load the SDG JSON into a NetworkX DiGraph."""
-    with open(path, "r", encoding="utf-8") as f:
-        data = json.load(f)
-    return nx.node_link_graph(data)
+# ── Guards ────────────────────────────────────────────────────────────────────
+
+def refuse_quarantined(path: Path) -> None:
+    """Hard stop if asked to read anything under _quarantine/."""
+    if "_quarantine" in Path(path).resolve().parts:
+        raise SystemExit(
+            f"[REFUSED] {path} is quarantined. See _quarantine/QUARANTINE_LOG.md."
+        )
 
 
-def load_centrality(path: Path) -> pd.DataFrame:
-    """Load centrality table CSV."""
-    df = pd.read_csv(path)
-    print(f"[INFO] Centrality: {len(df)} services, columns: {list(df.columns)}")
+# ── Structural metrics (no outcome data involved) ─────────────────────────────
+
+def descendant_count(G: nx.DiGraph) -> dict[str, int]:
+    """Number of nodes reachable from each node, excluding the node itself.
+
+    The transitive blast radius a failure could reach by following call edges. Unlike
+    out-degree this counts the whole downstream cone, so an orchestrator one hop above a
+    deep subtree scores higher than one above a shallow one.
+
+    Cycles are handled correctly: nx.descendants returns the reachable set, so a node in
+    a cycle counts the other cycle members once each, not repeatedly.
+    """
+    return {n: len(nx.descendants(G, n)) for n in G.nodes()}
+
+
+def dominator_subtree_size(G: nx.DiGraph, entry: Optional[str] = None) -> dict[str, int]:
+    """Number of nodes each node dominates, counted from the entry node.
+
+    v dominates u when every path from `entry` to u passes through v. The dominated set
+    is therefore the set of services that become *unreachable* if v fails -- a stricter
+    and more operationally meaningful blast radius than descendant_count, which counts
+    everything downstream regardless of whether an alternative route exists.
+
+    Args:
+        G: the service dependency graph.
+        entry: the ingress node. Defaults to the unique node with in-degree 0
+            (nginx-web-server / frontend). If several exist, the one with the highest
+            out-degree is chosen and the choice is reported.
+
+    Returns:
+        node -> count of nodes it dominates, excluding itself. Nodes unreachable from
+        `entry` get 0.
+    """
+    if entry is None:
+        entry = _infer_entry(G)
+
+    # nx.immediate_dominators gives idom for every node reachable from entry.
+    idom = nx.immediate_dominators(G, entry)
+
+    # Build the dominator tree, then each node's dominated count is its subtree size - 1.
+    dom_tree = nx.DiGraph()
+    dom_tree.add_nodes_from(idom.keys())
+    for node, parent in idom.items():
+        if node != parent:          # the entry node is its own immediate dominator
+            dom_tree.add_edge(parent, node)
+
+    # Iterate over the dominator tree, not over idom.keys(): networkx omits the entry
+    # node from the idom mapping, so keying off idom silently leaves the entry at 0 --
+    # exactly the node with the largest dominated set.
+    sizes = {n: 0 for n in G.nodes()}
+    for node in dom_tree.nodes():
+        sizes[node] = len(nx.descendants(dom_tree, node))
+    return sizes
+
+
+def _infer_entry(G: nx.DiGraph) -> str:
+    """Pick the ingress node: the sole source, else the source with the most out-edges."""
+    sources = [n for n in G.nodes() if G.in_degree(n) == 0]
+    if not sources:
+        raise ValueError(
+            "graph has no node with in-degree 0; pass entry= explicitly"
+        )
+    if len(sources) > 1:
+        sources.sort(key=lambda n: -G.out_degree(n))
+        print(f"  [INFO] multiple entry candidates {sources}; using '{sources[0]}'")
+    return sources[0]
+
+
+# ── Hybrid metric ─────────────────────────────────────────────────────────────
+
+def compute_hybrid(
+    centrality_df: pd.DataFrame,
+    weights: HybridWeights,
+) -> pd.DataFrame:
+    """Apply the hybrid formula for a given weight triplet.
+
+    Criticality(v) = w_in*C_in + w_out*C_out*fan_out_weight + w_btw*C_btw
+    """
+    weights.validate()
+    df = centrality_df.copy()
+    max_out = df["out_degree"].max()
+    df["fan_out_weight"] = df["out_degree"] / max_out if max_out > 0 else 0.0
+    df["hybrid_criticality"] = (
+        weights.w_in * df["in_degree"]
+        + weights.w_out * df["out_degree"] * df["fan_out_weight"]
+        + weights.w_btw * df["betweenness"]
+    ).round(6)
     return df
 
 
-def load_experiment_results(path: Path) -> pd.DataFrame:
-    """Load experiment log and aggregate per service."""
+# ── Loading ───────────────────────────────────────────────────────────────────
+
+def load_graph(path: Path) -> nx.DiGraph:
+    refuse_quarantined(path)
+    with open(path, "r", encoding="utf-8") as fh:
+        return nx.node_link_graph(json.load(fh), edges="edges")
+
+
+def load_outcomes(path: Path, outcome: str) -> pd.DataFrame:
+    """Aggregate the outcome variable per service.
+
+    Censored recovery observations are DROPPED here rather than imputed. Averaging a
+    censored value as if it were a duration is exactly the defect this refactor exists to
+    prevent. Dropping them biases toward fast recoveries, which is why the
+    preregistration specifies survival analysis as the primary test -- this aggregation
+    is for the weight search only.
+    """
+    refuse_quarantined(path)
     df = pd.read_csv(path)
-    numeric_cols = [
-        "latency_p95_delta_ms", "latency_p99_delta_ms",
-        "error_rate_delta", "downstream_affected_count", "recovery_time_s",
-    ]
-    for col in numeric_cols:
-        if col in df.columns:
-            df[col] = pd.to_numeric(df[col], errors="coerce")
 
-    agg = df.groupby("service").agg({
-        "error_rate_delta": "mean",
-        "latency_p95_delta_ms": "mean",
-        "downstream_affected_count": "mean",
-        "recovery_time_s": "mean",
-    }).reset_index()
-    print(f"[INFO] Experiment results: {len(agg)} services (aggregated)")
-    return agg
+    if outcome not in df.columns:
+        raise SystemExit(f"[FAIL] outcome column '{outcome}' not in {path}")
+
+    if "recovery_censored" in df.columns and outcome == "recovery_time_s":
+        n_before = len(df)
+        df = df[~df["recovery_censored"].astype(str).str.lower().isin(["true", "1"])]
+        dropped = n_before - len(df)
+        if dropped:
+            print(f"  [INFO] dropped {dropped} censored observations from the weight "
+                  f"search (they are NOT imputed)")
+
+    df = df[pd.to_numeric(df[outcome], errors="coerce").notna()]
+    return df.groupby("service", as_index=False)[outcome].mean()
 
 
-def compute_hybrid_for_weights(
-    G: nx.DiGraph,
-    centrality_df: pd.DataFrame,
-    w1: float, w2: float, w3: float,
-) -> pd.DataFrame:
-    """Compute hybrid criticality score for a specific (w1, w2, w3) triplet."""
-    out_degrees = dict(G.out_degree())
-    max_out = max(out_degrees.values()) if out_degrees else 1
-    if max_out == 0:
-        max_out = 1
+# ── Protocols ─────────────────────────────────────────────────────────────────
 
-    df = centrality_df.copy()
-    fan_out_map = {n: (out_degrees.get(n, 0) / max_out) for n in G.nodes()}
-    df["fan_out_weight"] = df["service"].map(fan_out_map).fillna(0.0)
-
-    df["hybrid_criticality"] = (
-        w1 * df["in_degree"]
-        + w2 * df["out_degree"] * df["fan_out_weight"]
-        + w3 * df["betweenness"]
-    )
-    return df[["service", "hybrid_criticality"]]
-
-
-def grid_search(
-    G: nx.DiGraph,
-    centrality_df: pd.DataFrame,
-    blast_df: pd.DataFrame,
-    step: float = 0.1,
-    blast_measure: str = "error_rate_delta",
-) -> pd.DataFrame:
-    """
-    Search all (w1, w2, w3) triplets where w1+w2+w3=1.0 (within float tolerance).
-
-    For each triplet, compute hybrid score, merge with blast_df, and compute
-    Spearman rho against the specified blast_measure.
-
-    Returns a DataFrame sorted by descending |rho|.
-    """
-    print(f"\n[INFO] Grid search: step={step}, blast_measure={blast_measure}")
-
-    # Generate all triplets that sum to 1.0
-    steps = [round(v * step, 6) for v in range(int(1.0 / step) + 1)]
-    triplets = [
-        (w1, w2, round(1.0 - w1 - w2, 6))
-        for w1, w2 in product(steps, steps)
-        if 0.0 <= round(1.0 - w1 - w2, 6) <= 1.0
-    ]
-    print(f"[INFO] Testing {len(triplets)} weight combinations...")
-
-    results = []
-    merged_base = centrality_df.merge(blast_df, on="service", how="inner")
-
-    for w1, w2, w3 in triplets:
-        hybrid_df = compute_hybrid_for_weights(G, centrality_df, w1, w2, w3)
-        merged = merged_base.merge(hybrid_df, on="service", how="inner")
-
-        x = merged["hybrid_criticality"].values
-        y = merged[blast_measure].values
-
-        if len(x) < 4 or x.std() == 0 or y.std() == 0:
-            results.append({
-                "w1": w1, "w2": w2, "w3": w3,
-                "spearman_rho": 0.0, "p_value": 1.0,
-                "abs_rho": 0.0, "significant": False,
-            })
-            continue
-
-        rho, p = stats.spearmanr(x, y)
-        results.append({
-            "w1": w1, "w2": w2, "w3": w3,
-            "spearman_rho": round(rho, 4),
-            "p_value": round(p, 4),
-            "abs_rho": round(abs(rho), 4),
-            "significant": p < 0.05,
-        })
-
-    result_df = pd.DataFrame(results).sort_values("abs_rho", ascending=False)
-    return result_df
-
-
-def print_optimal_result(
-    best_row: pd.Series,
-    G: nx.DiGraph,
-    centrality_df: pd.DataFrame,
-    blast_df: pd.DataFrame,
-    composite_rho: float,
-) -> None:
-    """Print the optimal weights and the before/after rank comparison."""
-    w1, w2, w3 = best_row["w1"], best_row["w2"], best_row["w3"]
-    rho = best_row["spearman_rho"]
-    p = best_row["p_value"]
-
-    print("\n" + "=" * 70)
-    print("  OPTIMAL HYBRID WEIGHTS FOUND")
+def run_fixed(graph_path: Path, centrality_path: Path) -> None:
+    """Apply FIXED_WEIGHTS. No outcome data is read. No search is performed."""
     print("=" * 70)
-    print(f"  w1 (in_degree):   {w1}")
-    print(f"  w2 (fan_out):     {w2}")
-    print(f"  w3 (betweenness): {w3}")
-    print(f"  Spearman rho:     {rho:.4f}  (p={p:.4f})")
-    print(f"  Composite rho:    {composite_rho:.4f}")
-    improvement = (abs(rho) - abs(composite_rho)) / abs(composite_rho) * 100 if composite_rho != 0 else 0
-    print(f"  Improvement:      {improvement:+.1f}% over composite_score")
+    print("PROTOCOL: fixed")
     print("=" * 70)
-
-    # Compute hybrid ranks with optimal weights
-    hybrid_df = compute_hybrid_for_weights(G, centrality_df, w1, w2, w3)
-    merged = centrality_df[["service", "composite_rank", "composite_score"]].merge(
-        hybrid_df, on="service", how="inner"
-    )
-    merged["hybrid_rank"] = merged["hybrid_criticality"].rank(
-        ascending=False, method="min"
-    ).astype(int)
-    merged = merged.merge(
-        blast_df[["service", "downstream_affected_count"]].assign(
-            blast_rank=lambda df: df["downstream_affected_count"].rank(
-                ascending=False, method="min"
-            ).astype(int)
-        ),
-        on="service", how="inner"
-    )
-
-    print("\n  Before/After Rank Comparison (sorted by hybrid_rank):")
-    print(f"  {'Service':<35s} {'composite_rank':>15} {'hybrid_rank':>12} {'blast_rank':>11} {'FN_resolved?':>13}")
-    print("  " + "-" * 90)
-    for _, row in merged.sort_values("hybrid_rank").iterrows():
-        fn_was = abs(int(row["composite_rank"]) - int(row["blast_rank"])) >= len(merged) // 3
-        fn_now = abs(int(row["hybrid_rank"]) - int(row["blast_rank"])) >= len(merged) // 3
-        resolved = "✓ FIXED" if (fn_was and not fn_now) else ("still FN" if fn_now else "")
-        print(f"  {row['service']:<35s} {int(row['composite_rank']):>15} "
-              f"{int(row['hybrid_rank']):>12} {int(row['blast_rank']):>11} {resolved:>13}")
-
-
-def main():
-    parser = argparse.ArgumentParser(
-        description="Grid-search optimal weights for the Hybrid Criticality Metric"
-    )
-    parser.add_argument("--graph", type=str, default=None,
-                        help="Path to sdg.json (default: sdg/output/sdg.json)")
-    parser.add_argument("--centrality", type=str, default=None,
-                        help="Path to centrality_table.csv (default: centrality/output/centrality_table.csv)")
-    parser.add_argument("--results", type=str, default=None,
-                        help="Path to experiment_log.csv (default: measurement/results/experiment_log.csv)")
-    parser.add_argument("--output-dir", type=str, default=None,
-                        help="Output directory (default: centrality/output/)")
-    parser.add_argument("--step", type=float, default=0.1,
-                        help="Grid step size for weights (default: 0.1, use 0.05 for finer search)")
-    parser.add_argument("--blast-measure", type=str, default="error_rate_delta",
-                        help="Blast radius measure to optimise against (default: error_rate_delta)")
-    args = parser.parse_args()
-
-    root = get_project_root()
-
-    graph_path = Path(args.graph) if args.graph else root / "sdg" / "output" / "sdg.json"
-    centrality_path = Path(args.centrality) if args.centrality else (
-        root / "centrality" / "output" / "centrality_table.csv"
-    )
-    results_path = Path(args.results) if args.results else (
-        root / "measurement" / "results" / "experiment_log.csv"
-    )
-    output_dir = Path(args.output_dir) if args.output_dir else (
-        root / "centrality" / "output"
-    )
-
-    # Validate inputs
-    for p, name in [(graph_path, "SDG"), (centrality_path, "centrality"),
-                    (results_path, "experiment results")]:
-        if not p.exists():
-            print(f"[ERROR] {name} file not found: {p}")
-            sys.exit(1)
-
-    print("=" * 70)
-    print("  Hybrid Criticality Weight Optimizer")
-    print("=" * 70)
+    print(f"  Weights: w_in={FIXED_WEIGHTS.w_in}, w_out={FIXED_WEIGHTS.w_out}, "
+          f"w_btw={FIXED_WEIGHTS.w_btw}")
+    print("  Source:  centrality/metric_constants.py::FIXED_WEIGHTS")
+    print("  Outcome data is NOT read under this protocol.")
 
     G = load_graph(graph_path)
-    centrality_df = load_centrality(centrality_path)
-    blast_df = load_experiment_results(results_path)
+    refuse_quarantined(centrality_path)
+    cent = pd.read_csv(centrality_path)
 
-    # Baseline: composite_score correlation for comparison
-    merged_base = centrality_df.merge(blast_df, on="service", how="inner")
-    if "composite_score" in merged_base.columns and args.blast_measure in merged_base.columns:
-        x_comp = merged_base["composite_score"].values
-        y_blast = merged_base[args.blast_measure].values
-        if x_comp.std() > 0 and y_blast.std() > 0:
-            comp_rho, _ = stats.spearmanr(x_comp, y_blast)
-        else:
-            comp_rho = 0.0
+    out = compute_hybrid(cent, FIXED_WEIGHTS)
+    out = _attach_structural(out, G)
+    print()
+    print(out[["service", "in_degree", "out_degree", "betweenness",
+               "descendant_count", "dominator_subtree_size",
+               "hybrid_criticality"]].to_string(index=False))
+
+
+def run_cross_arch_tune(
+    graph_path: Path, centrality_path: Path, results_path: Path, outcome: str,
+    step: float,
+) -> None:
+    """Search the grid on the TUNING architecture only, then freeze the winner."""
+    print("=" * 70)
+    print(f"PROTOCOL: cross-arch / stage=tune  (architecture: {TUNING_ARCHITECTURE})")
+    print("=" * 70)
+
+    if LOCKFILE.exists():
+        raise SystemExit(
+            f"[REFUSED] {LOCKFILE} already exists. Weights are already frozen.\n"
+            f"          Re-tuning after seeing a result is leakage. Delete the lockfile\n"
+            f"          deliberately and record why, if you truly mean to re-tune."
+        )
+
+    G = load_graph(graph_path)
+    refuse_quarantined(centrality_path)
+    cent = pd.read_csv(centrality_path)
+    outcomes = load_outcomes(results_path, outcome)
+
+    steps = [round(i * step, 6) for i in range(int(1 / step) + 1)]
+    triplets = [
+        HybridWeights(a, b, round(1.0 - a - b, 6))
+        for a, b in product(steps, steps)
+        if -1e-9 <= round(1.0 - a - b, 6) <= 1.0 + 1e-9
+    ]
+
+    rows = []
+    for w in triplets:
+        merged = compute_hybrid(cent, w).merge(outcomes, on="service")
+        if len(merged) < 3 or merged["hybrid_criticality"].nunique() < 2:
+            continue
+        rho, p = stats.spearmanr(merged["hybrid_criticality"], merged[outcome])
+        rows.append({"w_in": w.w_in, "w_out": w.w_out, "w_btw": w.w_btw,
+                     "rho": round(float(rho), 6), "p": round(float(p), 6),
+                     "n_services": len(merged)})
+
+    if not rows:
+        raise SystemExit("[FAIL] no valid weight triplet produced a correlation")
+
+    grid = pd.DataFrame(rows).sort_values("rho", ascending=False)
+    grid_path = ROOT / "centrality" / "output" / "weight_grid_tuning_arch.csv"
+    grid_path.parent.mkdir(parents=True, exist_ok=True)
+    grid.to_csv(grid_path, index=False)
+
+    best = grid.iloc[0]
+    LOCKFILE.parent.mkdir(parents=True, exist_ok=True)
+    LOCKFILE.write_text(json.dumps({
+        "protocol": "cross-arch",
+        "frozen_at": datetime.now(timezone.utc).isoformat(),
+        "tuned_on_architecture": TUNING_ARCHITECTURE,
+        "tuned_on_results": str(results_path),
+        "outcome": outcome,
+        "grid_step": step,
+        "n_triplets_searched": len(grid),
+        "w_in": float(best["w_in"]), "w_out": float(best["w_out"]),
+        "w_btw": float(best["w_btw"]),
+        "tuning_rho": float(best["rho"]), "tuning_p": float(best["p"]),
+        "heldout_architecture": HELDOUT_ARCHITECTURE,
+        "evaluated": False,
+    }, indent=2), encoding="utf-8")
+
+    print(f"  Searched {len(grid)} triplets at step {step}")
+    print(f"  Best on tuning architecture: w_in={best['w_in']}, w_out={best['w_out']}, "
+          f"w_btw={best['w_btw']}  rho={best['rho']} p={best['p']}")
+    print(f"  Grid written to {grid_path.relative_to(ROOT)}")
+    print(f"  Weights FROZEN in {LOCKFILE.relative_to(ROOT)}")
+    print()
+    print("  NOTE: this rho is a MAXIMUM OVER A SEARCH on the tuning architecture.")
+    print("        It is not a validation result and must never be reported as one.")
+    print(f"        Only the held-out {HELDOUT_ARCHITECTURE} evaluation is reportable.")
+
+
+def run_cross_arch_evaluate(
+    graph_path: Path, centrality_path: Path, results_path: Path, outcome: str,
+) -> None:
+    """Evaluate the frozen weights once on the held-out architecture."""
+    print("=" * 70)
+    print(f"PROTOCOL: cross-arch / stage=evaluate  (held out: {HELDOUT_ARCHITECTURE})")
+    print("=" * 70)
+
+    if not LOCKFILE.exists():
+        raise SystemExit(
+            f"[REFUSED] {LOCKFILE} not found. Run --stage tune first.\n"
+            f"          Evaluating without frozen weights is not a held-out test."
+        )
+
+    lock = json.loads(LOCKFILE.read_text(encoding="utf-8"))
+    if lock.get("evaluated"):
+        raise SystemExit(
+            f"[REFUSED] the held-out architecture has already been evaluated once\n"
+            f"          (at {lock.get('evaluated_at')}, rho={lock.get('heldout_rho')}).\n"
+            f"          Evaluating twice turns the held-out set into a tuning set."
+        )
+
+    weights = HybridWeights(lock["w_in"], lock["w_out"], lock["w_btw"])
+    print(f"  Frozen weights: w_in={weights.w_in}, w_out={weights.w_out}, "
+          f"w_btw={weights.w_btw}")
+    print(f"  Frozen at {lock['frozen_at']} on {lock['tuned_on_architecture']}")
+
+    load_graph(graph_path)
+    refuse_quarantined(centrality_path)
+    cent = pd.read_csv(centrality_path)
+    outcomes = load_outcomes(results_path, outcome)
+
+    merged = compute_hybrid(cent, weights).merge(outcomes, on="service")
+    rho, p = stats.spearmanr(merged["hybrid_criticality"], merged[outcome])
+
+    lock.update({
+        "evaluated": True,
+        "evaluated_at": datetime.now(timezone.utc).isoformat(),
+        "heldout_results": str(results_path),
+        "heldout_rho": round(float(rho), 6),
+        "heldout_p": round(float(p), 6),
+        "heldout_n_services": len(merged),
+    })
+    LOCKFILE.write_text(json.dumps(lock, indent=2), encoding="utf-8")
+
+    print()
+    print(f"  HELD-OUT RESULT: rho = {rho:.4f}, p = {p:.4f}, n = {len(merged)} services")
+    print()
+    print("  This is the reportable number, whatever it says. Per CLAUDE.md rule 4,")
+    print("  a null result is reported as null. The lockfile is now spent.")
+
+
+def _attach_structural(df: pd.DataFrame, G: nx.DiGraph) -> pd.DataFrame:
+    desc = descendant_count(G)
+    dom = dominator_subtree_size(G)
+    df = df.copy()
+    df["descendant_count"] = df["service"].map(desc).fillna(0).astype(int)
+    df["dominator_subtree_size"] = df["service"].map(dom).fillna(0).astype(int)
+    return df
+
+
+# ── CLI ───────────────────────────────────────────────────────────────────────
+
+def main() -> int:
+    ap = argparse.ArgumentParser(
+        description="Leakage-free hybrid weight selection. --protocol is required.",
+    )
+    ap.add_argument("--protocol", required=True, choices=["fixed", "cross-arch"],
+                    help="'fixed' uses metric_constants.FIXED_WEIGHTS and never reads "
+                         "outcome data. 'cross-arch' tunes on one architecture and "
+                         "evaluates once on the other. There is no default.")
+    ap.add_argument("--stage", choices=["tune", "evaluate"],
+                    help="Required for --protocol cross-arch.")
+    ap.add_argument("--graph", required=True, type=Path)
+    ap.add_argument("--centrality", type=Path,
+                    default=ROOT / "centrality" / "output" / "centrality_table.csv")
+    ap.add_argument("--results", type=Path,
+                    help="Raw results CSV from data/raw/. Not used by --protocol fixed.")
+    ap.add_argument("--outcome", default="recovery_time_s")
+    ap.add_argument("--step", type=float, default=GRID_STEP)
+    args = ap.parse_args()
+
+    if args.protocol == "fixed":
+        if args.results:
+            raise SystemExit(
+                "[REFUSED] --protocol fixed must not be given --results. Fixed weights "
+                "are never selected using outcome data."
+            )
+        run_fixed(args.graph, args.centrality)
+        return 0
+
+    if not args.stage:
+        raise SystemExit("[FAIL] --protocol cross-arch requires --stage tune|evaluate")
+    if not args.results:
+        raise SystemExit("[FAIL] --protocol cross-arch requires --results")
+
+    if args.stage == "tune":
+        run_cross_arch_tune(args.graph, args.centrality, args.results,
+                            args.outcome, args.step)
     else:
-        comp_rho = 0.0
-    print(f"\n[INFO] Baseline composite_score rho ({args.blast_measure}): {comp_rho:.4f}")
-
-    # Grid search
-    grid_df = grid_search(G, centrality_df, blast_df, step=args.step,
-                          blast_measure=args.blast_measure)
-
-    # Save grid results
-    output_dir.mkdir(parents=True, exist_ok=True)
-    grid_path = output_dir / "hybrid_weight_grid.csv"
-    grid_df.to_csv(grid_path, index=False)
-    print(f"\n[INFO] Saved grid search results: {grid_path}")
-
-    # Print top-5 triplets
-    print("\n  Top 5 weight combinations:")
-    print(f"  {'w1':>6} {'w2':>6} {'w3':>6} {'rho':>8} {'p':>8} {'sig':>6}")
-    print("  " + "-" * 50)
-    for _, row in grid_df.head(5).iterrows():
-        sig = "✓" if row["significant"] else "✗"
-        print(f"  {row['w1']:>6.2f} {row['w2']:>6.2f} {row['w3']:>6.2f} "
-              f"{row['spearman_rho']:>8.4f} {row['p_value']:>8.4f} {sig:>6}")
-
-    # Print optimal result with rank comparison
-    best = grid_df.iloc[0]
-    print_optimal_result(best, G, centrality_df, blast_df, comp_rho)
-
-    print(f"\n[INFO] Optimal weights for your paper:")
-    print(f"  Criticality(v) = {best['w1']} × in_degree(v) + "
-          f"{best['w2']} × out_degree(v) × fan_out_weight(v) + "
-          f"{best['w3']} × betweenness(v)")
-    print(f"\n[INFO] Done. Update compute_centrality.py with: "
-          f"w1={best['w1']}, w2={best['w2']}, w3={best['w3']}")
+        run_cross_arch_evaluate(args.graph, args.centrality, args.results, args.outcome)
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
