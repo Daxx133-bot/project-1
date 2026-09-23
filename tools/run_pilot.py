@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 import time
@@ -51,6 +52,35 @@ APPS = {
         "compose_dir": ROOT.parent / "DeathStarBench" / "hotelReservation",
     },
 }
+
+
+class RunLock:
+    """Refuse to start if another runner instance is live.
+
+    A double-launch silently corrupts runs: two processes inject faults into the same
+    stack while each other's load generator and recovery probe are active. That happened
+    during the 2026-09-24 pilot and cost 3 runs
+    (see _quarantine/QUARANTINE_LOG.md item 9).
+    """
+
+    def __init__(self, path: Path):
+        self.path = path
+
+    def __enter__(self):
+        if self.path.exists():
+            holder = self.path.read_text(encoding="utf-8").strip()
+            raise SystemExit(
+                f"[REFUSED] another runner appears to be active (lock held by {holder}). "
+                f"If you are certain it is dead, delete {self.path} and retry."
+            )
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.path.write_text(f"pid={os.getpid()} started={datetime.now(timezone.utc).isoformat()}",
+                             encoding="utf-8")
+        return self
+
+    def __exit__(self, *exc):
+        self.path.unlink(missing_ok=True)
+        return False
 
 
 def graph_services(path: Path) -> list[str]:
@@ -187,15 +217,16 @@ def main() -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     results = []
-    for service in [s.strip() for s in args.services.split(",")]:
-        for rep in range(1, args.reps + 1):
-            res = one_run(args.app, service, rep, cfg, args)
-            results.append(res)
-            stamp = res["timestamp"].replace(":", "-").replace("+00:00", "Z")
-            (out_dir / f"pilot_{args.app}_{service}_kill_rep{rep}_{stamp}.json").write_text(
-                json.dumps(res, indent=2), encoding="utf-8")
-            print(f"  [COOLDOWN] {args.cooldown}s")
-            time.sleep(args.cooldown)
+    with RunLock(out_dir / ".runner.lock"):
+        for service in [s.strip() for s in args.services.split(",")]:
+            for rep in range(1, args.reps + 1):
+                res = one_run(args.app, service, rep, cfg, args)
+                results.append(res)
+                stamp = res["timestamp"].replace(":", "-").replace("+00:00", "Z")
+                (out_dir / f"pilot_{args.app}_{service}_kill_rep{rep}_{stamp}.json").write_text(
+                    json.dumps(res, indent=2), encoding="utf-8")
+                print(f"  [COOLDOWN] {args.cooldown}s")
+                time.sleep(args.cooldown)
 
     print(f"\n{'='*70}\n  PILOT SUMMARY: {args.app}\n{'='*70}")
     for r in results:
