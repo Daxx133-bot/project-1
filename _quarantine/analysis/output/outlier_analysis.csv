@@ -1,0 +1,13 @@
+service,composite_rank,composite_score,downstream_affected_count,latency_p95_delta_ms,error_rate_delta,recovery_time_s,blast_rank,rank_diff,is_outlier,outlier_type
+compose-post-service,7,0.5,3.375,9.3525,0.071525,3.19125,2,5,True,"False Negative (low centrality, high impact)"
+url-shorten-service,8,0.5238,1.0,-15.89125,0.0341125,1.95625,11,3,False,Aligned
+nginx-web-server,12,0.7024,1.125,-23.1325,0.0159875,31.57125,10,2,False,Aligned
+home-timeline-service,4,0.3571,1.75,-6.7250000000000005,0.0387,2.64375,6,2,False,Aligned
+user-service,2,0.2262,2.875,12.817499999999999,0.0792,2.98625,4,2,False,Aligned
+post-storage-service,3,0.3452,2.375,1.9187500000000002,0.037375000000000005,2.48625,5,2,False,Aligned
+user-timeline-service,5,0.4524,3.1666666666666665,3.0283333333333338,0.06208333333333333,2.7716666666666665,3,2,False,Aligned
+media-service,10,0.6429,1.0,-14.44875,0.018925,1.5725,11,1,False,Aligned
+unique-id-service,10,0.6429,1.375,-23.04875,0.0167,1.295,9,1,False,Aligned
+social-graph-service,1,0.1786,3.75,2.23125,0.1034625,3.8049999999999997,1,0,False,Aligned
+text-service,6,0.4881,1.75,-11.082500000000001,0.03655,1.885,6,0,False,Aligned
+user-mention-service,8,0.5238,1.5,-12.99125,0.031675,1.9125,8,0,False,Aligned
