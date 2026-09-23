@@ -1,0 +1,64 @@
+
+======================================================================
+  socialnetwork / compose-post-service / kill / rep 1   (container: socialnetwork-compose-post-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=56.96ms traces=242
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-compose-post-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=2583.94ms traces=75 downstream=1
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 42.26s
+  [COOLDOWN] 20s
+
+======================================================================
+  socialnetwork / compose-post-service / kill / rep 2   (container: socialnetwork-compose-post-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=56.2ms traces=313
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-compose-post-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=2536.45ms traces=71 downstream=1
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 44.01s
+  [COOLDOWN] 20s
+
+======================================================================
+  socialnetwork / media-service / kill / rep 1   (container: socialnetwork-media-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=56.36ms traces=273
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-media-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=8923.13ms traces=52 downstream=7
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 48.35s
+  [COOLDOWN] 20s
+
+======================================================================
+  socialnetwork / media-service / kill / rep 2   (container: socialnetwork-media-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=56.29ms traces=289
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-media-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=7995.62ms traces=59 downstream=7
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 45.85s
+  [COOLDOWN] 20s
+
+======================================================================
+  PILOT SUMMARY: socialnetwork
+======================================================================
+  compose-post-service   rep1  telemetry_ok=True   base_traces=242   fault_traces=75    recovery=42.26s     restart=0.69s  wall=109.7s
+  compose-post-service   rep2  telemetry_ok=True   base_traces=313   fault_traces=71    recovery=44.01s     restart=0.81s  wall=111.95s
+  media-service          rep1  telemetry_ok=True   base_traces=273   fault_traces=52    recovery=48.35s     restart=0.7s  wall=116.17s
+  media-service          rep2  telemetry_ok=True   base_traces=289   fault_traces=59    recovery=45.85s     restart=0.69s  wall=113.72s
