@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-20T14:00:35+0530",
+  "service": "rate",
+  "fault_type": "latency",
+  "repetition": 2,
+  "baseline_p95_ms": 243.38,
+  "baseline_p99_ms": 282.54,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 242.4,
+  "fault_p99_ms": 299.05,
+  "fault_error_rate": 0.0,
+  "downstream_affected_count": 0,
+  "downstream_affected_services": "",
+  "recovery_time_s": 0.17,
+  "health_check_pass": true,
+  "integration_tests_pass": true,
+  "latency_p95_delta_ms": -0.9799999999999898,
+  "latency_p99_delta_ms": 16.50999999999999,
+  "error_rate_delta": 0.0
+}

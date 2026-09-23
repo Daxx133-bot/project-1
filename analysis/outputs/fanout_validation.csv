@@ -1,0 +1,9 @@
+architecture,metric,outcome,kendall_tau,tau_pval
+socialnetwork,raw_out_degree,downstream_affected_count,-0.41137667560372115,0.12
+socialnetwork,normalized_out_degree,downstream_affected_count,-0.41137667560372115,0.128
+socialnetwork,hybrid_linear,downstream_affected_count,-0.32070079957649444,0.174
+socialnetwork,hybrid_fanout,downstream_affected_count,-0.16724840200141816,0.53
+hotelreservation,raw_out_degree,downstream_affected_count,0.13483997249264842,0.75
+hotelreservation,normalized_out_degree,downstream_affected_count,0.13483997249264842,0.81
+hotelreservation,hybrid_linear,downstream_affected_count,0.13483997249264842,0.774
+hotelreservation,hybrid_fanout,downstream_affected_count,0.13483997249264842,0.742

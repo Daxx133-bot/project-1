@@ -114,8 +114,8 @@ def main():
         help="Comma-separated services for fault injection (default: all)",
     )
     parser.add_argument(
-        "--faults", type=str, default="kill,latency",
-        help="Comma-separated fault types (default: kill,latency)",
+        "--faults", type=str, default="kill,latency,cpu",
+        help="Comma-separated fault types (default: kill,latency,cpu)",
     )
     parser.add_argument(
         "--reps", type=int, default=3,

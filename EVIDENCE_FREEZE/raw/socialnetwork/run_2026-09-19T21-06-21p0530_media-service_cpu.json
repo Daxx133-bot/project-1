@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-19T21:06:21+0530",
+  "service": "media-service",
+  "fault_type": "cpu",
+  "repetition": 3,
+  "baseline_p95_ms": 33.81,
+  "baseline_p99_ms": 55.33,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 135.97,
+  "fault_p99_ms": 184.64,
+  "fault_error_rate": 0.0,
+  "downstream_affected_count": 11,
+  "downstream_affected_services": "nginx-web-server,compose-post-service,home-timeline-service,text-service,user-mention-service,url-shorten-service,unique-id-service,post-storage-service,social-graph-service,user-service,user-timeline-service",
+  "recovery_time_s": 0.18,
+  "health_check_pass": true,
+  "integration_tests_pass": true,
+  "latency_p95_delta_ms": 102.16,
+  "latency_p99_delta_ms": 129.31,
+  "error_rate_delta": 0.0
+}

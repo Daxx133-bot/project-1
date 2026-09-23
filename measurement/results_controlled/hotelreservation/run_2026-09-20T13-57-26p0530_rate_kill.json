@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-20T13:57:26+0530",
+  "service": "rate",
+  "fault_type": "kill",
+  "repetition": 3,
+  "baseline_p95_ms": 216.12,
+  "baseline_p99_ms": 261.2,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 10.27,
+  "fault_p99_ms": 15.93,
+  "fault_error_rate": 0.616,
+  "downstream_affected_count": 3,
+  "downstream_affected_services": "frontend,search,geo",
+  "recovery_time_s": 0.9,
+  "health_check_pass": true,
+  "integration_tests_pass": true,
+  "latency_p95_delta_ms": -205.85,
+  "latency_p99_delta_ms": -245.26999999999998,
+  "error_rate_delta": 0.616
+}

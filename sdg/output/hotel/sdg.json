@@ -1,0 +1,78 @@
+{
+  "directed": true,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "id": "frontend"
+    },
+    {
+      "id": "search"
+    },
+    {
+      "id": "reservation"
+    },
+    {
+      "id": "rate"
+    },
+    {
+      "id": "geo"
+    },
+    {
+      "id": "profile"
+    },
+    {
+      "id": "recommendation"
+    }
+  ],
+  "edges": [
+    {
+      "weight": 1000,
+      "call_count": 1000,
+      "avg_latency_us": 3747.12,
+      "avg_latency_ms": 3.75,
+      "source": "frontend",
+      "target": "search"
+    },
+    {
+      "weight": 1000,
+      "call_count": 1000,
+      "avg_latency_us": 1051.89,
+      "avg_latency_ms": 1.05,
+      "source": "frontend",
+      "target": "reservation"
+    },
+    {
+      "weight": 1265,
+      "call_count": 1265,
+      "avg_latency_us": 722.2,
+      "avg_latency_ms": 0.72,
+      "source": "frontend",
+      "target": "profile"
+    },
+    {
+      "weight": 265,
+      "call_count": 265,
+      "avg_latency_us": 49.35,
+      "avg_latency_ms": 0.05,
+      "source": "frontend",
+      "target": "recommendation"
+    },
+    {
+      "weight": 1000,
+      "call_count": 1000,
+      "avg_latency_us": 1092.69,
+      "avg_latency_ms": 1.09,
+      "source": "search",
+      "target": "rate"
+    },
+    {
+      "weight": 1000,
+      "call_count": 1000,
+      "avg_latency_us": 174.2,
+      "avg_latency_ms": 0.17,
+      "source": "search",
+      "target": "geo"
+    }
+  ]
+}

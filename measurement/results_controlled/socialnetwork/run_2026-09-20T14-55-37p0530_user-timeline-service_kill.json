@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-20T14:55:37+0530",
+  "service": "user-timeline-service",
+  "fault_type": "kill",
+  "repetition": 1,
+  "baseline_p95_ms": 21.03,
+  "baseline_p99_ms": 27.53,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 5140.1,
+  "fault_p99_ms": 10002.5,
+  "fault_error_rate": 0.14,
+  "downstream_affected_count": 8,
+  "downstream_affected_services": "nginx-web-server,compose-post-service,text-service,user-mention-service,url-shorten-service,media-service,unique-id-service,user-service",
+  "recovery_time_s": 1.15,
+  "health_check_pass": true,
+  "integration_tests_pass": true,
+  "latency_p95_delta_ms": 5119.070000000001,
+  "latency_p99_delta_ms": 9974.97,
+  "error_rate_delta": 0.14
+}

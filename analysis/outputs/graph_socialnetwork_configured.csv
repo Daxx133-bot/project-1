@@ -1,0 +1,16 @@
+source,target
+user-timeline-service,post-storage-service
+user-mention-service,user-service
+nginx-web-server,compose-post-service
+nginx-web-server,home-timeline-service
+nginx-web-server,user-timeline-service
+compose-post-service,text-service
+compose-post-service,media-service
+compose-post-service,unique-id-service
+compose-post-service,user-mention-service
+compose-post-service,url-shorten-service
+compose-post-service,user-service
+compose-post-service,home-timeline-service
+compose-post-service,post-storage-service
+home-timeline-service,post-storage-service
+home-timeline-service,social-graph-service

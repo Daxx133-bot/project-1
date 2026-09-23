@@ -184,6 +184,84 @@ def add_composite_score(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def compute_hybrid_criticality(
+    G: nx.DiGraph,
+    df: pd.DataFrame,
+    w1: float = 0.4,
+    w2: float = 0.4,
+    w3: float = 0.2,
+) -> pd.DataFrame:
+    """
+    Compute the Fan-Out Corrected Hybrid Criticality Metric.
+
+    Standard centrality metrics fail to capture services that act as
+    synchronous write orchestrators with high fan-out but low in-degree
+    (e.g., compose-post-service). This metric explicitly rewards such
+    fan-out behaviour.
+
+    Formula:
+        Criticality(v) = w1 * in_degree(v)
+                       + w2 * out_degree(v) * fan_out_weight(v)
+                       + w3 * betweenness(v)
+
+    Where fan_out_weight(v) = out_degree(v) / max_out_degree in graph.
+    This amplifies services with high absolute and proportional fan-out.
+
+    Default weights (w1=0.4, w2=0.4, w3=0.2) are optimised empirically
+    via hybrid_weight_optimizer.py — tune using your experiment_log.csv.
+
+    Args:
+        G:  The directed Service Dependency Graph.
+        df: DataFrame already containing in_degree, out_degree, betweenness
+            columns (output of compute_all_centralities + add_ranks).
+        w1: Weight for in-degree (how many services depend on this one).
+        w2: Weight for out-degree fan-out product.
+        w3: Weight for betweenness (bottleneck path coverage).
+
+    Returns:
+        DataFrame with new columns:
+          - fan_out_weight: Normalised out-degree proportion [0, 1]
+          - hybrid_criticality: Weighted combination score (higher = more critical)
+          - hybrid_rank: Rank by hybrid_criticality (1 = most critical)
+    """
+    print("\n[INFO] Computing hybrid criticality metric...")
+    print(f"  Weights: w1(in_degree)={w1}, w2(fan_out)={w2}, w3(betweenness)={w3}")
+
+    # Compute normalised fan-out weight for each node
+    out_degrees = dict(G.out_degree())
+    max_out = max(out_degrees.values()) if out_degrees else 1
+    if max_out == 0:
+        max_out = 1  # guard against all-zero out-degree graphs
+
+    fan_out_map = {node: (out_degrees.get(node, 0) / max_out) for node in G.nodes()}
+    df["fan_out_weight"] = df["service"].map(fan_out_map).fillna(0.0).round(6)
+
+    # Hybrid score: weighted sum
+    df["hybrid_criticality"] = (
+        w1 * df["in_degree"]
+        + w2 * df["out_degree"] * df["fan_out_weight"]
+        + w3 * df["betweenness"]
+    ).round(6)
+
+    # Rank: higher score = more critical = rank 1
+    df["hybrid_rank"] = df["hybrid_criticality"].rank(
+        ascending=False, method="min"
+    ).astype(int)
+
+    # Print comparison vs composite score
+    print("  Hybrid rank vs Composite rank comparison:")
+    compare = df[["service", "composite_rank", "hybrid_rank",
+                  "hybrid_criticality"]].sort_values("hybrid_rank")
+    for _, row in compare.iterrows():
+        diff = int(row["composite_rank"]) - int(row["hybrid_rank"])
+        marker = " <-- RANK SHIFT" if abs(diff) >= 3 else ""
+        print(f"    {int(row['hybrid_rank']):2d}. {row['service']:<35s} "
+              f"(hybrid_rank={int(row['hybrid_rank'])}, "
+              f"composite_rank={int(row['composite_rank'])}, diff={diff:+d}){marker}")
+
+    return df
+
+
 def print_results(df: pd.DataFrame) -> None:
     """Pretty-print the centrality results table."""
     print("\n" + "=" * 100)
@@ -283,13 +361,17 @@ def main():
     # Step 4: Add composite score
     df = add_composite_score(df)
 
-    # Step 5: Print results
+    # Step 5: Compute hybrid criticality metric (novel contribution)
+    df = compute_hybrid_criticality(G, df)
+
+    # Step 6: Print results
     print_results(df)
 
-    # Step 6: Save
+    # Step 7: Save (all new columns are included automatically)
     save_results(df, output_dir)
 
     print("\n[INFO] Centrality computation complete.")
+    print("[INFO] hybrid_criticality and hybrid_rank columns added to output.")
     print("[INFO] Ready for faultinjection/fault_runner.py")
 
 

@@ -118,6 +118,7 @@ def compute_spearman_correlations(
         "degree", "in_degree", "out_degree",
         "betweenness", "closeness", "eigenvector", "pagerank",
         "composite_score",
+        "hybrid_criticality",  # Novel fan-out corrected metric
     ]
 
     blast_measures = [
@@ -203,6 +204,28 @@ def print_results(corr_df: pd.DataFrame) -> None:
               f"rho={row['spearman_rho']:.4f}, p={row['p_value']:.4f}{sig_marker}")
 
     print("=" * 90)
+
+    # Highlight improvement: hybrid_criticality vs composite_score
+    print("\n  Hybrid Criticality vs Composite Score Comparison:")
+    blast_measures_compare = ["error_rate_delta", "downstream_affected_count",
+                               "latency_p95_delta_ms", "recovery_time_s"]
+    print(f"  {'Blast Measure':<30} {'composite_score rho':>20} {'hybrid_criticality rho':>23} {'Winner':>10}")
+    print("  " + "-" * 90)
+    for bm in blast_measures_compare:
+        comp_rows = corr_df[
+            (corr_df["centrality_metric"] == "composite_score") &
+            (corr_df["blast_radius_measure"] == bm)
+        ]
+        hyb_rows = corr_df[
+            (corr_df["centrality_metric"] == "hybrid_criticality") &
+            (corr_df["blast_radius_measure"] == bm)
+        ]
+        if comp_rows.empty or hyb_rows.empty:
+            continue
+        c_rho = comp_rows.iloc[0]["spearman_rho"]
+        h_rho = hyb_rows.iloc[0]["spearman_rho"]
+        winner = "HYBRID" if abs(h_rho) > abs(c_rho) else "composite"
+        print(f"  {bm:<30} {c_rho:>20.4f} {h_rho:>23.4f} {winner:>10}")
 
 
 def save_results(corr_df: pd.DataFrame, output_dir: Path) -> None:

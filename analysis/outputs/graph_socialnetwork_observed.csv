@@ -1,0 +1,5 @@
+source,target
+user-service,social-graph-service
+nginx-web-server,user-service
+nginx-web-server,user-timeline-service
+user-timeline-service,post-storage-service

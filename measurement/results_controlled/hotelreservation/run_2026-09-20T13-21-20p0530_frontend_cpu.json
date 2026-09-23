@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-20T13:21:20+0530",
+  "service": "frontend",
+  "fault_type": "cpu",
+  "repetition": 3,
+  "baseline_p95_ms": 154.78,
+  "baseline_p99_ms": 201.6,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 274.1,
+  "fault_p99_ms": 408.19,
+  "fault_error_rate": 0.0,
+  "downstream_affected_count": 0,
+  "downstream_affected_services": "",
+  "recovery_time_s": 0.11,
+  "health_check_pass": true,
+  "integration_tests_pass": true,
+  "latency_p95_delta_ms": 119.32000000000002,
+  "latency_p99_delta_ms": 206.59,
+  "error_rate_delta": 0.0
+}

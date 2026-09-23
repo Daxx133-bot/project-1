@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-19T20:48:28+0530",
+  "service": "media-service",
+  "fault_type": "kill",
+  "repetition": 2,
+  "baseline_p95_ms": 133.32,
+  "baseline_p99_ms": 189.41,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 5082.29,
+  "fault_p99_ms": 10002.33,
+  "fault_error_rate": 0.064,
+  "downstream_affected_count": 7,
+  "downstream_affected_services": "nginx-web-server,compose-post-service,text-service,user-mention-service,url-shorten-service,unique-id-service,user-service",
+  "recovery_time_s": 2.71,
+  "health_check_pass": true,
+  "integration_tests_pass": true,
+  "latency_p95_delta_ms": 4948.97,
+  "latency_p99_delta_ms": 9812.92,
+  "error_rate_delta": 0.064
+}

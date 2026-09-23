@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-19T17:50:27+0530",
+  "service": "user-mention-service",
+  "fault_type": "kill",
+  "repetition": 3,
+  "baseline_p95_ms": 166.37,
+  "baseline_p99_ms": 224.34,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 0.0,
+  "fault_p99_ms": 0.0,
+  "fault_error_rate": 0.0,
+  "downstream_affected_count": 0,
+  "downstream_affected_services": "",
+  "recovery_time_s": 0.94,
+  "health_check_pass": true,
+  "integration_tests_pass": false,
+  "latency_p95_delta_ms": -166.37,
+  "latency_p99_delta_ms": -224.34,
+  "error_rate_delta": 0.0
+}

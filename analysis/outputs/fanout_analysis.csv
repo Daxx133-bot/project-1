@@ -1,0 +1,13 @@
+architecture,metric,outcome,N,spearman_rho,rho_pval
+socialnetwork,raw_out_degree,downstream_affected_count,12,-0.5010370001688402,0.09945027486256872
+socialnetwork,normalized_out_degree,downstream_affected_count,12,-0.5010370001688402,0.09195402298850575
+socialnetwork,hybrid_linear,downstream_affected_count,12,-0.3481600837442632,0.25687156421789104
+socialnetwork,hybrid_fanout,downstream_affected_count,12,-0.2583526863793319,0.4047976011994003
+hotelreservation,raw_out_degree,downstream_affected_count,7,0.15731330124142315,0.7396301849075462
+hotelreservation,normalized_out_degree,downstream_affected_count,7,0.15731330124142315,0.7411294352823589
+hotelreservation,hybrid_linear,downstream_affected_count,7,0.15731330124142315,0.7496251874062968
+hotelreservation,hybrid_fanout,downstream_affected_count,7,0.15731330124142315,0.7351324337831084
+ALL_POOLED,raw_out_degree,downstream_affected_count,19,-0.2229172086217594,0.34782608695652173
+ALL_POOLED,normalized_out_degree,downstream_affected_count,19,-0.23002618566208882,0.3448275862068966
+ALL_POOLED,hybrid_linear,downstream_affected_count,19,-0.03801302577947699,0.8710644677661169
+ALL_POOLED,hybrid_fanout,downstream_affected_count,19,0.029919886679502426,0.9190404797601199

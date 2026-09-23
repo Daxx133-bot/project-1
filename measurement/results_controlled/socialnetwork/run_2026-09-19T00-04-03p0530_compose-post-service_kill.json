@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-19T00:04:03+0530",
+  "service": "compose-post-service",
+  "fault_type": "kill",
+  "repetition": 1,
+  "baseline_p95_ms": 25.89,
+  "baseline_p99_ms": 36.55,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 1625.37,
+  "fault_p99_ms": 2563.43,
+  "fault_error_rate": 0.0814,
+  "downstream_affected_count": 1,
+  "downstream_affected_services": "nginx-web-server",
+  "recovery_time_s": 0.96,
+  "health_check_pass": true,
+  "integration_tests_pass": true,
+  "latency_p95_delta_ms": 1599.4799999999998,
+  "latency_p99_delta_ms": 2526.8799999999997,
+  "error_rate_delta": 0.0814
+}

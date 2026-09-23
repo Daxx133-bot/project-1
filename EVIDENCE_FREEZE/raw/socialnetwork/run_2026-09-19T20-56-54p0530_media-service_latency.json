@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-19T20:56:54+0530",
+  "service": "media-service",
+  "fault_type": "latency",
+  "repetition": 2,
+  "baseline_p95_ms": 160.92,
+  "baseline_p99_ms": 214.32,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 264.45,
+  "fault_p99_ms": 376.04,
+  "fault_error_rate": 0.0,
+  "downstream_affected_count": 0,
+  "downstream_affected_services": "",
+  "recovery_time_s": 0.1,
+  "health_check_pass": true,
+  "integration_tests_pass": true,
+  "latency_p95_delta_ms": 103.53,
+  "latency_p99_delta_ms": 161.72000000000003,
+  "error_rate_delta": 0.0
+}

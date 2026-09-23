@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-20T13:03:06+0530",
+  "service": "compose-post-service",
+  "fault_type": "cpu",
+  "repetition": 1,
+  "baseline_p95_ms": 38.7,
+  "baseline_p99_ms": 45.5,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 35.17,
+  "fault_p99_ms": 55.79,
+  "fault_error_rate": 0.0,
+  "downstream_affected_count": 0,
+  "downstream_affected_services": "",
+  "recovery_time_s": 0.13,
+  "health_check_pass": true,
+  "integration_tests_pass": true,
+  "latency_p95_delta_ms": -3.530000000000001,
+  "latency_p99_delta_ms": 10.29,
+  "error_rate_delta": 0.0
+}

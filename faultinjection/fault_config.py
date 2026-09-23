@@ -87,13 +87,17 @@ class FaultSpec:
             ]
 
         elif self.fault_type == FaultType.CPU:
-            # CPU stress runs inside the target container via docker exec
-            # (Pumba doesn't have a CPU stress command, so we use docker exec)
-            return [
-                "docker", "exec", container_name,
-                "stress-ng",
-                "--cpu", str(self.cpu_workers),
-                "--timeout", f"{self.duration_seconds}s",
+            # Use Pumba's built-in stress subcommand.
+            # This avoids requiring stress-ng to be installed inside each container
+            # (DSB containers do NOT ship with stress-ng by default).
+            # Pumba stress runs as a sidecar container and manages CPU pressure
+            # on the target container from the outside via cgroups.
+            return base + [
+                "stress",
+                "--duration", f"{self.duration_seconds}s",
+                "--pull-image",
+                f"--stressors=--cpu {self.cpu_workers} --timeout {self.duration_seconds}s",
+                container_name,
             ]
 
         else:
@@ -108,7 +112,7 @@ class FaultSpec:
                     f"(±{self.latency_jitter_ms}ms jitter) "
                     f"for {self.duration_seconds}s")
         elif self.fault_type == FaultType.CPU:
-            return (f"CPU stress: {self.cpu_workers} workers "
+            return (f"CPU stress (Pumba built-in): {self.cpu_workers} workers "
                     f"for {self.duration_seconds}s")
         return str(self.fault_type)
 
@@ -174,7 +178,7 @@ DEFAULT_LATENCY_SPEC = FaultSpec(
 DEFAULT_CPU_SPEC = FaultSpec(
     fault_type=FaultType.CPU,
     duration_seconds=60,
-    cpu_workers=4,
+    cpu_workers=2,    # 2 workers is sufficient to saturate without risking OOM
 )
 
 # Map fault type to its default spec

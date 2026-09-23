@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-20T14:40:59+0530",
+  "service": "recommendation",
+  "fault_type": "kill",
+  "repetition": 2,
+  "baseline_p95_ms": 250.6,
+  "baseline_p99_ms": 308.08,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 240.46,
+  "fault_p99_ms": 285.55,
+  "fault_error_rate": 0.374,
+  "downstream_affected_count": 1,
+  "downstream_affected_services": "frontend",
+  "recovery_time_s": 2.15,
+  "health_check_pass": true,
+  "integration_tests_pass": true,
+  "latency_p95_delta_ms": -10.139999999999986,
+  "latency_p99_delta_ms": -22.529999999999973,
+  "error_rate_delta": 0.374
+}

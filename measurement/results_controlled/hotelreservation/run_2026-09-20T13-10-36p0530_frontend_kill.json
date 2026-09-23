@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-20T13:10:36+0530",
+  "service": "frontend",
+  "fault_type": "kill",
+  "repetition": 2,
+  "baseline_p95_ms": 148.32,
+  "baseline_p99_ms": 179.17,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 225.26,
+  "fault_p99_ms": 262.37,
+  "fault_error_rate": 0.0,
+  "downstream_affected_count": 0,
+  "downstream_affected_services": "",
+  "recovery_time_s": 1.41,
+  "health_check_pass": true,
+  "integration_tests_pass": true,
+  "latency_p95_delta_ms": 76.94,
+  "latency_p99_delta_ms": 83.20000000000002,
+  "error_rate_delta": 0.0
+}

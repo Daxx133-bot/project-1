@@ -146,6 +146,33 @@ def print_analysis(analysis_df: pd.DataFrame) -> None:
             print(f"      Blast rank:      {row['blast_rank']} (high)")
             print(f"      Affected downstream: {row['downstream_affected_count']:.1f}")
 
+    # ── Hybrid Metric Resolution ────────────────────────────────────────────
+    if "hybrid_rank" in analysis_df.columns:
+        print("\n  === Hybrid Criticality Metric — False Negative Resolution ===")
+        print("  Shows whether the Fan-Out Corrected Hybrid Metric fixes")
+        print("  false negatives that pure composite_score misclassifies.")
+        print()
+        n = len(analysis_df)
+        threshold = max(1, int(n * 0.33))
+        any_fn = False
+        for _, row in analysis_df.iterrows():
+            c_rank = int(row["composite_rank"])
+            b_rank = int(row["blast_rank"])
+            h_rank = int(row["hybrid_rank"]) if "hybrid_rank" in row else None
+
+            was_fn = (b_rank < c_rank) and (abs(c_rank - b_rank) > threshold)
+            if was_fn and h_rank is not None:
+                any_fn = True
+                is_still_fn = (b_rank < h_rank) and (abs(h_rank - b_rank) > threshold)
+                status = "✓ RESOLVED" if not is_still_fn else "✗ STILL FALSE NEGATIVE"
+                print(f"    {row['service']:<35s}  "
+                      f"composite_rank={c_rank:>3}  "
+                      f"hybrid_rank={h_rank:>3}  "
+                      f"blast_rank={b_rank:>3}  "
+                      f"{status}")
+        if not any_fn:
+            print("    No false negatives found in the current dataset.")
+
     print("\n" + "=" * 90)
 
 
@@ -177,7 +204,12 @@ def main():
     parser = argparse.ArgumentParser(
         description="Identify false positive/negative services in centrality predictions"
     )
-    parser.add_argument("--output-dir", type=str, default=None)
+    parser.add_argument("--centrality-file", type=str, default=None,
+                        help="Path to centrality_table.csv (default: centrality/output/centrality_table.csv)")
+    parser.add_argument("--results-file", type=str, default=None,
+                        help="Path to experiment_log.csv (default: measurement/results/experiment_log.csv)")
+    parser.add_argument("--output-dir", type=str, default=None,
+                        help="Output directory (default: analysis/output/)")
     args = parser.parse_args()
 
     project_root = get_project_root()
@@ -185,9 +217,15 @@ def main():
         project_root / "analysis" / "output"
     )
 
-    # Load data
-    centrality_path = project_root / "centrality" / "output" / "centrality_table.csv"
-    results_path = project_root / "measurement" / "results" / "experiment_log.csv"
+    # Load data — use CLI paths if provided, else fall back to defaults
+    centrality_path = (
+        Path(args.centrality_file) if args.centrality_file
+        else project_root / "centrality" / "output" / "centrality_table.csv"
+    )
+    results_path = (
+        Path(args.results_file) if args.results_file
+        else project_root / "measurement" / "results" / "experiment_log.csv"
+    )
 
     for path in [centrality_path, results_path]:
         if not path.exists():

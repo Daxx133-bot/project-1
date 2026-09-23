@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-20T14:49:57+0530",
+  "service": "recommendation",
+  "fault_type": "cpu",
+  "repetition": 1,
+  "baseline_p95_ms": 229.41,
+  "baseline_p99_ms": 301.35,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 387.86,
+  "fault_p99_ms": 488.67,
+  "fault_error_rate": 0.0,
+  "downstream_affected_count": 0,
+  "downstream_affected_services": "",
+  "recovery_time_s": 0.1,
+  "health_check_pass": true,
+  "integration_tests_pass": true,
+  "latency_p95_delta_ms": 158.45000000000002,
+  "latency_p99_delta_ms": 187.32,
+  "error_rate_delta": 0.0
+}

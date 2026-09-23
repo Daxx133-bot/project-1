@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-20T14:30:29+0530",
+  "service": "profile",
+  "fault_type": "latency",
+  "repetition": 2,
+  "baseline_p95_ms": 206.46,
+  "baseline_p99_ms": 253.84,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 1690.36,
+  "fault_p99_ms": 1855.95,
+  "fault_error_rate": 0.0,
+  "downstream_affected_count": 6,
+  "downstream_affected_services": "frontend,search,reservation,rate,geo,recommendation",
+  "recovery_time_s": 0.07,
+  "health_check_pass": true,
+  "integration_tests_pass": true,
+  "latency_p95_delta_ms": 1483.8999999999999,
+  "latency_p99_delta_ms": 1602.1100000000001,
+  "error_rate_delta": 0.0
+}

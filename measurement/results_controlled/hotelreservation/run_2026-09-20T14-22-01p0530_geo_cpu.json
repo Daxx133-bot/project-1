@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-20T14:22:01+0530",
+  "service": "geo",
+  "fault_type": "cpu",
+  "repetition": 3,
+  "baseline_p95_ms": 209.16,
+  "baseline_p99_ms": 262.28,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 365.85,
+  "fault_p99_ms": 460.37,
+  "fault_error_rate": 0.0,
+  "downstream_affected_count": 0,
+  "downstream_affected_services": "",
+  "recovery_time_s": 0.13,
+  "health_check_pass": true,
+  "integration_tests_pass": true,
+  "latency_p95_delta_ms": 156.69000000000003,
+  "latency_p99_delta_ms": 198.09000000000003,
+  "error_rate_delta": 0.0
+}

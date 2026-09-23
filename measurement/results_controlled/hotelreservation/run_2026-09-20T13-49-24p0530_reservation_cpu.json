@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-20T13:49:24+0530",
+  "service": "reservation",
+  "fault_type": "cpu",
+  "repetition": 1,
+  "baseline_p95_ms": 206.49,
+  "baseline_p99_ms": 263.7,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 330.6,
+  "fault_p99_ms": 413.3,
+  "fault_error_rate": 0.0,
+  "downstream_affected_count": 0,
+  "downstream_affected_services": "",
+  "recovery_time_s": 0.17,
+  "health_check_pass": true,
+  "integration_tests_pass": true,
+  "latency_p95_delta_ms": 124.11000000000001,
+  "latency_p99_delta_ms": 149.60000000000002,
+  "error_rate_delta": 0.0
+}

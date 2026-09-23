@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-19T17:00:14+0530",
+  "service": "nginx-web-server",
+  "fault_type": "cpu",
+  "repetition": 3,
+  "baseline_p95_ms": 28.05,
+  "baseline_p99_ms": 36.32,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 29.63,
+  "fault_p99_ms": 38.29,
+  "fault_error_rate": 0.0,
+  "downstream_affected_count": 0,
+  "downstream_affected_services": "",
+  "recovery_time_s": 60.83,
+  "health_check_pass": true,
+  "integration_tests_pass": true,
+  "latency_p95_delta_ms": 1.5799999999999983,
+  "latency_p99_delta_ms": 1.9699999999999989,
+  "error_rate_delta": 0.0
+}

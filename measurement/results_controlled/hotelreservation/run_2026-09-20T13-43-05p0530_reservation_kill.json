@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-20T13:43:05+0530",
+  "service": "reservation",
+  "fault_type": "kill",
+  "repetition": 3,
+  "baseline_p95_ms": 191.65,
+  "baseline_p99_ms": 234.16,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 221.44,
+  "fault_p99_ms": 268.65,
+  "fault_error_rate": 0.352,
+  "downstream_affected_count": 1,
+  "downstream_affected_services": "frontend",
+  "recovery_time_s": 61.23,
+  "health_check_pass": true,
+  "integration_tests_pass": false,
+  "latency_p95_delta_ms": 29.789999999999992,
+  "latency_p99_delta_ms": 34.48999999999998,
+  "error_rate_delta": 0.352
+}

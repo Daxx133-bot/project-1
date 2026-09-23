@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><key id="d3" for="edge" attr.name="avg_latency_ms" attr.type="double"/>
+<key id="d2" for="edge" attr.name="avg_latency_us" attr.type="double"/>
+<key id="d1" for="edge" attr.name="call_count" attr.type="long"/>
+<key id="d0" for="edge" attr.name="weight" attr.type="long"/>
+<graph edgedefault="directed"><node id="frontend"/>
+<node id="search"/>
+<node id="reservation"/>
+<node id="rate"/>
+<node id="geo"/>
+<node id="profile"/>
+<node id="recommendation"/>
+<edge source="frontend" target="search">
+  <data key="d0">1000</data>
+  <data key="d1">1000</data>
+  <data key="d2">3747.12</data>
+  <data key="d3">3.75</data>
+</edge>
+<edge source="frontend" target="reservation">
+  <data key="d0">1000</data>
+  <data key="d1">1000</data>
+  <data key="d2">1051.89</data>
+  <data key="d3">1.05</data>
+</edge>
+<edge source="frontend" target="profile">
+  <data key="d0">1265</data>
+  <data key="d1">1265</data>
+  <data key="d2">722.2</data>
+  <data key="d3">0.72</data>
+</edge>
+<edge source="frontend" target="recommendation">
+  <data key="d0">265</data>
+  <data key="d1">265</data>
+  <data key="d2">49.35</data>
+  <data key="d3">0.05</data>
+</edge>
+<edge source="search" target="rate">
+  <data key="d0">1000</data>
+  <data key="d1">1000</data>
+  <data key="d2">1092.69</data>
+  <data key="d3">1.09</data>
+</edge>
+<edge source="search" target="geo">
+  <data key="d0">1000</data>
+  <data key="d1">1000</data>
+  <data key="d2">174.2</data>
+  <data key="d3">0.17</data>
+</edge>
+</graph></graphml>

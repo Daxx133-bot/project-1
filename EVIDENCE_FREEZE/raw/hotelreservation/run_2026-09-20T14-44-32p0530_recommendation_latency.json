@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-20T14:44:32+0530",
+  "service": "recommendation",
+  "fault_type": "latency",
+  "repetition": 1,
+  "baseline_p95_ms": 225.51,
+  "baseline_p99_ms": 292.39,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 604.11,
+  "fault_p99_ms": 627.62,
+  "fault_error_rate": 0.0,
+  "downstream_affected_count": 2,
+  "downstream_affected_services": "frontend,profile",
+  "recovery_time_s": 0.16,
+  "health_check_pass": true,
+  "integration_tests_pass": true,
+  "latency_p95_delta_ms": 378.6,
+  "latency_p99_delta_ms": 335.23,
+  "error_rate_delta": 0.0
+}

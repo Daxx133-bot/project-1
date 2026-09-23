@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-19T22:26:45+0530",
+  "service": "social-graph-service",
+  "fault_type": "latency",
+  "repetition": 1,
+  "baseline_p95_ms": 45.56,
+  "baseline_p99_ms": 53.59,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 0.0,
+  "fault_p99_ms": 0.0,
+  "fault_error_rate": 0.0,
+  "downstream_affected_count": 0,
+  "downstream_affected_services": "",
+  "recovery_time_s": 0.06,
+  "health_check_pass": true,
+  "integration_tests_pass": true,
+  "latency_p95_delta_ms": -45.56,
+  "latency_p99_delta_ms": -53.59,
+  "error_rate_delta": 0.0
+}

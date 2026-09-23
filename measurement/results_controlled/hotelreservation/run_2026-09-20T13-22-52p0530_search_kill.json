@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-20T13:22:52+0530",
+  "service": "search",
+  "fault_type": "kill",
+  "repetition": 1,
+  "baseline_p95_ms": 166.52,
+  "baseline_p99_ms": 190.9,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 5.23,
+  "fault_p99_ms": 6.43,
+  "fault_error_rate": 0.62,
+  "downstream_affected_count": 1,
+  "downstream_affected_services": "frontend",
+  "recovery_time_s": 0.89,
+  "health_check_pass": true,
+  "integration_tests_pass": true,
+  "latency_p95_delta_ms": -161.29000000000002,
+  "latency_p99_delta_ms": -184.47,
+  "error_rate_delta": 0.62
+}

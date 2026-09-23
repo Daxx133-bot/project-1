@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-19T20:28:30+0530",
+  "service": "url-shorten-service",
+  "fault_type": "kill",
+  "repetition": 2,
+  "baseline_p95_ms": 238.8,
+  "baseline_p99_ms": 310.15,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 5120.89,
+  "fault_p99_ms": 5675.77,
+  "fault_error_rate": 0.07,
+  "downstream_affected_count": 7,
+  "downstream_affected_services": "nginx-web-server,compose-post-service,text-service,user-mention-service,media-service,unique-id-service,user-service",
+  "recovery_time_s": 1.57,
+  "health_check_pass": true,
+  "integration_tests_pass": true,
+  "latency_p95_delta_ms": 4882.09,
+  "latency_p99_delta_ms": 5365.620000000001,
+  "error_rate_delta": 0.07
+}

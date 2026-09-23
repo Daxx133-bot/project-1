@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-19T14:39:54+0530",
+  "service": "reservation",
+  "fault_type": "latency",
+  "repetition": 1,
+  "baseline_p95_ms": 0.54,
+  "baseline_p99_ms": 0.81,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 0.45,
+  "fault_p99_ms": 0.55,
+  "fault_error_rate": 0.0,
+  "downstream_affected_count": 0,
+  "downstream_affected_services": "",
+  "recovery_time_s": 0.07,
+  "health_check_pass": true,
+  "integration_tests_pass": true,
+  "latency_p95_delta_ms": -0.09000000000000002,
+  "latency_p99_delta_ms": -0.26,
+  "error_rate_delta": 0.0
+}

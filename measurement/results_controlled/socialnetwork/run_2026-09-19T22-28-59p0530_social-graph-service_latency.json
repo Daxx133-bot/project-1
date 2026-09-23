@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-19T22:28:59+0530",
+  "service": "social-graph-service",
+  "fault_type": "latency",
+  "repetition": 2,
+  "baseline_p95_ms": 40.24,
+  "baseline_p99_ms": 62.43,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 293.3,
+  "fault_p99_ms": 9998.56,
+  "fault_error_rate": 0.012,
+  "downstream_affected_count": 11,
+  "downstream_affected_services": "nginx-web-server,compose-post-service,home-timeline-service,text-service,user-mention-service,url-shorten-service,media-service,unique-id-service,post-storage-service,user-service,user-timeline-service",
+  "recovery_time_s": 0.17,
+  "health_check_pass": true,
+  "integration_tests_pass": true,
+  "latency_p95_delta_ms": 253.06,
+  "latency_p99_delta_ms": 9936.13,
+  "error_rate_delta": 0.012
+}

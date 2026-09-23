@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-19T17:11:31+0530",
+  "service": "home-timeline-service",
+  "fault_type": "latency",
+  "repetition": 3,
+  "baseline_p95_ms": 36.27,
+  "baseline_p99_ms": 46.28,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 1547.86,
+  "fault_p99_ms": 1911.73,
+  "fault_error_rate": 0.0,
+  "downstream_affected_count": 11,
+  "downstream_affected_services": "nginx-web-server,compose-post-service,text-service,user-mention-service,url-shorten-service,media-service,unique-id-service,post-storage-service,social-graph-service,user-service,user-timeline-service",
+  "recovery_time_s": 0.06,
+  "health_check_pass": true,
+  "integration_tests_pass": true,
+  "latency_p95_delta_ms": 1511.59,
+  "latency_p99_delta_ms": 1865.45,
+  "error_rate_delta": 0.0
+}

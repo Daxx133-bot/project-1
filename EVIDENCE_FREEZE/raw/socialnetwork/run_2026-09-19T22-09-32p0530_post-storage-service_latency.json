@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-19T22:09:32+0530",
+  "service": "post-storage-service",
+  "fault_type": "latency",
+  "repetition": 2,
+  "baseline_p95_ms": 48.58,
+  "baseline_p99_ms": 77.94,
+  "baseline_error_rate": 0.0,
+  "fault_p95_ms": 587.35,
+  "fault_p99_ms": 3104.85,
+  "fault_error_rate": 0.0,
+  "downstream_affected_count": 11,
+  "downstream_affected_services": "nginx-web-server,compose-post-service,home-timeline-service,text-service,user-mention-service,url-shorten-service,media-service,unique-id-service,social-graph-service,user-service,user-timeline-service",
+  "recovery_time_s": 0.07,
+  "health_check_pass": true,
+  "integration_tests_pass": true,
+  "latency_p95_delta_ms": 538.77,
+  "latency_p99_delta_ms": 3026.91,
+  "error_rate_delta": 0.0
+}
