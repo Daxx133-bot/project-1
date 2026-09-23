@@ -193,3 +193,38 @@ Moved: `composite_vs_blast_radius.png`, `correlation_heatmap.png`,
 | `measurement/results/*.json`, `measurement/results/hotel/*`, `measurement/results_controlled/**` | Genuine run records. |
 | `centrality/output/*` | Computed from the dependency graph only. Never touched outcome data. Table 1 and Table 5 of the paper reproduce exactly from these. |
 | `EVIDENCE_FREEZE/derived/*` | Contains copies of contaminated derived tables, but the directory is an immutable historical snapshot. Flagged, not moved; it must be regenerated after re-collection. |
+
+---
+
+## 9. `data/pilot/pilot_socialnetwork_*.json` (3 files) → `_quarantine/data/pilot_contaminated_concurrent/`
+
+**Quarantined 2026-09-24. Defect: two pilot processes injected faults into the same
+stack concurrently.**
+
+A first Social Network pilot was launched with `nohup ... &`. It appeared not to have
+survived (its log was empty and no output arrived), so a second pilot was launched. Both
+were in fact running. The duplicate is unmistakable in the artefacts:
+
+```
+pilot_socialnetwork_compose-post-service_kill_rep1_2026-09-23T19-17-44.732151+00-00.json
+pilot_socialnetwork_compose-post-service_kill_rep1_2026-09-23T19-17-57.595215+00-00.json
+```
+
+Two runs labelled `rep1`, **13 seconds apart**, each killing `compose-post-service` while
+the other's load generator and recovery probe were active. Their baseline p95 values
+differ (56.07 ms vs 57.98 ms) and one recorded recovery at 45.45 s while the other was
+already recovered at its first probe sample (35.32 s) — consistent with the second run
+measuring a system the first had already perturbed.
+
+Neither run can be attributed to a clean single-fault condition, so **both** are
+quarantined along with the third file from the same interleaved period. No attempt is
+made to salvage the "good" one: there is no way to establish which samples were taken
+while the other pilot's fault was active.
+
+The Hotel Reservation pilot (4 runs) is **unaffected** — it ran to completion as a single
+process before this happened, and is retained in `data/pilot/`.
+
+**Lesson, applicable to the campaign:** the runner must refuse to start if another
+instance is live. A PID lockfile in `data/pilot/` (or `data/campaign/`) is the minimal
+fix, and is required before the 300-run campaign, where an accidental double-launch would
+silently corrupt a large fraction of the runs in exactly this way.

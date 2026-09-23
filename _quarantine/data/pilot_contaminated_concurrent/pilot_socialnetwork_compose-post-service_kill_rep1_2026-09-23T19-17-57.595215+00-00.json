@@ -1,0 +1,79 @@
+{
+  "app": "socialnetwork",
+  "service": "compose-post-service",
+  "fault_type": "kill",
+  "repetition": 1,
+  "timestamp": "2026-09-23T19:17:57.595215+00:00",
+  "container": "socialnetwork-compose-post-service-1",
+  "baseline_p95_ms": 57.98,
+  "baseline_p99_ms": 2115.68,
+  "baseline_error_rate": 0.022,
+  "baseline_trace_count": 455,
+  "fault_p95_ms": 1377.44,
+  "fault_p99_ms": 2559.9,
+  "fault_error_rate": 0.1,
+  "fault_trace_count": 240,
+  "telemetry_ok": true,
+  "downstream_affected_count": 1,
+  "downstream_affected_services": "nginx-web-server",
+  "recovery_time_s": 35.32,
+  "recovery_censored": false,
+  "recovery_observed_until_s": 41.33,
+  "recovery_first_ok_at_s": 35.32,
+  "recovery_blocking_indicator": null,
+  "recovery_poll_interval_s": 1.0,
+  "container_restart_time_s": 0.45,
+  "wall_clock_s": 104.3,
+  "recovery_samples": [
+    {
+      "t_s": 35.32,
+      "trace_count": 53,
+      "p95_ms": 58.46,
+      "p99_ms": 60.85,
+      "error_rate": 0.0,
+      "downstream_affected": 0,
+      "all_ok": true,
+      "have_signal": true
+    },
+    {
+      "t_s": 36.86,
+      "trace_count": 40,
+      "p95_ms": 58.86,
+      "p99_ms": 61.34,
+      "error_rate": 0.0,
+      "downstream_affected": 0,
+      "all_ok": true,
+      "have_signal": true
+    },
+    {
+      "t_s": 38.48,
+      "trace_count": 19,
+      "p95_ms": 58.29,
+      "p99_ms": 58.9,
+      "error_rate": 0.0,
+      "downstream_affected": 0,
+      "all_ok": true,
+      "have_signal": true
+    },
+    {
+      "t_s": 39.94,
+      "trace_count": 13,
+      "p95_ms": 53.57,
+      "p99_ms": 57.96,
+      "error_rate": 0.0,
+      "downstream_affected": 0,
+      "all_ok": true,
+      "have_signal": true
+    },
+    {
+      "t_s": 41.33,
+      "trace_count": 8,
+      "p95_ms": 6.95,
+      "p99_ms": 7.2,
+      "error_rate": 0.0,
+      "downstream_affected": 0,
+      "all_ok": true,
+      "have_signal": true
+    }
+  ]
+}
