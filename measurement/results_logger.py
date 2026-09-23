@@ -49,7 +49,30 @@ class ExperimentResult:
     downstream_affected_services: str = ""  # comma-separated list
 
     # ── Recovery ───────────────────────────────────────────────────
-    recovery_time_s: float = 0.0     # Seconds from fault removal to healthy
+    # Seconds from FAULT INJECTION until delta-p95, delta-p99, delta-error-rate and
+    # downstream-affected-count are all simultaneously within tolerance of baseline and
+    # hold there. None when the probe timed out -- see recovery_censored.
+    #
+    # None is deliberate and must be preserved through every downstream step. Filling a
+    # censored observation with a number is the defect that produced the 61.07 s figure
+    # in the manuscript (see _audit/AUDIT_REPORT.md section C).
+    recovery_time_s: Optional[float] = None
+    recovery_censored: bool = False          # True => did not recover within the window
+    recovery_observed_until_s: float = 0.0   # Follow-up time, for survival analysis
+    recovery_blocking_indicator: str = ""    # Which indicator was still out of tolerance
+
+    # Seconds until the container reported State.Running == true. A DIFFERENT quantity
+    # from recovery_time_s: infrastructure restart, not application recovery. Near-zero
+    # and meaningless for latency/cpu faults, which never stop the container.
+    container_restart_time_s: Optional[float] = None
+    container_restart_censored: bool = False
+
+    # ── Telemetry provenance ───────────────────────────────────────
+    # Without these, a zero metric cannot be distinguished from "no traffic" or
+    # "Jaeger unreachable". See _audit/TELEMETRY_DIAGNOSIS.md section 2(c2).
+    baseline_trace_count: int = 0
+    fault_trace_count: int = 0
+    telemetry_ok: bool = False       # False => the run's metrics are not interpretable
 
     # ── Validation ─────────────────────────────────────────────────
     health_check_pass: bool = False
@@ -74,7 +97,10 @@ CSV_COLUMNS = [
     "baseline_p99_ms", "fault_p99_ms", "latency_p99_delta_ms",
     "baseline_error_rate", "fault_error_rate", "error_rate_delta",
     "downstream_affected_count", "downstream_affected_services",
-    "recovery_time_s",
+    "recovery_time_s", "recovery_censored", "recovery_observed_until_s",
+    "recovery_blocking_indicator",
+    "container_restart_time_s", "container_restart_censored",
+    "baseline_trace_count", "fault_trace_count", "telemetry_ok",
     "health_check_pass", "integration_tests_pass",
 ]
 

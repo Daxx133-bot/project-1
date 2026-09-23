@@ -41,6 +41,7 @@ from measurement.metrics_collector import (
     collect_baseline_metrics, collect_fault_window_metrics,
     compute_blast_radius,
 )
+from measurement.recovery_probe import probe_recovery
 from measurement.results_logger import ExperimentResult, ResultsLogger
 
 
@@ -174,14 +175,24 @@ def restore_service(
     container_name: str,
     fault_type: FaultType,
     dsb_dir: str,
-) -> float:
+) -> dict:
     """
     Restore the service to a healthy state after fault injection.
 
     For KILL faults: restart the container via docker-compose.
     For LATENCY/CPU faults: they auto-expire (Pumba cleans up netem rules).
 
-    Returns the recovery time in seconds.
+    Returns the CONTAINER RESTART measurement:
+        {"container_restart_time_s": float | None, "censored": bool,
+         "observed_until_s": float}
+
+    This is NOT application recovery. It answers "is the container process running
+    again?", not "has the application returned to baseline latency and error rate?".
+    Use measurement.recovery_probe.probe_recovery() for the latter.
+
+    Historically this function returned a bare float and, on timeout, returned the
+    elapsed wall time -- which is where the manuscript's 61.07 s figure came from. It
+    now reports censoring explicitly instead. See _audit/AUDIT_REPORT.md section C.
     """
     start = time.time()
 
@@ -225,17 +236,26 @@ def restore_service(
                 capture_output=True, text=True, check=True,
             )
             if "true" in result.stdout.lower():
-                recovery_time = time.time() - start
-                print(f"  [RESTORE] {service} recovered in {recovery_time:.1f}s")
-                return recovery_time
+                elapsed = time.time() - start
+                print(f"  [RESTORE] {service} container running again after {elapsed:.1f}s")
+                return {
+                    "container_restart_time_s": round(elapsed, 2),
+                    "censored": False,
+                    "observed_until_s": round(elapsed, 2),
+                }
         except subprocess.CalledProcessError:
             pass
 
         time.sleep(2)
 
-    recovery_time = time.time() - start
-    print(f"  [WARNING] {service} may not have fully recovered ({recovery_time:.1f}s)")
-    return recovery_time
+    elapsed = time.time() - start
+    print(f"  [WARNING] {service} container did not report Running within "
+          f"{max_wait}s -- recording as CENSORED, not as a measurement")
+    return {
+        "container_restart_time_s": None,
+        "censored": True,
+        "observed_until_s": round(elapsed, 2),
+    }
 
 
 def run_health_check(nginx_url: str) -> bool:
@@ -440,9 +460,28 @@ def run_single_experiment(
         print(f"  [MEASURE] Affected: {downstream_list}")
 
     # ── Step 6: Restore service ────────────────────────────────────────
-    recovery_time = restore_service(
+    # Two separate measurements, deliberately not conflated:
+    #   restart_info  -- infrastructure: is the container process running again?
+    #   recovery      -- application: have all four impact indicators returned to
+    #                    baseline and held there?
+    restart_info = restore_service(
         service, container_name, fault_spec.fault_type, config.dsb_dir,
     )
+
+    # ── Step 6b: Probe application recovery ────────────────────────────
+    # Measured from fault injection, per the definition the manuscript states.
+    print("  [RECOVERY] Probing for return to baseline...")
+    recovery = probe_recovery(
+        config.jaeger_url, gateway, all_services, baseline_metrics, fault_start_us,
+        poll_interval_s=config.recovery_poll_interval_s,
+        max_wait_s=config.recovery_max_wait_s,
+        tolerance=config.recovery_tolerance,
+    )
+    if recovery.recovered:
+        print(f"  [RECOVERY] Recovered in {recovery.recovery_time_s}s")
+    else:
+        print(f"  [RECOVERY] CENSORED -- no sustained return to baseline within "
+              f"{recovery.max_wait_s}s (blocked on: {recovery.blocking_indicator})")
 
     # ── Step 7: Cooldown and health check ──────────────────────────────
     print(f"  [COOLDOWN] Waiting {config.cooldown_seconds}s...")
@@ -470,7 +509,15 @@ def run_single_experiment(
         fault_error_rate=fault_metrics.get("error_rate", 0.0),
         downstream_affected_count=downstream_count,
         downstream_affected_services=",".join(downstream_list),
-        recovery_time_s=round(recovery_time, 2),
+        recovery_time_s=recovery.recovery_time_s,
+        recovery_censored=recovery.censored,
+        recovery_observed_until_s=recovery.observed_until_s,
+        recovery_blocking_indicator=recovery.blocking_indicator or "",
+        container_restart_time_s=restart_info["container_restart_time_s"],
+        container_restart_censored=restart_info["censored"],
+        baseline_trace_count=int(gateway_baseline.get("trace_count", 0)),
+        fault_trace_count=int(fault_metrics.get("trace_count", 0)),
+        telemetry_ok=bool(gateway_baseline.get("trace_count", 0) > 0),
         health_check_pass=health_ok,
         integration_tests_pass=tests_ok,
     )

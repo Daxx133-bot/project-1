@@ -147,6 +147,15 @@ class ExperimentConfig:
     cooldown_seconds: int = 30
     load_rate: int = 50
     load_mode: str = "locust"
+
+    # ── Recovery probing (measurement/recovery_probe.py) ───────────────────
+    # max_wait is deliberately far above the old 60 s cap: at 60 s a genuine recovery
+    # was indistinguishable from a timeout, and the timeout value was written to disk
+    # as if it were a measurement (the 61.07 s figure). Generous here costs wall time;
+    # too tight silently fabricates data.
+    recovery_max_wait_s: float = 180.0
+    recovery_poll_interval_s: float = 3.0
+    recovery_tolerance: float = 0.10     # "within 10% of baseline"
     nginx_url: str = "http://localhost:8080"
     jaeger_url: str = "http://localhost:16686"
     dsb_dir: str = ""
@@ -157,8 +166,16 @@ class ExperimentConfig:
         return len(self.services) * len(self.fault_types) * self.repetitions
 
     def estimated_time_minutes(self) -> float:
-        """Rough estimate of total experiment time."""
-        per_run = self.warmup_seconds + self.fault_duration + self.cooldown_seconds + 30
+        """Rough upper bound on total experiment time.
+
+        Assumes the worst case for recovery probing (every run censored at
+        recovery_max_wait_s). Typical runs recover far sooner, so real wall time will
+        be well under this.
+        """
+        per_run = (
+            self.warmup_seconds + self.fault_duration + self.cooldown_seconds + 30
+            + self.recovery_max_wait_s
+        )
         return (self.total_runs() * per_run) / 60.0
 
 
