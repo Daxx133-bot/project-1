@@ -58,6 +58,20 @@ USERS = [f"Cornell_{i}" for i in range(1, 51)]
 HOTELS = list(range(1, 21))
 
 
+def _credentials():
+    """Return a (username, password) pair in DeathStarBench's seeded format.
+
+    DSB seeds hotelReservation users as username "Cornell_<i>" with password equal to
+    the digit <i> repeated 10 times. BOTH fields are mandatory: frontend/server.go
+    returns HTTP 400 "Please specify username and password" and returns BEFORE issuing
+    the CheckUser RPC if either is missing. Omitting the password is why the `user`
+    service never appeared in any trace, and therefore never appeared in the dependency
+    graph. See _audit/TELEMETRY_DIAGNOSIS.md section 3.
+    """
+    i = random.randint(1, 50)
+    return f"Cornell_{i}", str(i % 10) * 10
+
+
 class HotelUser(HttpUser):
     wait_time = between(0.5, 1.5)
 
@@ -72,37 +86,50 @@ class HotelUser(HttpUser):
             catch_response=True,
             name="/hotels [search]",
         ) as r:
-            if r.status_code >= 500:
-                r.failure(f"Server error: {r.status_code}")
+            if r.status_code >= 400:
+                r.failure(f"HTTP {r.status_code}: {r.text[:120]}")
 
     @task(2)
     def make_reservation(self):
+        # reservationHandler reads r.URL.Query() -- QUERY PARAMS, not a JSON body -- and
+        # requires inDate, outDate, hotelId, customerName, username, password. The room
+        # count field is `number`, not `roomNumber`. Sending a JSON body produced HTTP
+        # 400 on 100% of requests (55/55 in hotel_load_stats_failures.csv).
         in_date, out_date = random.choice(DATE_PAIRS)
+        lat, lon = random.choice(HOTEL_LOCATIONS)
+        username, password = _credentials()
         with self.client.post(
             "/reservation",
-            json={
-                "customerName": random.choice(USERS),
-                "hotelId": str(random.choice(HOTELS)),
+            params={
                 "inDate": in_date,
                 "outDate": out_date,
-                "roomNumber": random.randint(1, 100),
+                "lat": str(lat),
+                "lon": str(lon),
+                "hotelId": str(random.choice(HOTELS)),
+                "customerName": username,
+                "username": username,
+                "password": password,
+                "number": str(random.randint(1, 5)),
             },
             catch_response=True,
             name="/reservation [book]",
         ) as r:
-            if r.status_code >= 500:
-                r.failure(f"Server error: {r.status_code}")
+            if r.status_code >= 400:
+                r.failure(f"HTTP {r.status_code}: {r.text[:120]}")
 
     @task(2)
     def get_user(self):
+        # userHandler requires BOTH username and password, else HTTP 400 before the
+        # CheckUser RPC. Without the password no frontend->user span is ever emitted.
+        username, password = _credentials()
         with self.client.get(
             "/user",
-            params={"username": random.choice(USERS)},
+            params={"username": username, "password": password},
             catch_response=True,
             name="/user [lookup]",
         ) as r:
-            if r.status_code >= 500:
-                r.failure(f"Server error: {r.status_code}")
+            if r.status_code >= 400:
+                r.failure(f"HTTP {r.status_code}: {r.text[:120]}")
 
     @task(1)
     def get_recommendations(self):
@@ -114,9 +141,20 @@ class HotelUser(HttpUser):
             catch_response=True,
             name="/recommendations",
         ) as r:
-            if r.status_code >= 500:
-                r.failure(f"Server error: {r.status_code}")
+            if r.status_code >= 400:
+                r.failure(f"HTTP {r.status_code}: {r.text[:120]}")
 '''
+
+
+def _credentials():
+    """(username, password) in DeathStarBench's seeded format.
+
+    Module-scope twin of the helper embedded in LOCUSTFILE_CONTENT, for the
+    requests-based fallback path in run_direct(). Both fields are mandatory or the
+    frontend returns HTTP 400 before issuing any RPC.
+    """
+    i = random.randint(1, 50)
+    return f"Cornell_{i}", str(i % 10) * 10
 
 
 def run_with_locust(base_url: str, duration: int, rate: int) -> bool:
@@ -183,17 +221,23 @@ def run_direct(base_url: str, duration: int, rate: int) -> None:
                               params={"inDate": in_d, "outDate": out_d,
                                       "lat": str(lat), "lon": str(lon)}, timeout=5)
                 elif roll < 0.8:
+                    # Query params, not a JSON body; username/password mandatory;
+                    # the field is `number`, not `roomNumber`. See _credentials().
+                    uname, pwd = _credentials()
                     r = s.post(f"{base_url}/reservation",
-                               json={"customerName": random.choice(USERS),
-                                     "hotelId": str(random.randint(1, 20)),
-                                     "inDate": in_d, "outDate": out_d,
-                                     "roomNumber": random.randint(1, 100)}, timeout=5)
+                               params={"inDate": in_d, "outDate": out_d,
+                                       "lat": str(lat), "lon": str(lon),
+                                       "hotelId": str(random.randint(1, 20)),
+                                       "customerName": uname,
+                                       "username": uname, "password": pwd,
+                                       "number": str(random.randint(1, 5))}, timeout=5)
                 else:
+                    uname, pwd = _credentials()
                     r = s.get(f"{base_url}/user",
-                              params={"username": random.choice(USERS)}, timeout=5)
+                              params={"username": uname, "password": pwd}, timeout=5)
 
                 with lock:
-                    if r.status_code < 500:
+                    if r.status_code < 400:
                         request_counts["ok"] += 1
                     else:
                         request_counts["fail"] += 1
