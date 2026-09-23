@@ -1,0 +1,271 @@
+dataset,n,metric,impact,rho,p
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,degree,latency_p95_delta_ms,0.1156,0.7206
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,degree,latency_p99_delta_ms,0.1373,0.6706
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,degree,error_rate_delta,0.2203,0.4914
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,degree,downstream_affected_count,0.2605,0.4135
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,degree,recovery_time_s,0.7874,0.0024
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,in_degree,latency_p95_delta_ms,0.6258,0.0295
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,in_degree,latency_p99_delta_ms,0.6635,0.0186
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,in_degree,error_rate_delta,0.6221,0.0308
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,in_degree,downstream_affected_count,0.7704,0.0034
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,in_degree,recovery_time_s,0.3808,0.222
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,out_degree,latency_p95_delta_ms,-0.1867,0.5613
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,out_degree,latency_p99_delta_ms,-0.2159,0.5003
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,out_degree,error_rate_delta,0.011,0.973
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,out_degree,downstream_affected_count,0.077,0.812
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,out_degree,recovery_time_s,0.5673,0.0544
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,betweenness,latency_p95_delta_ms,0.0896,0.7819
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,betweenness,latency_p99_delta_ms,0.0858,0.7908
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,betweenness,error_rate_delta,0.4143,0.1806
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,betweenness,downstream_affected_count,0.5234,0.0807
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,betweenness,recovery_time_s,0.3284,0.2973
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,closeness,latency_p95_delta_ms,0.5766,0.0497
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,closeness,latency_p99_delta_ms,0.63,0.0281
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,closeness,error_rate_delta,0.5517,0.0629
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,closeness,downstream_affected_count,0.6543,0.021
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,closeness,recovery_time_s,0.3061,0.3332
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,eigenvector,latency_p95_delta_ms,0.6109,0.0348
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,eigenvector,latency_p99_delta_ms,0.7519,0.0048
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,eigenvector,error_rate_delta,0.6227,0.0306
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,eigenvector,downstream_affected_count,0.4884,0.1072
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,eigenvector,recovery_time_s,0.3289,0.2965
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,pagerank,latency_p95_delta_ms,0.5432,0.068
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,pagerank,latency_p99_delta_ms,0.6455,0.0234
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,pagerank,error_rate_delta,0.5573,0.0597
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,pagerank,downstream_affected_count,0.553,0.0622
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,pagerank,recovery_time_s,0.2011,0.5309
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,composite_score,latency_p95_delta_ms,-0.5333,0.0742
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,composite_score,latency_p99_delta_ms,-0.5895,0.0437
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,composite_score,error_rate_delta,-0.6772,0.0156
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,composite_score,downstream_affected_count,-0.8155,0.0012
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,composite_score,recovery_time_s,-0.4842,0.1107
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,hybrid_criticality,latency_p95_delta_ms,0.2847,0.3697
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,hybrid_criticality,latency_p99_delta_ms,0.3275,0.2988
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,hybrid_criticality,error_rate_delta,0.3595,0.2511
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,hybrid_criticality,downstream_affected_count,0.3637,0.2452
+SN_mixed_synthetic+real (measurement/results/experiment_log.csv),12,hybrid_criticality,recovery_time_s,0.8471,0.0005
+SN_synthetic_only_48,12,degree,latency_p95_delta_ms,0.6032,0.0379
+SN_synthetic_only_48,12,degree,latency_p99_delta_ms,0.5996,0.0393
+SN_synthetic_only_48,12,degree,error_rate_delta,0.484,0.1108
+SN_synthetic_only_48,12,degree,downstream_affected_count,0.6209,0.0312
+SN_synthetic_only_48,12,degree,recovery_time_s,0.5599,0.0584
+SN_synthetic_only_48,12,in_degree,latency_p95_delta_ms,0.7163,0.0088
+SN_synthetic_only_48,12,in_degree,latency_p99_delta_ms,0.7163,0.0088
+SN_synthetic_only_48,12,in_degree,error_rate_delta,0.8181,0.0011
+SN_synthetic_only_48,12,in_degree,downstream_affected_count,0.6955,0.012
+SN_synthetic_only_48,12,in_degree,recovery_time_s,0.7239,0.0078
+SN_synthetic_only_48,12,out_degree,latency_p95_delta_ms,0.3514,0.2627
+SN_synthetic_only_48,12,out_degree,latency_p99_delta_ms,0.3221,0.3073
+SN_synthetic_only_48,12,out_degree,error_rate_delta,0.2452,0.4424
+SN_synthetic_only_48,12,out_degree,downstream_affected_count,0.4158,0.1789
+SN_synthetic_only_48,12,out_degree,recovery_time_s,0.3111,0.325
+SN_synthetic_only_48,12,betweenness,latency_p95_delta_ms,0.6158,0.033
+SN_synthetic_only_48,12,betweenness,latency_p99_delta_ms,0.5748,0.0506
+SN_synthetic_only_48,12,betweenness,error_rate_delta,0.6718,0.0167
+SN_synthetic_only_48,12,betweenness,downstream_affected_count,0.726,0.0075
+SN_synthetic_only_48,12,betweenness,recovery_time_s,0.6457,0.0233
+SN_synthetic_only_48,12,closeness,latency_p95_delta_ms,0.5944,0.0415
+SN_synthetic_only_48,12,closeness,latency_p99_delta_ms,0.6122,0.0344
+SN_synthetic_only_48,12,closeness,error_rate_delta,0.6834,0.0143
+SN_synthetic_only_48,12,closeness,downstream_affected_count,0.5099,0.0904
+SN_synthetic_only_48,12,closeness,recovery_time_s,0.6158,0.033
+SN_synthetic_only_48,12,eigenvector,latency_p95_delta_ms,0.5404,0.0697
+SN_synthetic_only_48,12,eigenvector,latency_p99_delta_ms,0.5757,0.0502
+SN_synthetic_only_48,12,eigenvector,error_rate_delta,0.5639,0.0562
+SN_synthetic_only_48,12,eigenvector,downstream_affected_count,0.3956,0.203
+SN_synthetic_only_48,12,eigenvector,recovery_time_s,0.5287,0.0772
+SN_synthetic_only_48,12,pagerank,latency_p95_delta_ms,0.5221,0.0817
+SN_synthetic_only_48,12,pagerank,latency_p99_delta_ms,0.5609,0.0578
+SN_synthetic_only_48,12,pagerank,error_rate_delta,0.6103,0.0351
+SN_synthetic_only_48,12,pagerank,downstream_affected_count,0.4025,0.1946
+SN_synthetic_only_48,12,pagerank,recovery_time_s,0.575,0.0505
+SN_synthetic_only_48,12,composite_score,latency_p95_delta_ms,-0.8316,0.0008
+SN_synthetic_only_48,12,composite_score,latency_p99_delta_ms,-0.8211,0.0011
+SN_synthetic_only_48,12,composite_score,error_rate_delta,-0.9193,0.0
+SN_synthetic_only_48,12,composite_score,downstream_affected_count,-0.8183,0.0011
+SN_synthetic_only_48,12,composite_score,recovery_time_s,-0.8386,0.0007
+SN_synthetic_only_48,12,hybrid_criticality,latency_p95_delta_ms,0.6585,0.0199
+SN_synthetic_only_48,12,hybrid_criticality,latency_p99_delta_ms,0.6478,0.0227
+SN_synthetic_only_48,12,hybrid_criticality,error_rate_delta,0.5481,0.065
+SN_synthetic_only_48,12,hybrid_criticality,downstream_affected_count,0.6798,0.015
+SN_synthetic_only_48,12,hybrid_criticality,recovery_time_s,0.5944,0.0415
+SN_real_only_59,12,degree,latency_p95_delta_ms,0.2203,0.4914
+SN_real_only_59,12,degree,latency_p99_delta_ms,0.1734,0.59
+SN_real_only_59,12,degree,error_rate_delta,-0.1166,0.7182
+SN_real_only_59,12,degree,downstream_affected_count,,
+SN_real_only_59,12,degree,recovery_time_s,0.2384,0.4556
+SN_real_only_59,12,in_degree,latency_p95_delta_ms,0.4562,0.1361
+SN_real_only_59,12,in_degree,latency_p99_delta_ms,0.4072,0.189
+SN_real_only_59,12,in_degree,error_rate_delta,-0.4666,0.1262
+SN_real_only_59,12,in_degree,downstream_affected_count,,
+SN_real_only_59,12,in_degree,recovery_time_s,-0.4562,0.1361
+SN_real_only_59,12,out_degree,latency_p95_delta_ms,-0.0988,0.7599
+SN_real_only_59,12,out_degree,latency_p99_delta_ms,-0.1281,0.6915
+SN_real_only_59,12,out_degree,error_rate_delta,0.0703,0.828
+SN_real_only_59,12,out_degree,downstream_affected_count,,
+SN_real_only_59,12,out_degree,recovery_time_s,0.4026,0.1944
+SN_real_only_59,12,betweenness,latency_p95_delta_ms,0.1568,0.6266
+SN_real_only_59,12,betweenness,latency_p99_delta_ms,0.1082,0.7378
+SN_real_only_59,12,betweenness,error_rate_delta,0.066,0.8385
+SN_real_only_59,12,betweenness,downstream_affected_count,,
+SN_real_only_59,12,betweenness,recovery_time_s,0.1344,0.6772
+SN_real_only_59,12,closeness,latency_p95_delta_ms,0.3239,0.3044
+SN_real_only_59,12,closeness,latency_p99_delta_ms,0.2741,0.3887
+SN_real_only_59,12,closeness,error_rate_delta,-0.4405,0.1518
+SN_real_only_59,12,closeness,downstream_affected_count,,
+SN_real_only_59,12,closeness,recovery_time_s,-0.4485,0.1437
+SN_real_only_59,12,eigenvector,latency_p95_delta_ms,0.5052,0.0939
+SN_real_only_59,12,eigenvector,latency_p99_delta_ms,0.4464,0.1457
+SN_real_only_59,12,eigenvector,error_rate_delta,-0.1084,0.7374
+SN_real_only_59,12,eigenvector,downstream_affected_count,,
+SN_real_only_59,12,eigenvector,recovery_time_s,-0.2702,0.3957
+SN_real_only_59,12,pagerank,latency_p95_delta_ms,0.3351,0.287
+SN_real_only_59,12,pagerank,latency_p99_delta_ms,0.2787,0.3804
+SN_real_only_59,12,pagerank,error_rate_delta,-0.2766,0.3842
+SN_real_only_59,12,pagerank,downstream_affected_count,,
+SN_real_only_59,12,pagerank,recovery_time_s,-0.3598,0.2506
+SN_real_only_59,12,composite_score,latency_p95_delta_ms,-0.3895,0.2108
+SN_real_only_59,12,composite_score,latency_p99_delta_ms,-0.3228,0.3061
+SN_real_only_59,12,composite_score,error_rate_delta,0.3938,0.2053
+SN_real_only_59,12,composite_score,downstream_affected_count,,
+SN_real_only_59,12,composite_score,recovery_time_s,0.2807,0.3768
+SN_real_only_59,12,hybrid_criticality,latency_p95_delta_ms,0.3951,0.2037
+SN_real_only_59,12,hybrid_criticality,latency_p99_delta_ms,0.3417,0.277
+SN_real_only_59,12,hybrid_criticality,error_rate_delta,-0.1368,0.6716
+SN_real_only_59,12,hybrid_criticality,downstream_affected_count,,
+SN_real_only_59,12,hybrid_criticality,recovery_time_s,0.1424,0.6589
+SN_controlled_122,12,degree,latency_p95_delta_ms,-0.307,0.3317
+SN_controlled_122,12,degree,latency_p99_delta_ms,-0.047,0.8848
+SN_controlled_122,12,degree,error_rate_delta,0.0778,0.8101
+SN_controlled_122,12,degree,downstream_affected_count,-0.4885,0.1071
+SN_controlled_122,12,degree,recovery_time_s,-0.0181,0.9556
+SN_controlled_122,12,in_degree,latency_p95_delta_ms,0.328,0.298
+SN_controlled_122,12,in_degree,latency_p99_delta_ms,0.5278,0.0778
+SN_controlled_122,12,in_degree,error_rate_delta,0.5759,0.05
+SN_controlled_122,12,in_degree,downstream_affected_count,0.3248,0.303
+SN_controlled_122,12,in_degree,recovery_time_s,-0.2224,0.4871
+SN_controlled_122,12,out_degree,latency_p95_delta_ms,-0.399,0.1989
+SN_controlled_122,12,out_degree,latency_p99_delta_ms,-0.1501,0.6416
+SN_controlled_122,12,out_degree,error_rate_delta,-0.044,0.892
+SN_controlled_122,12,out_degree,downstream_affected_count,-0.6416,0.0245
+SN_controlled_122,12,out_degree,recovery_time_s,-0.1427,0.6581
+SN_controlled_122,12,betweenness,latency_p95_delta_ms,-0.0709,0.8266
+SN_controlled_122,12,betweenness,latency_p99_delta_ms,0.153,0.6349
+SN_controlled_122,12,betweenness,error_rate_delta,0.2131,0.506
+SN_controlled_122,12,betweenness,downstream_affected_count,-0.2524,0.4287
+SN_controlled_122,12,betweenness,recovery_time_s,-0.4927,0.1037
+SN_controlled_122,12,closeness,latency_p95_delta_ms,0.3488,0.2665
+SN_controlled_122,12,closeness,latency_p99_delta_ms,0.452,0.1401
+SN_controlled_122,12,closeness,error_rate_delta,0.501,0.0971
+SN_controlled_122,12,closeness,downstream_affected_count,0.435,0.1576
+SN_controlled_122,12,closeness,recovery_time_s,-0.2527,0.4281
+SN_controlled_122,12,eigenvector,latency_p95_delta_ms,0.1645,0.6095
+SN_controlled_122,12,eigenvector,latency_p99_delta_ms,0.0117,0.9711
+SN_controlled_122,12,eigenvector,error_rate_delta,0.0294,0.9277
+SN_controlled_122,12,eigenvector,downstream_affected_count,0.4531,0.1391
+SN_controlled_122,12,eigenvector,recovery_time_s,-0.0587,0.8561
+SN_controlled_122,12,pagerank,latency_p95_delta_ms,0.3351,0.287
+SN_controlled_122,12,pagerank,latency_p99_delta_ms,0.2928,0.3557
+SN_controlled_122,12,pagerank,error_rate_delta,0.3127,0.3223
+SN_controlled_122,12,pagerank,downstream_affected_count,0.5654,0.0554
+SN_controlled_122,12,pagerank,recovery_time_s,-0.2716,0.3931
+SN_controlled_122,12,composite_score,latency_p95_delta_ms,-0.2491,0.4349
+SN_controlled_122,12,composite_score,latency_p99_delta_ms,-0.4456,0.1465
+SN_controlled_122,12,composite_score,error_rate_delta,-0.5185,0.0842
+SN_controlled_122,12,composite_score,downstream_affected_count,-0.2179,0.4962
+SN_controlled_122,12,composite_score,recovery_time_s,0.4175,0.1768
+SN_controlled_122,12,hybrid_criticality,latency_p95_delta_ms,-0.2314,0.4694
+SN_controlled_122,12,hybrid_criticality,latency_p99_delta_ms,-0.032,0.9213
+SN_controlled_122,12,hybrid_criticality,error_rate_delta,0.0981,0.7618
+SN_controlled_122,12,hybrid_criticality,downstream_affected_count,-0.4065,0.1898
+SN_controlled_122,12,hybrid_criticality,recovery_time_s,0.0605,0.8518
+HR_42,7,degree,latency_p95_delta_ms,,
+HR_42,7,degree,latency_p99_delta_ms,,
+HR_42,7,degree,error_rate_delta,,
+HR_42,7,degree,downstream_affected_count,,
+HR_42,7,degree,recovery_time_s,0.0891,0.8494
+HR_42,7,in_degree,latency_p95_delta_ms,,
+HR_42,7,in_degree,latency_p99_delta_ms,,
+HR_42,7,in_degree,error_rate_delta,,
+HR_42,7,in_degree,downstream_affected_count,,
+HR_42,7,in_degree,recovery_time_s,0.2041,0.6606
+HR_42,7,out_degree,latency_p95_delta_ms,,
+HR_42,7,out_degree,latency_p99_delta_ms,,
+HR_42,7,out_degree,error_rate_delta,,
+HR_42,7,out_degree,downstream_affected_count,,
+HR_42,7,out_degree,recovery_time_s,0.0891,0.8494
+HR_42,7,betweenness,latency_p95_delta_ms,,
+HR_42,7,betweenness,latency_p99_delta_ms,,
+HR_42,7,betweenness,error_rate_delta,,
+HR_42,7,betweenness,downstream_affected_count,,
+HR_42,7,betweenness,recovery_time_s,0.4082,0.3632
+HR_42,7,closeness,latency_p95_delta_ms,,
+HR_42,7,closeness,latency_p99_delta_ms,,
+HR_42,7,closeness,error_rate_delta,,
+HR_42,7,closeness,downstream_affected_count,,
+HR_42,7,closeness,recovery_time_s,0.2191,0.6369
+HR_42,7,eigenvector,latency_p95_delta_ms,,
+HR_42,7,eigenvector,latency_p99_delta_ms,,
+HR_42,7,eigenvector,error_rate_delta,,
+HR_42,7,eigenvector,downstream_affected_count,,
+HR_42,7,eigenvector,recovery_time_s,0.2191,0.6369
+HR_42,7,pagerank,latency_p95_delta_ms,,
+HR_42,7,pagerank,latency_p99_delta_ms,,
+HR_42,7,pagerank,error_rate_delta,,
+HR_42,7,pagerank,downstream_affected_count,,
+HR_42,7,pagerank,recovery_time_s,0.1455,0.7556
+HR_42,7,composite_score,latency_p95_delta_ms,,
+HR_42,7,composite_score,latency_p99_delta_ms,,
+HR_42,7,composite_score,error_rate_delta,,
+HR_42,7,composite_score,downstream_affected_count,,
+HR_42,7,composite_score,recovery_time_s,-0.3063,0.504
+HR_42,7,hybrid_criticality,latency_p95_delta_ms,,
+HR_42,7,hybrid_criticality,latency_p99_delta_ms,,
+HR_42,7,hybrid_criticality,error_rate_delta,,
+HR_42,7,hybrid_criticality,downstream_affected_count,,
+HR_42,7,hybrid_criticality,recovery_time_s,0.0891,0.8494
+HR_controlled_81,7,degree,latency_p95_delta_ms,0.7572,0.0487
+HR_controlled_81,7,degree,latency_p99_delta_ms,0.7572,0.0487
+HR_controlled_81,7,degree,error_rate_delta,-0.2673,0.5623
+HR_controlled_81,7,degree,downstream_affected_count,0.1573,0.7362
+HR_controlled_81,7,degree,recovery_time_s,-0.4009,0.3728
+HR_controlled_81,7,in_degree,latency_p95_delta_ms,-0.4082,0.3632
+HR_controlled_81,7,in_degree,latency_p99_delta_ms,-0.4082,0.3632
+HR_controlled_81,7,in_degree,error_rate_delta,0.6124,0.1438
+HR_controlled_81,7,in_degree,downstream_affected_count,-0.103,0.8261
+HR_controlled_81,7,in_degree,recovery_time_s,0.0,1.0
+HR_controlled_81,7,out_degree,latency_p95_delta_ms,0.7572,0.0487
+HR_controlled_81,7,out_degree,latency_p99_delta_ms,0.7572,0.0487
+HR_controlled_81,7,out_degree,error_rate_delta,-0.2673,0.5623
+HR_controlled_81,7,out_degree,downstream_affected_count,0.1573,0.7362
+HR_controlled_81,7,out_degree,recovery_time_s,-0.4009,0.3728
+HR_controlled_81,7,betweenness,latency_p95_delta_ms,0.6124,0.1438
+HR_controlled_81,7,betweenness,latency_p99_delta_ms,0.6124,0.1438
+HR_controlled_81,7,betweenness,error_rate_delta,0.4082,0.3632
+HR_controlled_81,7,betweenness,downstream_affected_count,0.103,0.8261
+HR_controlled_81,7,betweenness,recovery_time_s,-0.6124,0.1438
+HR_controlled_81,7,closeness,latency_p95_delta_ms,-0.6773,0.0946
+HR_controlled_81,7,closeness,latency_p99_delta_ms,-0.6773,0.0946
+HR_controlled_81,7,closeness,error_rate_delta,0.4183,0.3503
+HR_controlled_81,7,closeness,downstream_affected_count,0.0704,0.8809
+HR_controlled_81,7,closeness,recovery_time_s,-0.3586,0.4296
+HR_controlled_81,7,eigenvector,latency_p95_delta_ms,-0.6773,0.0946
+HR_controlled_81,7,eigenvector,latency_p99_delta_ms,-0.6773,0.0946
+HR_controlled_81,7,eigenvector,error_rate_delta,0.4183,0.3503
+HR_controlled_81,7,eigenvector,downstream_affected_count,0.0704,0.8809
+HR_controlled_81,7,eigenvector,recovery_time_s,-0.3586,0.4296
+HR_controlled_81,7,pagerank,latency_p95_delta_ms,-0.5637,0.1875
+HR_controlled_81,7,pagerank,latency_p99_delta_ms,-0.5637,0.1875
+HR_controlled_81,7,pagerank,error_rate_delta,0.6001,0.1543
+HR_controlled_81,7,pagerank,downstream_affected_count,0.3395,0.4563
+HR_controlled_81,7,pagerank,recovery_time_s,-0.3819,0.3979
+HR_controlled_81,7,composite_score,latency_p95_delta_ms,0.3964,0.3786
+HR_controlled_81,7,composite_score,latency_p99_delta_ms,0.3964,0.3786
+HR_controlled_81,7,composite_score,error_rate_delta,-0.6307,0.1289
+HR_controlled_81,7,composite_score,downstream_affected_count,-0.3091,0.5
+HR_controlled_81,7,composite_score,recovery_time_s,0.6307,0.1289
+HR_controlled_81,7,hybrid_criticality,latency_p95_delta_ms,0.7572,0.0487
+HR_controlled_81,7,hybrid_criticality,latency_p99_delta_ms,0.7572,0.0487
+HR_controlled_81,7,hybrid_criticality,error_rate_delta,-0.2673,0.5623
+HR_controlled_81,7,hybrid_criticality,downstream_affected_count,0.1573,0.7362
+HR_controlled_81,7,hybrid_criticality,recovery_time_s,-0.4009,0.3728
