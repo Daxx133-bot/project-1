@@ -70,40 +70,95 @@ def get_traces_in_window(
         return []
 
 
+def span_service_map(trace: dict[str, Any]) -> dict[str, str]:
+    """Map a trace's processID -> serviceName, using Jaeger's `processes` block."""
+    return {
+        pid: proc.get("serviceName", "")
+        for pid, proc in (trace.get("processes") or {}).items()
+    }
+
+
+def _span_kind(span: dict[str, Any]) -> str | None:
+    for tag in span.get("tags", []):
+        if tag.get("key") == "span.kind":
+            return tag.get("value")
+    return None
+
+
+def _is_root(span: dict[str, Any]) -> bool:
+    refs = span.get("references", [])
+    return not any(r.get("refType") == "CHILD_OF" for r in refs)
+
+
+def select_spans(
+    traces: list[dict[str, Any]],
+    service: str | None = None,
+) -> list[dict[str, Any]]:
+    """Select the spans whose durations define a latency measurement.
+
+    `service is None`  -> ROOT spans only. This is END-TO-END trace latency and is
+                          only meaningful as a system-wide number.
+
+    `service = "geo"`  -> the SERVER spans emitted by `geo` itself. A server span's
+                          duration is the time `geo` took to handle one request,
+                          including whatever it spent waiting on its own callees.
+                          Client spans are excluded: a client span emitted by `geo`
+                          measures a *callee's* latency as observed by geo, so
+                          counting it would re-attribute a downstream service's
+                          slowness to geo. If a service's spans carry no `span.kind`
+                          tag at all, every span it emitted is used (fail-open), and
+                          the caller can detect this via the returned `count`.
+
+    Why this function exists (Q3, 2026-09-25)
+    -----------------------------------------
+    The original `compute_latency_percentiles` took ROOT-span durations for whatever
+    trace set it was handed. Because `get_traces_in_window(service=X)` returns every
+    trace that *touches* X, "service X's p95" was in fact the end-to-end p95 of all
+    traces passing through X. Every service on a hot path therefore inherited the
+    same number, so a slow leaf made its ancestors AND its unrelated path-mates all
+    look degraded. That is what produced the 2 spuriously "affected" DESCENDANTS in
+    the HR search latency pilot runs. Per-service percentiles must come from spans
+    belonging to that service only.
+    """
+    out: list[dict[str, Any]] = []
+    for trace in traces:
+        if service is None:
+            out.extend(s for s in trace.get("spans", []) if _is_root(s))
+            continue
+        pmap = span_service_map(trace)
+        mine = [s for s in trace.get("spans", [])
+                if pmap.get(s.get("processID")) == service]
+        server = [s for s in mine if _span_kind(s) == "server"]
+        kinded = any(_span_kind(s) is not None for s in mine)
+        out.extend(server if kinded else mine)
+    return out
+
+
 def compute_latency_percentiles(
     traces: list[dict[str, Any]],
+    service: str | None = None,
 ) -> dict[str, float]:
     """
-    Compute p50, p95, and p99 latency from root span durations.
-
-    A root span is identified as a span with no parent references
-    (it's the top-level span in a trace). Its duration represents
-    the end-to-end request latency.
+    Compute p50, p95 and p99 latency in milliseconds.
 
     Args:
-        traces: List of Jaeger trace dicts.
+        traces:  List of Jaeger trace dicts.
+        service: If given, percentiles are computed from the SERVER spans emitted by
+                 that service, i.e. that service's own request-handling latency.
+                 If omitted, percentiles come from root spans and are END-TO-END
+                 latency for the whole trace — never attribute those to a service.
 
     Returns:
-        Dict with keys: p50_ms, p95_ms, p99_ms, mean_ms, count
+        Dict with keys: p50_ms, p95_ms, p99_ms, mean_ms, count, scope
     """
-    root_durations_us: list[float] = []
+    spans = select_spans(traces, service)
+    scope = "end_to_end_root" if service is None else f"service_server_spans:{service}"
 
-    for trace in traces:
-        spans = trace.get("spans", [])
-        for span in spans:
-            # Root span: has no CHILD_OF references
-            refs = span.get("references", [])
-            is_root = not any(r.get("refType") == "CHILD_OF" for r in refs)
-            if is_root:
-                duration = span.get("duration", 0)
-                root_durations_us.append(float(duration))
-
-    if not root_durations_us:
+    if not spans:
         return {"p50_ms": 0.0, "p95_ms": 0.0, "p99_ms": 0.0,
-                "mean_ms": 0.0, "count": 0}
+                "mean_ms": 0.0, "count": 0, "scope": scope}
 
-    # Convert microseconds to milliseconds
-    durations_ms = [d / 1000.0 for d in root_durations_us]
+    durations_ms = [float(s.get("duration", 0)) / 1000.0 for s in spans]
 
     return {
         "p50_ms": round(float(np.percentile(durations_ms, 50)), 2),
@@ -111,52 +166,59 @@ def compute_latency_percentiles(
         "p99_ms": round(float(np.percentile(durations_ms, 99)), 2),
         "mean_ms": round(float(np.mean(durations_ms)), 2),
         "count": len(durations_ms),
+        "scope": scope,
     }
 
 
-def compute_error_rate(traces: list[dict[str, Any]]) -> float:
-    """
-    Compute the error rate from traces.
+def _span_has_error(span: dict[str, Any]) -> bool:
+    for tag in span.get("tags", []):
+        key, value = tag.get("key", ""), tag.get("value")
+        if key == "error" and value is True:
+            return True
+        if key == "http.status_code" and isinstance(value, int) and value >= 500:
+            return True
+    return False
 
-    A trace is considered "errored" if any of its spans has a tag
-    "error" set to true, or an "http.status_code" >= 500.
+
+def compute_error_rate(
+    traces: list[dict[str, Any]],
+    service: str | None = None,
+) -> float:
+    """
+    Compute an error rate in [0.0, 1.0].
 
     Args:
-        traces: List of Jaeger trace dicts.
-
-    Returns:
-        Error rate as a float in [0.0, 1.0].
+        traces:  List of Jaeger trace dicts.
+        service: If given, only spans emitted by that service are inspected, and the
+                 denominator is the number of traces in which that service actually
+                 appears. Without this filter a trace is "errored" if ANY span in it
+                 errored, so a failure anywhere on a path marks every service on that
+                 path as errored — the same misattribution as the p95 bug (Q3).
+                 If omitted, the trace-level (end-to-end) error rate is returned.
     """
     if not traces:
         return 0.0
 
-    error_count = 0
+    if service is None:
+        errored = sum(1 for t in traces
+                      if any(_span_has_error(s) for s in t.get("spans", [])))
+        return round(errored / len(traces), 4)
 
+    denom = 0
+    errored = 0
     for trace in traces:
-        has_error = False
-        for span in trace.get("spans", []):
-            tags = span.get("tags", [])
-            for tag in tags:
-                key = tag.get("key", "")
-                value = tag.get("value")
+        pmap = span_service_map(trace)
+        mine = [s for s in trace.get("spans", [])
+                if pmap.get(s.get("processID")) == service]
+        if not mine:
+            continue
+        denom += 1
+        if any(_span_has_error(s) for s in mine):
+            errored += 1
 
-                # Check for explicit error tag
-                if key == "error" and value is True:
-                    has_error = True
-                    break
-
-                # Check for HTTP 5xx status
-                if key == "http.status_code" and isinstance(value, int) and value >= 500:
-                    has_error = True
-                    break
-
-            if has_error:
-                break
-
-        if has_error:
-            error_count += 1
-
-    return round(error_count / len(traces), 4)
+    if denom == 0:
+        return 0.0
+    return round(errored / denom, 4)
 
 
 def compute_blast_radius(
@@ -209,7 +271,8 @@ def compute_blast_radius(
             continue
 
         # Compute fault-window metrics
-        fault_latency = compute_latency_percentiles(fault_traces)
+        # Q3: per-service percentiles, from this service's own server spans.
+        fault_latency = compute_latency_percentiles(fault_traces, service=service)
 
         # Get baseline metrics for this service
         baseline = baseline_latencies.get(service, {})
@@ -221,7 +284,7 @@ def compute_blast_radius(
             continue
 
         # Check if error rate increased
-        fault_error = compute_error_rate(fault_traces)
+        fault_error = compute_error_rate(fault_traces, service=service)
         baseline_error = baseline.get("error_rate", 0.0)
         if fault_error > baseline_error + 0.05:  # 5% absolute increase threshold
             affected.append(service)
@@ -257,20 +320,23 @@ def collect_baseline_metrics(
         traces = get_traces_in_window(jaeger_url, service, start_us, now_us)
 
         if traces:
-            latency = compute_latency_percentiles(traces)
-            error_rate = compute_error_rate(traces)
+            latency = compute_latency_percentiles(traces, service=service)
+            error_rate = compute_error_rate(traces, service=service)
             baselines[service] = {
                 "p50_ms": latency["p50_ms"],
                 "p95_ms": latency["p95_ms"],
                 "p99_ms": latency["p99_ms"],
                 "mean_ms": latency["mean_ms"],
-                "trace_count": latency["count"],
+                "span_count": latency["count"],
+                "trace_count": len(traces),
                 "error_rate": error_rate,
+                "scope": latency["scope"],
             }
         else:
             baselines[service] = {
                 "p50_ms": 0.0, "p95_ms": 0.0, "p99_ms": 0.0,
-                "mean_ms": 0.0, "trace_count": 0, "error_rate": 0.0,
+                "mean_ms": 0.0, "span_count": 0, "trace_count": 0,
+                "error_rate": 0.0, "scope": f"service_server_spans:{service}",
             }
 
     return baselines
@@ -301,6 +367,9 @@ def collect_fault_window_metrics(
         jaeger_url, primary_service, fault_start_us, fault_end_us
     )
 
+    # Deliberately END-TO-END: `primary_service` is the gateway, so root-span
+    # duration IS the user-visible request latency. Never reuse this for a
+    # non-gateway service -- see select_spans() (Q3).
     latency = compute_latency_percentiles(traces)
     error_rate = compute_error_rate(traces)
 

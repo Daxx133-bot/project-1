@@ -1,0 +1,72 @@
+================================================================================================
+Q3 VALIDATION -- per-service p95 recomputed from real spans
+================================================================================================
+corpus      : sdg\raw_traces\hotel\raw_traces.json
+collected_at: 2026-09-13T11:07:46+0530
+traces      : 1644   spans: 16970
+
+service           traces   spans    OLD p95    NEW p95    ratio   OLD scope             
+------------------------------------------------------------------------------------------------
+frontend            1639    1639      14.66      14.66     1.00   end_to_end_root       
+geo                 1000    1000      15.90       0.55    28.91   end_to_end_root       
+profile             1265    1265      15.24       1.75     8.71   end_to_end_root       
+rate                1000    1000      15.90       2.61     6.09   end_to_end_root       
+recommendation       265     265       4.39       0.14    31.36   end_to_end_root       
+reservation         1000    1000      15.90       2.63     6.05   end_to_end_root       
+search              1000    1000      15.90       6.17     2.58   end_to_end_root       
+
+  OLD p95 across services: min=4.39  max=15.90  max/min=3.62x   distinct=4/7
+  NEW p95 across services: min=0.14  max=14.66  max/min=104.71x   distinct=7/7
+
+================================================================================================
+MISCLASSIFICATION MECHANISM
+================================================================================================
+The blast-radius rule flags service S when  p95(S, fault) > 2 x p95(S, baseline).
+Take the slowest service in this corpus and ask which services the OLD rule
+would drag with it, using only durations present in the file.
+
+slowest service by its OWN spans: frontend  (p95 14.66 ms)
+
+service           appears in  OLD p95 on  NEW p95 on  OLD/NEW  note
+                       those       those       those
+------------------------------------------------------------------------------------------------
+frontend                1639       14.66       14.66     1.00  IS the slow one
+geo                     1000       15.90        0.55    28.91  inherits the slow trace's tail
+profile                 1265       15.24        1.75     8.71  inherits the slow trace's tail
+rate                    1000       15.90        2.61     6.09  inherits the slow trace's tail
+recommendation           265        4.39        0.14    31.36  inherits the slow trace's tail
+reservation             1000       15.90        2.63     6.05  inherits the slow trace's tail
+search                  1000       15.90        6.17     2.58  inherits the slow trace's tail
+
+Reading: under the OLD rule every service on the slow path reports the same
+end-to-end tail, so a single slow service makes its ancestors AND unrelated
+path-mates exceed any multiplicative threshold together. Under the NEW rule
+each service reports its own spans and they separate.
+
+================================================================================================
+PART 2 -- PREDICTED vs OBSERVED FLAGGED SET (HR search, latency fault)
+================================================================================================
+trace cohort of 'search' in the corpus: 1000 traces
+  services co-occurring with 'search': ['frontend', 'geo', 'profile', 'rate', 'reservation', 'search']
+  OLD rule therefore predicts flagged = ['frontend', 'geo', 'profile', 'rate', 'reservation']
+
+  pilot_hotelreservation_search_latency_rep1_2026-09-24T19-32-05.918890+00-00.json
+    observed flagged = ['frontend', 'geo', 'profile', 'rate', 'reservation']
+    match            = EXACT
+  pilot_hotelreservation_search_latency_rep2_2026-09-24T19-36-02.555316+00-00.json
+    observed flagged = ['frontend', 'geo', 'profile', 'rate', 'reservation']
+    match            = EXACT
+
+  VERDICT: exact set match in every run. The pilot's flagged set is fully
+  explained by the root-span bug -- it is the trace cohort, not a graph
+  neighbourhood. Note that 'profile' and 'reservation' are neither
+  ancestors nor descendants of 'search'; they were flagged purely because
+  they ride the same trace. Under the corrected rule each of these
+  services reports its own server spans, which in this corpus differ by
+  up to 105x, so they can no longer move as a block.
+
+  LIMIT OF THIS VALIDATION: this shows the old number was structurally
+  incapable of distinguishing these services, and predicts the observed set
+  exactly. It does not measure the corrected per-service p95 during a live
+  latency fault, because those spans no longer exist. That measurement
+  requires a fresh run and is listed as such.

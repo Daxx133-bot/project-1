@@ -202,6 +202,8 @@ def probe_recovery(
         traces = get_traces_in_window(
             jaeger_url, gateway_service, window_start_us, window_end_us
         )
+        # End-to-end by design: `gateway_service` is the entry point, so root-span
+        # duration is the user-visible latency we want back inside tolerance.
         lat = compute_latency_percentiles(traces)
         err = compute_error_rate(traces)
         trace_count = lat["count"]
@@ -300,11 +302,13 @@ def _count_affected(
         traces = get_traces_in_window(jaeger_url, service, window_start_us, window_end_us)
         if not traces:
             continue
-        lat = compute_latency_percentiles(traces)
+        # Q3: per-service spans only. Using root spans here made every service on a
+        # slow path look degraded, inflating this count and the blast radius.
+        lat = compute_latency_percentiles(traces, service=service)
         if base_p95 > 0 and lat["p95_ms"] > degradation_factor * base_p95:
             affected += 1
             continue
-        if compute_error_rate(traces) > base_err + error_rate_abs_threshold:
+        if compute_error_rate(traces, service=service) > base_err + error_rate_abs_threshold:
             affected += 1
     return affected
 

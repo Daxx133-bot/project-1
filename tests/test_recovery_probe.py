@@ -22,18 +22,27 @@ class FakeClock:
         self.t += seconds
 
 
-def make_traces(duration_ms: float, n: int = 20, error: bool = False):
-    """Build a trace list whose root spans all have the given duration."""
+def make_traces(duration_ms: float, n: int = 20, error: bool = False,
+                service: str | None = None):
+    """Build a trace list whose spans all have the given duration.
+
+    `service` attaches a Jaeger `processes` block and a `span.kind=server` tag, so the
+    span is attributable to that service. Per-service percentiles (Q3) need this;
+    without it the span belongs to no service and only counts end-to-end.
+    """
     out = []
     for i in range(n):
         tags = [{"key": "http.status_code", "type": "int64", "value": 500}] if error else []
+        if service is not None:
+            tags = tags + [{"key": "span.kind", "type": "string", "value": "server"}]
         out.append({
             "traceID": f"t{i}",
             "spans": [{
                 "spanID": f"s{i}", "operationName": "op", "references": [],
                 "startTime": 0, "duration": int(duration_ms * 1000), "tags": tags,
+                "processID": "p1",
             }],
-            "processes": {},
+            "processes": ({"p1": {"serviceName": service}} if service else {}),
         })
     return out
 
@@ -173,7 +182,7 @@ def test_downstream_affected_blocks_recovery(monkeypatch, baseline):
     install_fake_jaeger(
         monkeypatch,
         gateway_sequence=[make_traces(100.0)],
-        downstream_sequence=[make_traces(500.0)],   # svc_a baseline p95 is 50 -> 10x
+        downstream_sequence=[make_traces(500.0, service="svc_a")],  # baseline p95 50 -> 10x
     )
 
     res = rp.probe_recovery(
