@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+from dataclasses import replace
 import subprocess
 import sys
 import time
@@ -32,7 +33,9 @@ from infra.docker_utils import find_docker_executable  # noqa: E402
 from measurement.metrics_collector import (  # noqa: E402
     collect_baseline_metrics, collect_fault_window_metrics, compute_blast_radius,
 )
+from measurement.blast_radius import classify_affected, is_gateway  # noqa: E402
 from measurement.recovery_probe import probe_recovery  # noqa: E402
+import networkx as nx  # noqa: E402
 
 APPS = {
     "socialnetwork": {
@@ -87,6 +90,10 @@ def graph_services(path: Path) -> list[str]:
     return [n["id"] for n in json.loads(path.read_text(encoding="utf-8"))["nodes"]]
 
 
+def load_graph(path: Path) -> "nx.DiGraph":
+    return nx.node_link_graph(json.loads(path.read_text(encoding="utf-8")), edges="edges")
+
+
 def container_for(service: str, docker_exe: str) -> str:
     out = subprocess.run([docker_exe, "ps", "--format", "{{.Names}}"],
                          capture_output=True, text=True, check=True).stdout.split()
@@ -107,13 +114,16 @@ def start_load(cfg: dict, duration: int, users: int) -> subprocess.Popen:
     )
 
 
-def one_run(app: str, service: str, rep: int, cfg: dict, args) -> dict:
+def one_run(app: str, service: str, rep: int, cfg: dict, args,
+            fault_type: FaultType = FaultType.KILL) -> dict:
     docker_exe = find_docker_executable()
     container = container_for(service, docker_exe)
     services = graph_services(cfg["graph"])
+    G = load_graph(cfg["graph"])
     t0 = time.time()
 
-    print(f"\n{'='*70}\n  {app} / {service} / kill / rep {rep}   (container: {container})\n{'='*70}")
+    print(f"\n{'='*70}\n  {app} / {service} / {fault_type.value} / rep {rep}"
+          f"   (container: {container})\n{'='*70}")
 
     load = start_load(cfg, args.warmup + args.fault_duration + int(args.max_wait) + 60,
                       args.users)
@@ -129,7 +139,12 @@ def one_run(app: str, service: str, rep: int, cfg: dict, args) -> dict:
         print(f"  [BASELINE] gateway p95={gw_base.get('p95_ms')}ms "
               f"traces={base_traces}")
 
-        spec = DEFAULT_SPECS[FaultType.KILL]
+        # The netem / stress rule must expire exactly when the fault window closes,
+        # otherwise the "removal" instant used as the T_rec reference would be recorded
+        # while the fault is still active. DEFAULT_SPECS ships 60 s; align it to the
+        # window actually being run.
+        spec = replace(DEFAULT_SPECS[fault_type],
+                       duration_seconds=args.fault_duration)
         fault_start_us = int(time.time() * 1_000_000)
         print(f"  [FAULT] {' '.join(spec.pumba_command(container))}")
         subprocess.run(spec.pumba_command(container), check=True, timeout=60,
@@ -147,17 +162,27 @@ def one_run(app: str, service: str, rep: int, cfg: dict, args) -> dict:
         print(f"  [FAULT] gateway p95={fault_m.get('p95_ms')}ms traces={fault_traces} "
               f"downstream={down_n}")
 
-        print("  [RESTORE] docker compose up -d")
         restart_t0 = time.time()
-        subprocess.run([docker_exe, "compose", "up", "-d", service],
-                       cwd=str(cfg["compose_dir"]), capture_output=True, timeout=180)
+        if fault_type == FaultType.KILL:
+            print("  [RESTORE] docker compose up -d")
+            subprocess.run([docker_exe, "compose", "up", "-d", service],
+                           cwd=str(cfg["compose_dir"]), capture_output=True, timeout=180)
+        else:
+            # netem / stress rules expire on their own at the end of the fault window.
+            print(f"  [RESTORE] {fault_type.value} fault auto-expired; nothing to restart")
         restart_s = round(time.time() - restart_t0, 2)
+
+        # Amendment (b): the instant the fault was lifted. T_rec counts from here.
+        fault_removal_us = int(time.time() * 1_000_000)
+        fault_removal_offset_s = round((fault_removal_us - fault_start_us) / 1e6, 2)
 
         print(f"  [RECOVERY] probing (poll={args.poll}s, max_wait={args.max_wait}s)")
         rec = probe_recovery(
             cfg["jaeger"], cfg["gateway"], services, baseline, fault_start_us,
+            reference_us=fault_removal_us,
             poll_interval_s=args.poll, max_wait_s=args.max_wait,
             tolerance=0.10, confirm_seconds=args.confirm,
+            lag_s=args.lag, min_traces=args.min_traces,
         )
         if rec.recovered:
             print(f"  [RECOVERY] recovered at {rec.recovery_time_s}s")
@@ -165,8 +190,21 @@ def one_run(app: str, service: str, rep: int, cfg: dict, args) -> dict:
             print(f"  [RECOVERY] CENSORED at {rec.observed_until_s}s "
                   f"(blocked on {rec.blocking_indicator})")
 
+        cls = classify_affected(G, service, down_list)
+        print(f"  [BLAST] ancestors={cls['ancestor_affected_count']}/{cls['n_ancestors']} "
+              f"descendants={cls['descendant_affected_count']}/{cls['n_descendants']} "
+              f"unrelated={cls['unrelated_affected_count']}")
+
         return {
-            "app": app, "service": service, "fault_type": "kill", "repetition": rep,
+            "app": app, "service": service, "fault_type": fault_type.value,
+            "repetition": rep,
+            **cls,
+            "is_gateway": is_gateway(G, service),
+            "excluded_from_correlation": is_gateway(G, service),
+            "fault_removal_offset_s": fault_removal_offset_s,
+            "recovery_measured_from": rec.measured_from,
+            "recovery_min_traces": rec.min_traces,
+            "recovery_lag_s": rec.lag_s,
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "container": container,
             "baseline_p95_ms": gw_base.get("p95_ms"),
@@ -208,6 +246,11 @@ def main() -> int:
     ap.add_argument("--poll", type=float, default=1.0)
     ap.add_argument("--max-wait", type=float, default=180.0)
     ap.add_argument("--confirm", type=float, default=5.0)
+    ap.add_argument("--fault-type", default="kill", choices=["kill", "latency", "cpu"])
+    ap.add_argument("--lag", type=float, default=5.0,
+                    help="amendment (e): seconds to lag each probe window")
+    ap.add_argument("--min-traces", type=int, default=20,
+                    help="amendment (e): minimum traces for a sample to vote for recovery")
     ap.add_argument("--users", type=int, default=25)
     ap.add_argument("--cooldown", type=int, default=20)
     args = ap.parse_args()
@@ -220,10 +263,11 @@ def main() -> int:
     with RunLock(out_dir / ".runner.lock"):
         for service in [s.strip() for s in args.services.split(",")]:
             for rep in range(1, args.reps + 1):
-                res = one_run(args.app, service, rep, cfg, args)
+                res = one_run(args.app, service, rep, cfg, args,
+                              FaultType(args.fault_type))
                 results.append(res)
                 stamp = res["timestamp"].replace(":", "-").replace("+00:00", "Z")
-                (out_dir / f"pilot_{args.app}_{service}_kill_rep{rep}_{stamp}.json").write_text(
+                (out_dir / f"pilot_{args.app}_{service}_{args.fault_type}_rep{rep}_{stamp}.json").write_text(
                     json.dumps(res, indent=2), encoding="utf-8")
                 print(f"  [COOLDOWN] {args.cooldown}s")
                 time.sleep(args.cooldown)
