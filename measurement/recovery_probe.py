@@ -52,6 +52,20 @@ DEFAULT_TOLERANCE = 0.10          # "within 10% of baseline"
 DEFAULT_CONFIRM_S = 6.0           # must hold for this long before declaring recovery
 DEFAULT_PROBE_WINDOW_S = 10.0     # width of each trace query window
 
+# Amendment (e), 2026-09-25. Both defaults come from measured pilot behaviour, not taste.
+#
+# DEFAULT_LAG_S: Jaeger's agent flushes spans in batches, so a window ending at "now"
+# catches a flush or misses it. In pilot run compose-post rep1 the per-sample trace
+# counts oscillated 8, 2, 1, 38, 31, 23, 17, 13, 8, 2, 46 -- that is the flush cycle,
+# not the request rate. Ending the window LAG seconds in the past lets spans settle.
+#
+# DEFAULT_MIN_TRACES: the same run read all_ok=True at t=35.15s and t=36.53s from
+# windows holding 2 and 1 traces. A p95 from one trace is not a measurement. Below this
+# floor a sample is "no signal" -- which already means "not recovered" -- rather than
+# being allowed to vote for recovery.
+DEFAULT_LAG_S = 5.0
+DEFAULT_MIN_TRACES = 20
+
 
 @dataclass
 class RecoveryResult:
@@ -82,6 +96,9 @@ class RecoveryResult:
     tolerance: float = DEFAULT_TOLERANCE
     confirm_seconds: float = DEFAULT_CONFIRM_S
     max_wait_s: float = DEFAULT_MAX_WAIT_S
+    min_traces: int = DEFAULT_MIN_TRACES
+    lag_s: float = DEFAULT_LAG_S
+    measured_from: str = "fault_removal"
     samples: list[dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
@@ -110,11 +127,14 @@ def probe_recovery(
     baseline: dict[str, dict[str, float]],
     fault_start_us: int,
     *,
+    reference_us: Optional[int] = None,
     poll_interval_s: float = DEFAULT_POLL_INTERVAL_S,
     max_wait_s: float = DEFAULT_MAX_WAIT_S,
     tolerance: float = DEFAULT_TOLERANCE,
     confirm_seconds: float = DEFAULT_CONFIRM_S,
     probe_window_s: float = DEFAULT_PROBE_WINDOW_S,
+    lag_s: float = DEFAULT_LAG_S,
+    min_traces: int = DEFAULT_MIN_TRACES,
     degradation_factor: float = 2.0,
     error_rate_abs_threshold: float = 0.05,
     now_fn: Callable[[], float] = time.time,
@@ -148,7 +168,14 @@ def probe_recovery(
     base_err = float(gw_baseline.get("error_rate", 0.0))
 
     fault_start_s = fault_start_us / 1_000_000.0
-    deadline = fault_start_s + max_wait_s
+    # Amendment (b), 2026-09-25: T_rec is measured from fault REMOVAL, not injection.
+    # Measuring from injection made T_rec = fault_duration + restart + convergence, which
+    # floored at ~34 s and is not comparable to any external literature. `reference_us`
+    # is the instant the fault was lifted (the restart command returning, or the netem /
+    # stress rule expiring). It defaults to fault_start_us only so older callers keep
+    # their previous meaning explicitly rather than silently.
+    reference_s = (reference_us / 1_000_000.0) if reference_us is not None else fault_start_s
+    deadline = reference_s + max_wait_s
 
     samples: list[dict[str, Any]] = []
     ok_since: Optional[float] = None
@@ -160,11 +187,17 @@ def probe_recovery(
         if now >= deadline:
             break
 
-        window_end_us = int(now * 1_000_000)
-        window_start_us = int((now - probe_window_s) * 1_000_000)
+        # Amendment (e): end the window `lag_s` in the past so Jaeger's batch flush has
+        # landed. Querying up to "now" samples a partially-written window.
+        window_end_us = int((now - lag_s) * 1_000_000)
+        window_start_us = int((now - lag_s - probe_window_s) * 1_000_000)
         # Never look back before the fault: pre-fault traces would make a still-degraded
         # system appear recovered.
         window_start_us = max(window_start_us, fault_start_us)
+        if window_end_us <= window_start_us:
+            # The lagged window has not opened yet (very early in the probe).
+            sleep_fn(poll_interval_s)
+            continue
 
         traces = get_traces_in_window(
             jaeger_url, gateway_service, window_start_us, window_end_us
@@ -185,15 +218,17 @@ def probe_recovery(
             "downstream_affected": affected == 0,
         }
 
-        # No traces at all means we cannot assert recovery. Treat it as not-recovered
-        # rather than as zero latency -- that conflation is the bug described in
-        # _audit/TELEMETRY_DIAGNOSIS.md section 2(c2).
-        have_signal = trace_count > 0
+        # Amendment (e): a window must hold at least `min_traces` traces before its
+        # percentiles are allowed to vote for recovery. Too few traces means we cannot
+        # assert recovery -- the same reasoning as trace_count == 0, just not at zero.
+        # Treating a thin window as "recovered" is how a false positive gets in.
+        have_signal = trace_count >= min_traces
         all_ok = have_signal and all(checks.values())
 
-        elapsed = now - fault_start_s
+        elapsed = now - reference_s
         samples.append({
             "t_s": round(elapsed, 2),
+            "t_since_fault_start_s": round(now - fault_start_s, 2),
             "trace_count": trace_count,
             "p95_ms": lat["p95_ms"], "p99_ms": lat["p99_ms"],
             "error_rate": err, "downstream_affected": affected,
@@ -208,18 +243,21 @@ def probe_recovery(
             if now - ok_since >= confirm_seconds:
                 return RecoveryResult(
                     recovered=True,
-                    recovery_time_s=round(ok_since - fault_start_s, 2),
+                    recovery_time_s=round(ok_since - reference_s, 2),
                     censored=False,
                     observed_until_s=round(elapsed, 2),
                     first_ok_at_s=round(first_ok_at, 2) if first_ok_at is not None else None,
                     blocking_indicator=None,
                     tolerance=tolerance, confirm_seconds=confirm_seconds,
-                    max_wait_s=max_wait_s, samples=samples,
+                    max_wait_s=max_wait_s, min_traces=min_traces, lag_s=lag_s,
+                    measured_from=("fault_removal" if reference_us is not None
+                                   else "fault_injection"),
+                    samples=samples,
                 )
         else:
             ok_since = None
             if not have_signal:
-                last_blocking = "no_traces"
+                last_blocking = "insufficient_traces" if trace_count else "no_traces"
             else:
                 last_blocking = next(k for k, v in checks.items() if not v)
 
@@ -231,11 +269,13 @@ def probe_recovery(
         recovered=False,
         recovery_time_s=None,
         censored=True,
-        observed_until_s=round(now_fn() - fault_start_s, 2),
+        observed_until_s=round(now_fn() - reference_s, 2),
         first_ok_at_s=round(first_ok_at, 2) if first_ok_at is not None else None,
         blocking_indicator=last_blocking,
         tolerance=tolerance, confirm_seconds=confirm_seconds,
-        max_wait_s=max_wait_s, samples=samples,
+        max_wait_s=max_wait_s, min_traces=min_traces, lag_s=lag_s,
+        measured_from=("fault_removal" if reference_us is not None else "fault_injection"),
+        samples=samples,
     )
 
 

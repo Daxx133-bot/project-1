@@ -72,10 +72,12 @@ def test_recovers_when_all_indicators_return_and_hold(monkeypatch, baseline):
     seq = [make_traces(900.0), make_traces(800.0)] + [make_traces(100.0)] * 10
     install_fake_jaeger(monkeypatch, seq)
 
+    start = clock.t
     res = rp.probe_recovery(
         "http://jaeger", "gw", ["svc_a"], baseline,
-        fault_start_us=int(clock.t * 1_000_000),
-        poll_interval_s=3.0, max_wait_s=180.0, confirm_seconds=6.0,
+        fault_start_us=int((start - 60) * 1_000_000),   # fault began well before probing
+        reference_us=int(start * 1_000_000),            # probe starts at fault removal
+        poll_interval_s=3.0, max_wait_s=180.0, confirm_seconds=6.0, lag_s=0.0,
         now_fn=clock.now, sleep_fn=clock.sleep,
     )
 
@@ -94,7 +96,7 @@ def test_censored_when_never_recovers(monkeypatch, baseline):
     res = rp.probe_recovery(
         "http://jaeger", "gw", ["svc_a"], baseline,
         fault_start_us=int(clock.t * 1_000_000),
-        poll_interval_s=3.0, max_wait_s=30.0,
+        poll_interval_s=3.0, max_wait_s=30.0, lag_s=0.0,
         now_fn=clock.now, sleep_fn=clock.sleep,
     )
 
@@ -117,10 +119,12 @@ def test_transient_dip_does_not_count_as_recovery(monkeypatch, baseline):
     ]
     install_fake_jaeger(monkeypatch, seq)
 
+    start = clock.t
     res = rp.probe_recovery(
         "http://jaeger", "gw", ["svc_a"], baseline,
-        fault_start_us=int(clock.t * 1_000_000),
-        poll_interval_s=3.0, max_wait_s=12.0, confirm_seconds=6.0,
+        fault_start_us=int((start - 60) * 1_000_000),
+        reference_us=int(start * 1_000_000),
+        poll_interval_s=3.0, max_wait_s=12.0, confirm_seconds=6.0, lag_s=0.0,
         now_fn=clock.now, sleep_fn=clock.sleep,
     )
 
@@ -139,7 +143,7 @@ def test_no_traces_is_not_treated_as_recovered(monkeypatch, baseline):
     res = rp.probe_recovery(
         "http://jaeger", "gw", ["svc_a"], baseline,
         fault_start_us=int(clock.t * 1_000_000),
-        poll_interval_s=3.0, max_wait_s=15.0,
+        poll_interval_s=3.0, max_wait_s=15.0, lag_s=0.0,
         now_fn=clock.now, sleep_fn=clock.sleep,
     )
 
@@ -155,7 +159,7 @@ def test_error_rate_blocks_recovery_even_when_latency_is_fine(monkeypatch, basel
     res = rp.probe_recovery(
         "http://jaeger", "gw", ["svc_a"], baseline,
         fault_start_us=int(clock.t * 1_000_000),
-        poll_interval_s=3.0, max_wait_s=12.0,
+        poll_interval_s=3.0, max_wait_s=12.0, lag_s=0.0,
         now_fn=clock.now, sleep_fn=clock.sleep,
     )
 
@@ -175,7 +179,7 @@ def test_downstream_affected_blocks_recovery(monkeypatch, baseline):
     res = rp.probe_recovery(
         "http://jaeger", "gw", ["svc_a"], baseline,
         fault_start_us=int(clock.t * 1_000_000),
-        poll_interval_s=3.0, max_wait_s=12.0,
+        poll_interval_s=3.0, max_wait_s=12.0, lag_s=0.0,
         now_fn=clock.now, sleep_fn=clock.sleep,
     )
 
@@ -197,7 +201,7 @@ def test_probe_window_never_reaches_back_before_the_fault(monkeypatch, baseline)
 
     rp.probe_recovery(
         "http://jaeger", "gw", [], baseline, fault_start_us=fault_start_us,
-        poll_interval_s=3.0, max_wait_s=9.0, probe_window_s=30.0,
+        poll_interval_s=3.0, max_wait_s=9.0, probe_window_s=30.0, lag_s=0.0,
         now_fn=clock.now, sleep_fn=clock.sleep,
     )
 
@@ -260,3 +264,105 @@ def test_container_restart_time_returns_elapsed_when_it_comes_back(monkeypatch):
 
     assert out["censored"] is False
     assert out["container_restart_time_s"] == pytest.approx(4.0)
+
+
+# ── Amendment (e): min-trace floor and lagged window ─────────────────────────
+
+def test_thin_window_cannot_vote_for_recovery(monkeypatch, baseline):
+    """The exact pilot failure: a healthy-looking window with 2 traces must not
+    count as recovery. See _audit/PILOT_FINDINGS.md section 2b."""
+    clock = FakeClock()
+    # Latency is at baseline, but only 2 traces support it.
+    install_fake_jaeger(monkeypatch, [make_traces(100.0, n=2)])
+
+    res = rp.probe_recovery(
+        "http://jaeger", "gw", ["svc_a"], baseline,
+        fault_start_us=int((clock.t - 60) * 1_000_000),
+        reference_us=int(clock.t * 1_000_000),
+        poll_interval_s=3.0, max_wait_s=15.0, lag_s=0.0, min_traces=20,
+        now_fn=clock.now, sleep_fn=clock.sleep,
+    )
+
+    assert res.recovered is False
+    assert res.censored is True
+    assert res.blocking_indicator == "insufficient_traces"
+
+
+def test_same_window_recovers_once_it_is_thick_enough(monkeypatch, baseline):
+    """Control for the test above: identical latency, enough traces -> recovered."""
+    clock = FakeClock()
+    install_fake_jaeger(monkeypatch, [make_traces(100.0, n=50)])
+
+    res = rp.probe_recovery(
+        "http://jaeger", "gw", ["svc_a"], baseline,
+        fault_start_us=int((clock.t - 60) * 1_000_000),
+        reference_us=int(clock.t * 1_000_000),
+        poll_interval_s=3.0, max_wait_s=30.0, confirm_seconds=6.0,
+        lag_s=0.0, min_traces=20,
+        now_fn=clock.now, sleep_fn=clock.sleep,
+    )
+
+    assert res.recovered is True
+    assert res.censored is False
+
+
+def test_probe_window_is_lagged(monkeypatch, baseline):
+    """Queried windows must end lag_s in the past, not at 'now'."""
+    clock = FakeClock()
+    seen = []
+
+    def fake_get_traces(jaeger_url, service, start_us, end_us, limit=500):
+        seen.append((start_us, end_us))
+        return make_traces(900.0, n=50)
+
+    monkeypatch.setattr(rp, "get_traces_in_window", fake_get_traces)
+    t0 = clock.t
+    rp.probe_recovery(
+        "http://jaeger", "gw", [], baseline,
+        fault_start_us=int((t0 - 100) * 1_000_000),
+        reference_us=int(t0 * 1_000_000),
+        poll_interval_s=3.0, max_wait_s=9.0, probe_window_s=10.0, lag_s=5.0,
+        now_fn=clock.now, sleep_fn=clock.sleep,
+    )
+
+    assert seen, "probe made no queries"
+    first_start, first_end = seen[0]
+    # window ends ~lag_s before the clock at that iteration
+    assert first_end <= int(t0 * 1_000_000) - int(4.9 * 1_000_000)
+    assert first_end - first_start == pytest.approx(10 * 1_000_000, rel=0.01)
+
+
+def test_recovery_is_measured_from_the_reference_point(monkeypatch, baseline):
+    """Amendment (b): T_rec counts from fault REMOVAL when reference_us is given."""
+    clock = FakeClock()
+    install_fake_jaeger(monkeypatch, [make_traces(100.0, n=50)])
+    removal = clock.t                 # probe starts the instant the fault is lifted
+    fault_start = removal - 30.0      # fault was held for 30 s before that
+
+    res = rp.probe_recovery(
+        "http://jaeger", "gw", ["svc_a"], baseline,
+        fault_start_us=int(fault_start * 1_000_000),
+        reference_us=int(removal * 1_000_000),
+        poll_interval_s=3.0, max_wait_s=60.0, confirm_seconds=6.0,
+        lag_s=0.0, min_traces=20,
+        now_fn=clock.now, sleep_fn=clock.sleep,
+    )
+
+    assert res.recovered is True
+    assert res.measured_from == "fault_removal"
+    # Recovery counts from removal: ~0 s, NOT the ~30 s it would be from injection.
+    assert res.recovery_time_s == pytest.approx(0.0, abs=0.01)
+    # The offset from injection is still recorded per sample, so nothing is lost.
+    assert res.samples[0]["t_since_fault_start_s"] == pytest.approx(30.0, abs=0.01)
+
+
+def test_measured_from_defaults_to_injection_when_no_reference(monkeypatch, baseline):
+    clock = FakeClock()
+    install_fake_jaeger(monkeypatch, [make_traces(100.0, n=50)])
+    res = rp.probe_recovery(
+        "http://jaeger", "gw", ["svc_a"], baseline,
+        fault_start_us=int((clock.t - 60) * 1_000_000),
+        poll_interval_s=3.0, max_wait_s=120.0, lag_s=0.0, min_traces=20,
+        now_fn=clock.now, sleep_fn=clock.sleep,
+    )
+    assert res.measured_from == "fault_injection"
