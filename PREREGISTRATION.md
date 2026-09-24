@@ -185,11 +185,32 @@ per sample **13–18 → 34–38**, thin samples voting for recovery **6 and 4 �
 requests fail fast, so the surviving latency distribution is dominated by fast failures and
 p95 *drops*. In SN the largest Δp95 (+8867 ms) coincided with the *lowest* error rate.
 
-| Fault type | Primary indicator | Δp95 status |
-|---|---|---|
-| **kill** | **error rate** | descriptive only |
-| latency | *see §10 open question 2* | *see §10* |
-| cpu | *see §10 open question 2* | *see §10* |
+**[v2] The sign of Δp95 under kill faults is determined by the architecture, not by
+chance.** Across 10 kill runs it is perfectly split:
+
+| Application | n | Δp95 under kill |
+|---|---:|---|
+| Hotel Reservation | 4 | **all negative** (−44.0 to −53.4 ms) |
+| Social Network | 6 | **all positive** (+1716 to +8867 ms) |
+
+The mechanism is the stack's failure mode: HR's Go services refuse the connection and
+return HTTP 500 in ~5 ms, so the tail *shrinks*; SN's Thrift clients block until timeout,
+so the tail *inflates*. **Δp95 is therefore not comparable across architectures for kill
+faults and must never be pooled.**
+
+Under latency and CPU faults the service stays alive and slow, so Δp95 is positive in
+4/4 runs and behaves normally. Error rate, conversely, is **identically 0.000** in all
+4 latency/CPU runs — it carries no signal at all when nothing fails.
+
+| Fault type | Primary indicator | Secondary | Not valid |
+|---|---|---|---|
+| **kill** | **error rate** (0.154–0.560, signal in 10/10) | $T_{rec}$ | **Δp95** — sign flips by architecture |
+| **latency** | **Δp95** (130–185× baseline, positive 2/2) | $T_{rec}$ | **error rate** — identically 0.000 |
+| **cpu** | **Δp95** (1.86–2.03× baseline, positive 2/2) | — | **error rate** — identically 0.000 |
+
+No single indicator is valid across all three fault types. The analysis therefore runs
+**per fault type with its own primary indicator**, and never pools indicators across
+fault types or (for kill Δp95) across architectures.
 
 ---
 
@@ -257,9 +278,11 @@ belongs in Limitations, not in a hedge.
 
 | Architecture | Services faulted | Fault types | Reps | Runs |
 |---|---:|---:|---:|---:|
-| Social Network | 11 (gateway excluded) | *§10 Q2* | 5 | up to 165 |
-| Hotel Reservation | 7 (gateway excluded) | *§10 Q2* | 5 | up to 105 |
-| | | | | **up to 270** |
+| Social Network | 11 (gateway excluded) | 2 (kill, latency) — *§10 Q2* | 5 | **110** |
+| Hotel Reservation | 7 (gateway excluded) | 2 (kill, latency) | 5 | **70** |
+| | | | | **180** |
+
+(With CPU included under Q2 option (b)/(c) this becomes 165 + 105 = **270**.)
 
 - **Balance is mandatory.** Prior batches were unbalanced precisely on the services
   carrying the headline claims. A failed run is re-run, never topped up unevenly.
@@ -273,10 +296,15 @@ belongs in Limitations, not in a hedge.
 - **A run with `telemetry_ok = False` is discarded and re-run**, never analysed as zeros.
 - **[v2]** The runner holds a PID lockfile and refuses to start concurrently.
 
-**Measured timing.** Median run 116 s, mean 129 s over 10 pilot runs (max 244 s, the
-censored one). At the pilot's 1-in-8 censoring rate, 270 runs ≈ **9–10 h**; **12–16 h
-realistic** with stack swaps, seeding and re-runs. One stack at a time is a hard
-constraint (`_audit/MEMORY_CEILING.md`).
+**Measured timing.** Median run 116 s, mean 133 s over 14 pilot runs (max 244 s, censored).
+At the pilot's observed 2-in-14 censoring rate:
+
+| Scope | Runs | Estimated pure run time | Realistic with swaps/seeding/re-runs |
+|---|---:|---:|---:|
+| kill + latency *(recommended)* | **180** | ~6.7 h | **8–11 h** |
+| kill + latency + cpu | 270 | ~10 h | 12–16 h |
+
+One stack at a time is a hard constraint (`_audit/MEMORY_CEILING.md`).
 
 ---
 
@@ -311,10 +339,25 @@ directional only *(recommended)*; **(b)** drop the cross-arch protocol, fix weig
 priori per `metric_constants.py`, and use both architectures descriptively; **(c)** add a
 third benchmark — out of scope for this timeline.
 
-**Q2 — Fault types in the campaign, and their valid indicators.** Pending the 4
-latency/CPU pilot runs now in flight. Kill is settled: error rate primary, Δp95
-descriptive. Latency/CPU recommendation follows from that data and will be filled in
-before locking.
+**Q2 — Fault types in the campaign.** The 4 latency/CPU runs are in and settle the
+indicator question (§5.4). What remains is whether **CPU stress earns its place**:
+
+| | latency | cpu |
+|---|---|---|
+| Effect size | **130–185× baseline p95** | **1.86–2.03× baseline** |
+| Δp95 sign | positive 2/2 | positive 2/2 |
+| Blast classification | **identical both reps** (A/D/U = 1/2/2) | **flips between reps** (0/2/0 vs 1/0/0) |
+| Censoring | 0/2 | **1/2** |
+
+`pumba stress --cpu 2` barely perturbs these services — they are not CPU-bound — and the
+blast-radius classification is unstable between two runs of the same condition, which
+means it is noise-dominated at this effect size. CPU would consume a third of the campaign
+(~90 runs, 4–5 h) for the weakest signal of the three.
+
+Options: **(a)** run kill + latency only, and state CPU as out of scope *(recommended)*;
+**(b)** keep CPU but raise the stressor (e.g. `--cpu 4` or add `--vm`) and re-pilot 2 runs
+first to confirm a stable effect; **(c)** keep CPU as-is and accept a likely null with
+unstable classification.
 
 **Q3 — `per-service` metric semantics.** `_audit/PER_SERVICE_METRIC_SEMANTICS.md`:
 per-service p95 is currently the *end-to-end* p95 of traces touching that service, because
@@ -325,7 +368,7 @@ result but makes the A/D/U classification non-comparable across fault types.
 | | |
 |---|---|
 | Q1 — HR's role | ☐ (a) held-out, permutation, directional ☐ (b) fixed weights, descriptive ☐ (c) third benchmark |
-| Q2 — fault types | ☐ pending pilot data |
+| Q2 — fault types | ☐ (a) kill + latency only ☐ (b) keep cpu, raise stressor, re-pilot ☐ (c) keep cpu as-is |
 | Q3 — metric semantics | ☐ fix for campaign ☐ fix + re-run pilot ☐ keep and rename |
 | Approved by | ______________________ |
 | Date | ______________________ |

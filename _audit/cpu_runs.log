@@ -1,0 +1,36 @@
+
+======================================================================
+  hotelreservation / search / cpu / rep 1   (container: hotelreservation-search-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=42.56ms traces=499
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba stress --duration 30s --pull-image --stressors=--cpu 2 --timeout 30s hotelreservation-search-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=79.3ms traces=500 downstream=2
+  [RESTORE] waiting for cpu rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] CENSORED at 181.69s (blocked on p95)
+  [BLAST] ancestors=0/1 descendants=2/2 unrelated=0
+  [COOLDOWN] 20s
+
+======================================================================
+  hotelreservation / search / cpu / rep 2   (container: hotelreservation-search-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=42.01ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba stress --duration 30s --pull-image --stressors=--cpu 2 --timeout 30s hotelreservation-search-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=85.24ms traces=500 downstream=1
+  [RESTORE] waiting for cpu rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 72.76s
+  [BLAST] ancestors=1/1 descendants=0/2 unrelated=0
+  [COOLDOWN] 20s
+
+======================================================================
+  PILOT SUMMARY: hotelreservation
+======================================================================
+  search                 rep1  telemetry_ok=True   base_traces=499   fault_traces=500   recovery=CENSORED   restart=1.63s  wall=279.89s
+  search                 rep2  telemetry_ok=True   base_traces=500   fault_traces=500   recovery=72.76s     restart=0.92s  wall=177.76s

@@ -1,0 +1,36 @@
+
+======================================================================
+  hotelreservation / search / latency / rep 1   (container: hotelreservation-search-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=42.78ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-search-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=7895.89ms traces=308 downstream=5
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.31s
+  [BLAST] ancestors=1/1 descendants=2/2 unrelated=2
+  [COOLDOWN] 20s
+
+======================================================================
+  hotelreservation / search / latency / rep 2   (container: hotelreservation-search-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=42.41ms traces=499
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-search-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=5539.38ms traces=229 downstream=5
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 109.76s
+  [BLAST] ancestors=1/1 descendants=2/2 unrelated=2
+  [COOLDOWN] 20s
+
+======================================================================
+  PILOT SUMMARY: hotelreservation
+======================================================================
+  search                 rep1  telemetry_ok=True   base_traces=500   fault_traces=308   recovery=15.31s     restart=6.53s  wall=121.79s
+  search                 rep2  telemetry_ok=True   base_traces=499   fault_traces=229   recovery=109.76s    restart=6.51s  wall=216.41s
