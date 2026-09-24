@@ -93,6 +93,26 @@ def descendant_count(G: nx.DiGraph) -> dict[str, int]:
     return {n: len(nx.descendants(G, n)) for n in G.nodes()}
 
 
+def ancestor_count(G: nx.DiGraph) -> dict[str, int]:
+    """Number of nodes that can reach each node, excluding the node itself.
+
+    PRIMARY PREDICTOR (locked 2026-09-25). If X calls Y and Y dies, X's request to Y
+    fails or hangs, so X degrades -- and so does anything that calls X, transitively.
+    The set that degrades is therefore Y's ANCESTOR set. Y's descendants merely stop
+    receiving traffic and go idle, which is not an impact. See
+    `_audit/CAUSAL_DIRECTION.md` and `measurement/blast_radius.py`.
+
+    Implemented by reversing the graph and reusing `descendant_count`: the ancestors of
+    v in G are exactly the descendants of v in G-reversed, so there is one traversal
+    implementation to get right rather than two. `nx.DiGraph.reverse(copy=False)` returns
+    a read-only reversed *view*, so this costs no copy of the graph.
+
+    Cycles are handled by inheritance from descendant_count: the reachable set is a set,
+    so each cycle member is counted once.
+    """
+    return descendant_count(G.reverse(copy=False))
+
+
 def dominator_subtree_size(G: nx.DiGraph, entry: Optional[str] = None) -> dict[str, int]:
     """Number of nodes each node dominates, counted from the entry node.
 
@@ -354,9 +374,11 @@ def run_cross_arch_evaluate(
 
 
 def _attach_structural(df: pd.DataFrame, G: nx.DiGraph) -> pd.DataFrame:
+    anc = ancestor_count(G)
     desc = descendant_count(G)
     dom = dominator_subtree_size(G)
     df = df.copy()
+    df["ancestor_count"] = df["service"].map(anc).fillna(0).astype(int)
     df["descendant_count"] = df["service"].map(desc).fillna(0).astype(int)
     df["dominator_subtree_size"] = df["service"].map(dom).fillna(0).astype(int)
     return df

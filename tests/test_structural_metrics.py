@@ -9,6 +9,7 @@ import networkx as nx
 import pytest
 
 from centrality.hybrid_weight_optimizer import (
+    ancestor_count,
     compute_hybrid,
     descendant_count,
     dominator_subtree_size,
@@ -138,3 +139,49 @@ def test_non_quarantined_paths_are_allowed(tmp_path):
     ok.parent.mkdir(parents=True)
     ok.write_text("x")
     refuse_quarantined(ok)       # must not raise
+
+
+# ── ancestor_count (primary predictor, added 2026-09-25) ─────────────────────
+
+def test_ancestor_count_is_descendant_count_on_the_reversed_graph():
+    """The defining identity: ancestors in G == descendants in G-reversed."""
+    G = nx.DiGraph([("a", "b"), ("b", "c"), ("a", "d"), ("d", "c")])
+    assert ancestor_count(G) == descendant_count(G.reverse(copy=False))
+
+
+def test_ancestor_count_matches_networkx_ancestors():
+    G = nx.DiGraph([("a", "b"), ("b", "c"), ("a", "d"), ("d", "c"), ("e", "c")])
+    got = ancestor_count(G)
+    assert got == {n: len(nx.ancestors(G, n)) for n in G.nodes()}
+    assert got == {"a": 0, "b": 1, "c": 4, "d": 1, "e": 0}
+
+
+def test_ancestor_count_excludes_the_node_itself():
+    G = nx.DiGraph([("a", "b")])
+    assert ancestor_count(G)["a"] == 0
+
+
+def test_ancestor_count_is_transitive_not_just_in_degree():
+    """A chain: the leaf has in-degree 1 but 3 ancestors."""
+    G = nx.DiGraph([("a", "b"), ("b", "c"), ("c", "d")])
+    assert G.in_degree("d") == 1
+    assert ancestor_count(G)["d"] == 3
+
+
+def test_ancestor_count_counts_each_cycle_member_once():
+    G = nx.DiGraph([("a", "b"), ("b", "c"), ("c", "a"), ("c", "d")])
+    got = ancestor_count(G)
+    assert got["d"] == 3            # a, b, c -- each once
+    assert got["a"] == 2            # b, c
+
+def test_ancestor_count_does_not_mutate_the_input_graph():
+    G = nx.DiGraph([("a", "b"), ("b", "c")])
+    before = (sorted(G.nodes()), sorted(G.edges()))
+    ancestor_count(G)
+    assert (sorted(G.nodes()), sorted(G.edges())) == before
+
+
+def test_ancestor_count_on_an_isolated_node_is_zero():
+    G = nx.DiGraph()
+    G.add_node("lonely")
+    assert ancestor_count(G) == {"lonely": 0}
