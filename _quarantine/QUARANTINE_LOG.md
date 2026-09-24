@@ -228,3 +228,37 @@ process before this happened, and is retained in `data/pilot/`.
 instance is live. A PID lockfile in `data/pilot/` (or `data/campaign/`) is the minimal
 fix, and is required before the 300-run campaign, where an accidental double-launch would
 silently corrupt a large fraction of the runs in exactly this way.
+
+---
+
+## 10. `data/pilot/pilot_hotelreservation_search_latency_rep1_*.json` → `_quarantine/data/pilot_invalid_blocking_pumba/`
+
+**Quarantined 2026-09-25. Defect: the fault expired ~40 s before the run recorded its
+removal, so `T_rec` is measured from the wrong instant.**
+
+`tools/run_pilot.py` injected every fault with `subprocess.run(...)`. That is correct for
+`kill` (SIGKILL is instantaneous) but wrong for `latency` and `cpu`: `pumba netem` and
+`pumba stress` **block for their entire `--duration`**. The sequence actually executed was:
+
+```
+t=0      pumba netem --duration 30s   (blocks)
+t=30     pumba returns -- THE FAULT IS ALREADY OVER
+t=30     runner begins its own 30 s "fault window"   <- no fault active
+t=60     fault window closes; metrics collected
+t=70.27  "fault removal" recorded; recovery probe starts
+```
+
+The recorded `fault_removal_offset_s = 70.27` against a 30 s configured window is the
+signature. The run's `T_rec = 23.98 s` is therefore measured from ~40 s after the real
+removal, and its fault-window metrics cover a period with no fault active.
+
+`faultinjection/fault_runner.py::inject_fault` had this right all along, using `Popen`
+for LATENCY/CPU and `subprocess.run` only for KILL. The pilot runner did not.
+
+Fixed in `tools/run_pilot.py`: non-kill faults now launch via `Popen` and the runner
+waits for that process to exit before recording the removal instant. Rep 2 was stopped
+before it ran rather than collecting a second invalid observation.
+
+**Not salvageable by reprocessing:** the baseline and fault-window metrics were collected
+over the wrong intervals, so no re-derivation from the stored samples can recover a valid
+measurement. Re-run required.

@@ -146,9 +146,21 @@ def one_run(app: str, service: str, rep: int, cfg: dict, args,
         spec = replace(DEFAULT_SPECS[fault_type],
                        duration_seconds=args.fault_duration)
         fault_start_us = int(time.time() * 1_000_000)
-        print(f"  [FAULT] {' '.join(spec.pumba_command(container))}")
-        subprocess.run(spec.pumba_command(container), check=True, timeout=60,
-                       capture_output=True)
+        cmd = spec.pumba_command(container)
+        print(f"  [FAULT] {' '.join(cmd)}")
+        fault_proc = None
+        if fault_type == FaultType.KILL:
+            # SIGKILL is instantaneous; run it synchronously.
+            subprocess.run(cmd, check=True, timeout=60, capture_output=True)
+        else:
+            # `pumba netem` and `pumba stress` BLOCK for their whole --duration. Running
+            # them synchronously would let the rule expire while we were still waiting,
+            # so the fault window would be over before we started measuring it and the
+            # recorded "removal" instant would land long after the real one. Launch in
+            # the background and let the window below be the authority on timing.
+            # (faultinjection/fault_runner.py::inject_fault does the same.)
+            fault_proc = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+                                          stderr=subprocess.PIPE)
 
         print(f"  [FAULT] holding {args.fault_duration}s")
         time.sleep(args.fault_duration)
@@ -168,8 +180,15 @@ def one_run(app: str, service: str, rep: int, cfg: dict, args,
             subprocess.run([docker_exe, "compose", "up", "-d", service],
                            cwd=str(cfg["compose_dir"]), capture_output=True, timeout=180)
         else:
-            # netem / stress rules expire on their own at the end of the fault window.
-            print(f"  [RESTORE] {fault_type.value} fault auto-expired; nothing to restart")
+            # The rule expires with the pumba process. Wait for it so the removal instant
+            # below is the real one, rather than a guess.
+            print(f"  [RESTORE] waiting for {fault_type.value} rule to expire...")
+            if fault_proc is not None:
+                try:
+                    fault_proc.wait(timeout=args.fault_duration + 60)
+                except subprocess.TimeoutExpired:
+                    fault_proc.kill()
+                    print("  [WARNING] pumba did not exit; killed it")
         restart_s = round(time.time() - restart_t0, 2)
 
         # Amendment (b): the instant the fault was lifted. T_rec counts from here.
