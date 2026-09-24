@@ -305,3 +305,74 @@ observed. These are correctness fixes; I regard them as required rather than opt
 - Nothing tuned, no weights fitted, no manuscript edited.
 - `data/pilot/` holds 8 clean runs; 3 contaminated runs are quarantined.
 - Preregistration remains **unlocked**, pending decisions on (a)–(e).
+
+---
+
+# Addendum — 2026-09-25 recomputation under the amended definitions
+
+Produced by `tools/recompute_pilot.py` (reprocessing only, no fault re-injected) and two
+confirmation runs. Raw output: `data/pilot/recomputed_pilot_outcomes.csv`.
+
+## A1. Blast radius reclassified
+
+| app | service | out-deg | \|anc\| | \|desc\| | **A** | **D** | **U** | old total |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| HR | geo | 0 | 2 | 0 | **2** | 0 | 0 | 2 |
+| HR | geo | 0 | 2 | 0 | **2** | 0 | 0 | 2 |
+| HR | search | 2 | 1 | 2 | **1** | 0 | 0 | 1 |
+| HR | search | 2 | 1 | 2 | **1** | 0 | 0 | 1 |
+| SN | compose-post-service | 7 | 1 | 10 | **1** | 0 | 0 | 1 |
+| SN | compose-post-service | 7 | 1 | 10 | **1** | 0 | 0 | 1 |
+| SN | media-service | 0 | 2 | 0 | **2** | 0 | **5** | 7 |
+| SN | media-service | 0 | 2 | 0 | **2** | 0 | **5** | 7 |
+
+- `ancestor_affected_count == |ancestors|` in **8/8** runs.
+- **0 descendants degraded in any run**, including `compose-post-service`'s 10.
+- `unrelated` is non-zero only for `media-service` (5 services, identical both reps).
+
+## A2. Recovery re-based on fault removal, and replayed under the min-trace floor
+
+| app | service | rep | from injection | removal offset | **from removal** | under min-trace floor |
+|---|---|---|---:|---:|---:|---|
+| HR | geo | 1 | 56.47 | 34.41 | **22.06** | 22.06 |
+| HR | geo | 2 | CENSORED | 35.22 | CENSORED | CENSORED |
+| HR | search | 1 | 46.52 | 34.50 | **12.02** | 12.02 |
+| HR | search | 2 | 46.41 | 34.32 | **12.09** | 12.09 |
+| SN | compose-post-service | 1 | 42.26 | 33.78 | 8.48 | **CENSORED** |
+| SN | compose-post-service | 2 | 44.01 | 34.17 | 9.84 | **CENSORED** |
+| SN | media-service | 1 | 48.35 | 34.02 | 14.33 | **CENSORED** |
+| SN | media-service | 2 | 45.85 | 34.31 | 11.54 | **CENSORED** |
+
+The removal offset is a near-constant **33.8–35.2 s**, confirming it was a fixed protocol
+offset rather than signal. Re-basing removes it: `T_rec` becomes **8.5–22.1 s**.
+
+**The floor censors all four SN runs and none of the HR runs.** HR had 0 thin samples;
+SN had 7–11 thin samples per run, 4–6 of which had voted for recovery. The original SN
+recovery values were resting on 1–17 trace windows. This is a real defect the floor
+correctly exposes — but the floor alone makes SN unmeasurable, which is why the lagged
+window matters.
+
+## A3. Confirmation runs for amendment (e)
+
+Same condition (`compose-post-service` / kill) that exhibited the defect:
+
+| run | median traces | thin/total | thin voted ok | T_rec (from removal) |
+|---|---:|---:|---:|---:|
+| BEFORE rep1 | 13 | 7/11 | **6** | 8.48 |
+| BEFORE rep2 | 18 | 7/12 | **4** | 9.84 |
+| **AFTER rep1** | **38** | 2/15 | **0** | **13.84** |
+| **AFTER rep2** | **34** | 1/17 | **0** | **16.47** |
+
+The lagged window roughly tripled the median trace count and no thin sample voted in
+either run. The floor is visible in rep1: at t=12.40 s all four indicators were in
+tolerance but `trace_count=19` blocked the vote; recovery was declared 1.44 s later on a
+46-trace window. `T_rec` is *larger* after the fix because the earlier values recovered
+"early" on thin evidence.
+
+## A4. Footnote on the censored `geo` rep2 run (amendment c)
+
+Per the decision, the strict 10% threshold stands and no rule exception is made. For the
+record, the hypothesis for that single censored observation is a **cold-cache
+steady-state shift**: error rate reached 0 and downstream count 0 within ~70 s, but
+gateway p95 stabilised at ~95 ms against a 49.9 ms baseline and held there to 180 s. This
+is recorded as a hypothesis about one run, not as grounds to relax the threshold.
