@@ -16,6 +16,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import gzip
 import json
 import os
 from dataclasses import replace
@@ -32,6 +33,7 @@ from faultinjection.fault_config import FaultType, DEFAULT_SPECS  # noqa: E402
 from infra.docker_utils import find_docker_executable  # noqa: E402
 from measurement.metrics_collector import (  # noqa: E402
     collect_baseline_metrics, collect_fault_window_metrics, compute_blast_radius,
+    get_traces_in_window,
 )
 from measurement.blast_radius import classify_affected, is_gateway  # noqa: E402
 from measurement.recovery_probe import probe_recovery  # noqa: E402
@@ -114,6 +116,40 @@ def start_load(cfg: dict, duration: int, users: int) -> subprocess.Popen:
     )
 
 
+def persist_spans(jaeger_url: str, services: list[str], start_us: int, end_us: int,
+                  out_path: Path, label: str) -> dict:
+    """Write the raw Jaeger traces for a window to a gzipped JSON file.
+
+    Preregistration v3 §9.6. The pilot stored only aggregates, so when the per-service
+    percentile definition turned out to be wrong (§6.1) the affected runs could not be
+    recomputed -- Jaeger's in-memory storage was long gone. Persisting the spans makes a
+    definitional change replayable offline instead of a re-run.
+
+    Traces are deduplicated by traceID: Jaeger returns the same trace once per service it
+    touches, so a naive dump stores each trace N times.
+    """
+    seen: dict[str, dict] = {}
+    for svc in services:
+        for tr in get_traces_in_window(jaeger_url, svc, start_us, end_us):
+            tid = tr.get("traceID")
+            if tid and tid not in seen:
+                seen[tid] = tr
+    payload = {
+        "label": label,
+        "window_start_us": start_us,
+        "window_end_us": end_us,
+        "queried_services": services,
+        "trace_count": len(seen),
+        "traces": list(seen.values()),
+    }
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    with gzip.open(out_path, "wt", encoding="utf-8") as fh:
+        json.dump(payload, fh)
+    return {"path": str(out_path.relative_to(ROOT)).replace(chr(92), "/"),
+            "trace_count": len(seen),
+            "bytes": out_path.stat().st_size}
+
+
 def one_run(app: str, service: str, rep: int, cfg: dict, args,
             fault_type: FaultType = FaultType.KILL) -> dict:
     docker_exe = find_docker_executable()
@@ -174,6 +210,19 @@ def one_run(app: str, service: str, rep: int, cfg: dict, args,
         print(f"  [FAULT] gateway p95={fault_m.get('p95_ms')}ms traces={fault_traces} "
               f"downstream={down_n}")
 
+        # v3 §9.6: keep the raw spans for this fault window so any later change to a
+        # metric definition can be replayed rather than re-run.
+        spans_meta = None
+        if getattr(args, "persist_spans", True):
+            stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+            spans_meta = persist_spans(
+                cfg["jaeger"], services, fault_start_us, fault_end_us,
+                Path(args.spans_dir) /
+                f"spans_{app}_{service}_{fault_type.value}_rep{rep}_{stamp}.json.gz",
+                label="fault_window")
+            print(f"  [SPANS] {spans_meta['trace_count']} traces -> "
+                  f"{spans_meta['path']} ({spans_meta['bytes'] / 1e6:.1f} MB)")
+
         restart_t0 = time.time()
         if fault_type == FaultType.KILL:
             print("  [RESTORE] docker compose up -d")
@@ -221,6 +270,7 @@ def one_run(app: str, service: str, rep: int, cfg: dict, args,
             "is_gateway": is_gateway(G, service),
             "excluded_from_correlation": is_gateway(G, service),
             "fault_removal_offset_s": fault_removal_offset_s,
+            "raw_spans": spans_meta,
             "recovery_measured_from": rec.measured_from,
             "recovery_min_traces": rec.min_traces,
             "recovery_lag_s": rec.lag_s,
@@ -272,6 +322,11 @@ def main() -> int:
                     help="amendment (e): minimum traces for a sample to vote for recovery")
     ap.add_argument("--users", type=int, default=25)
     ap.add_argument("--cooldown", type=int, default=20)
+    ap.add_argument("--no-persist-spans", dest="persist_spans",
+                    action="store_false",
+                    help="v3 §9.6: skip writing raw spans (not recommended)")
+    ap.add_argument("--spans-dir", default=str(ROOT / "data" / "spans"),
+                    help="where gzipped raw spans are written")
     args = ap.parse_args()
 
     cfg = APPS[args.app]
