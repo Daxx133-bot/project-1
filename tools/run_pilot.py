@@ -168,6 +168,8 @@ def one_run(app: str, service: str, rep: int, cfg: dict, args,
         time.sleep(args.warmup)
 
         print("  [BASELINE] collecting")
+        baseline_end_us = int(time.time() * 1_000_000)
+        baseline_start_us = baseline_end_us - args.warmup * 1_000_000
         baseline = collect_baseline_metrics(cfg["jaeger"], services,
                                             window_seconds=args.warmup)
         gw_base = baseline.get(cfg["gateway"], {})
@@ -212,16 +214,23 @@ def one_run(app: str, service: str, rep: int, cfg: dict, args,
 
         # v3 §9.6: keep the raw spans for this fault window so any later change to a
         # metric definition can be replayed rather than re-run.
+        # Both windows are kept. The blast-radius rule compares a fault-window
+        # per-service percentile against its BASELINE counterpart, so storing only the
+        # fault window would leave the comparison half-replayable -- which is the exact
+        # gap that made the Q3 fix unverifiable against the pilot runs.
         spans_meta = None
         if getattr(args, "persist_spans", True):
             stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-            spans_meta = persist_spans(
-                cfg["jaeger"], services, fault_start_us, fault_end_us,
-                Path(args.spans_dir) /
-                f"spans_{app}_{service}_{fault_type.value}_rep{rep}_{stamp}.json.gz",
-                label="fault_window")
-            print(f"  [SPANS] {spans_meta['trace_count']} traces -> "
-                  f"{spans_meta['path']} ({spans_meta['bytes'] / 1e6:.1f} MB)")
+            base = (f"spans_{app}_{service}_{fault_type.value}_rep{rep}_{stamp}")
+            spans_meta = {
+                w: persist_spans(cfg["jaeger"], services, a, b,
+                                 Path(args.spans_dir) / f"{base}_{w}.json.gz", label=w)
+                for w, a, b in (("baseline_window", baseline_start_us, baseline_end_us),
+                                ("fault_window", fault_start_us, fault_end_us))
+            }
+            for w, m in spans_meta.items():
+                print(f"  [SPANS] {w}: {m['trace_count']} traces -> "
+                      f"{m['path']} ({m['bytes'] / 1e6:.1f} MB)")
 
         restart_t0 = time.time()
         if fault_type == FaultType.KILL:
@@ -271,6 +280,12 @@ def one_run(app: str, service: str, rep: int, cfg: dict, args,
             "excluded_from_correlation": is_gateway(G, service),
             "fault_removal_offset_s": fault_removal_offset_s,
             "raw_spans": spans_meta,
+            "baseline_window_us": [baseline_start_us, baseline_end_us],
+            "fault_window_us": [fault_start_us, fault_end_us],
+            # Per-service baseline for EVERY service, not just the gateway. This is what
+            # the blast-radius rule actually compares against; storing only the gateway's
+            # made the classification unauditable after the fact.
+            "baseline_per_service": baseline,
             "recovery_measured_from": rec.measured_from,
             "recovery_min_traces": rec.min_traces,
             "recovery_lag_s": rec.lag_s,
