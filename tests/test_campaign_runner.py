@@ -283,3 +283,31 @@ def test_run_lock_refuses_a_second_concurrent_campaign(campaign, monkeypatch):
     (campaign / ".campaign.lock").write_text("pid=999", encoding="utf-8")
     with pytest.raises(SystemExit):
         run_main(monkeypatch, ["--max-runs", "1"], lambda *a: ok_result())
+
+
+def test_all_stacks_are_brought_down_before_the_first_run(campaign, monkeypatch):
+    """Two stacks collide on Jaeger's port and cannot co-reside under the memory ceiling.
+
+    A previous runner that died between stack_up and stack_down leaves one up, so the
+    campaign must not assume a clean host.
+    """
+    rc.build_manifest()
+    downed = []
+    monkeypatch.setattr(rc, "compose",
+                        lambda app, *cmd, timeout=600: downed.append((app, cmd)))
+    run_main(monkeypatch, ["--max-runs", "1"], lambda *a: ok_result())
+    assert {app for app, _ in downed} == set(rc.APPS), "every app must be brought down"
+    assert all(cmd[0] == "down" for _, cmd in downed)
+
+
+def test_pre_clean_failure_does_not_abort_the_campaign(campaign, monkeypatch):
+    import subprocess as sp
+
+    rc.build_manifest()
+
+    def boom(app, *cmd, timeout=600):
+        raise sp.TimeoutExpired(cmd="docker compose down", timeout=600)
+
+    monkeypatch.setattr(rc, "compose", boom)
+    assert run_main(monkeypatch, ["--max-runs", "1"], lambda *a: ok_result()) == 0
+    assert rc.counts(rc.load_manifest())["done"] == 1

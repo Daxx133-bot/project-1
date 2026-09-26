@@ -235,6 +235,25 @@ def stack_down(app: str) -> None:
     compose(app, "down", "-v")
 
 
+def down_all_stacks() -> None:
+    """Bring every application stack down before the first run.
+
+    Necessary, not merely tidy. The two stacks collide on Jaeger's host port and cannot
+    both fit under the Docker VM memory ceiling, and this process cannot know what a
+    previous process (or a human) left running -- a runner that died between `stack_up`
+    and `stack_down` leaves one up. Starting the other on top of it fails in a way that
+    looks like a broken application rather than a dirty host.
+
+    `compose down` on a stack that is not running is a no-op, so this is cheap.
+    """
+    for app in APPS:
+        log_progress(f"[{now()}] PRE-CLEAN down {app}")
+        try:
+            compose(app, "down", "-v", timeout=600)
+        except subprocess.SubprocessError as exc:
+            log_progress(f"[{now()}] PRE-CLEAN {app} raised {type(exc).__name__}: {exc}")
+
+
 def restore_stack(app: str) -> bool:
     """Escalating recovery after a failed run. Returns True if the stack is usable.
 
@@ -449,6 +468,7 @@ def main() -> int:
     with RunLock(LOCK):
         log_progress(f"[{now()}] CAMPAIGN START  {len(todo)} run(s) to go "
                      f"| {counts(doc)}")
+        down_all_stacks()
         try:
             for entry in todo:
                 # Re-read status: nothing else writes the manifest while we hold the
