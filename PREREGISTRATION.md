@@ -3,7 +3,10 @@
 **Study:** Identifying Failure-Prone Microservices Using Graph Centrality Metrics
 **Version:** 3 (2026-09-25). Supersedes v2 (same day, archived at
 `_audit/preregistration_versions/PREREGISTRATION_v2.md`) and v1 (2026-09-23).
-**Status:** READY TO LOCK. All three v2 open questions are resolved and recorded in §11.
+**Status:** **LOCKED 2026-09-26.** All three v2 open questions are resolved and recorded
+in §11. §7.1 was approved as written. Frozen copy:
+`_audit/preregistration_versions/PREREGISTRATION_v3_LOCKED.md`.
+**Code and data state at lock: commit `eaadaf1`.**
 **Supersedes:** every analysis in `_quarantine/` and every number in the current
 manuscript drafts.
 
@@ -100,6 +103,31 @@ its central example was ranked correctly by the metrics it set out to criticise.
 
 **H0 for all of the above:** no monotone association beyond chance. **H0 is a publishable
 outcome.**
+
+### 1.5 A risk to H1 that must be stated before the campaign, not after **[v3]**
+
+In the pilot `ancestor_affected_count` equalled `|ancestors|` in **8 of 8** kill runs, and
+in **both** corrected latency runs (§6.1). If that identity also holds across the campaign,
+then `ancestor_count` correlates with the outcome at **rho = 1.0 by construction**, and H1
+is confirmed *tautologically* rather than empirically: the outcome would simply be a
+re-measurement of the predictor.
+
+That is a real possibility and it is declared here so that it cannot later be presented as
+a strong predictive result. The campaign's informative quantity is therefore **the rate at
+which the identity FAILS**, reported explicitly as a preregistered primary descriptive:
+
+* **`ancestor_saturation`** = fraction of runs in which
+  `ancestor_affected_count == |ancestors|`, per architecture and per fault type.
+
+Interpretation, fixed in advance:
+
+| `ancestor_saturation` | What the paper must say |
+|---|---|
+| **= 1.00** | The mechanism is deterministic: a service failing degrades *every* transitive caller. H1's rho = 1.0 is then **a restatement of the mechanism, not a predictive finding**, and the contribution is the mechanism plus the falsification of the fan-out premise — not a correlation. |
+| **< 1.00** | `ancestor_count` is a genuine upper bound that is only partly realised, and rho < 1 measures how well it predicts. This is the case in which H1 is a real test. |
+
+Either way the fan-out comparison (H1b) remains a genuine test, because the hybrid metric
+is **not** a re-measurement of the outcome.
 
 ---
 
@@ -263,20 +291,52 @@ runs flagged **exactly that set — an exact match, in both runs** — including
 `reservation`, which are **neither ancestors nor descendants of `search`** and were flagged
 purely for sharing a trace.
 
-> **Stated limit of this validation.** The pilot's own fault-window spans were **not
-> persisted** — Jaeger ran with in-memory storage and the per-run JSON stores only
-> aggregates — so the corrected per-service p95 **cannot be recomputed for those runs**.
-> What is shown above is that the old number was *structurally incapable* of separating
-> these services, and that it predicts the observed flagged set exactly. A direct
-> measurement of corrected per-service p95 under a live latency fault requires a fresh
-> run. **[v3] The campaign runner therefore persists raw spans for every run** (§9), so
-> this class of question is never again unanswerable after the fact.
->
-> The 14 pilot runs are reclassified as **method development**. Their A/D/U columns are
-> not comparable to campaign data and will not be pooled with it. The kill-fault ancestor
-> result (§1.3) is unaffected: under kill, descendants stop appearing in traces at all, so
-> the affected set was driven by error rate on services that were still receiving traffic,
-> not by inherited percentiles.
+**[LOCKED 2026-09-26] Direct measurement under a live fault.** The caveat that stood here
+in the draft — that the pilot's spans were never persisted, so the corrected per-service
+p95 could not be measured under an actual fault — has been discharged. Two fresh HR
+`search` latency runs were executed with the corrected code and with both windows' raw
+spans persisted, then replayed under **both** definitions from the same bytes
+(`tools/analyze_live_spans.py`, output `_audit/Q3_LIVE_VALIDATION.txt`).
+
+Per-service p95, baseline to fault (ms), rep 1 / rep 2:
+
+| Service | Relation to `search` | OLD (root-span) | **NEW (own server spans)** | NEW fold-change | Flagged OLD to NEW |
+|---|---|---|---|---:|---|
+| frontend | ancestor (gateway) | 14.50 to 1972.13 / 12.34 to 2046.80 | **14.50 to 1972.13 / 12.34 to 2046.80** | **136.0x / 165.9x** | YES to **YES** |
+| search | *faulted* | 16.43 to 2041.61 / 15.91 to 2275.87 | **6.50 to 1425.39 / 6.35 to 1594.33** | 219.3x / 251.1x | YES to YES |
+| geo | descendant | 16.43 to 2041.61 / 15.91 to 2275.87 | **0.52 to 0.53 / 0.58 to 0.53** | 1.02x / **0.91x** | YES to **no** |
+| rate | descendant | 16.43 to 2041.61 / 15.91 to 2275.87 | **2.61 to 3.00 / 2.68 to 3.27** | 1.15x / 1.22x | YES to **no** |
+| profile | unrelated | 16.14 to 2024.35 / 15.13 to 2209.83 | **1.58 to 1.76 / 1.39 to 1.73** | 1.11x / 1.24x | YES to **no** |
+| reservation | unrelated | 15.80 to 2018.45 / 14.67 to 2159.41 | **4.25 to 4.01 / 3.75 to 3.77** | **0.94x** / 1.01x | YES to **no** |
+| recommendation | unrelated | 5.70 to 4.66 / 4.19 to 5.02 | 0.18 to 0.13 / 0.12 to 0.10 | 0.72x / 0.83x | no to no |
+| user | unrelated | 7.49 to 7.94 / 6.86 to 6.48 | 0.05 to 0.04 / 0.04 to 0.05 | 0.80x / 1.25x | no to no |
+
+| | rep 1 | rep 2 |
+|---|---|---|
+| OLD flagged set | `[frontend, geo, profile, rate, reservation]` | `[frontend, geo, profile, rate, reservation]` |
+| **NEW flagged set** | **`[frontend]`** | **`[frontend]`** |
+| A/D/U | **1/2/2 to 1/0/0** | **1/2/2 to 1/0/0** |
+
+Three things follow, and all three are reported in the paper:
+
+1. **The OLD set reproduces the 2026-09-24 pilot's flagged set exactly, on fresh runs.**
+   The exact-set prediction made before these runs is confirmed empirically, not merely
+   structurally.
+2. **`profile` and `reservation` disappear.** They are **a measurement artifact, not
+   shared-resource contention.** The distinguishing evidence: under the corrected
+   definition their *own* spans move by 1.11x/1.24x and 0.94x/1.01x — `reservation` gets
+   *faster* in rep 1 — while the end-to-end number they had been inheriting moves ~128x.
+   Their error rates are **0.000 throughout**. A contention effect cannot leave a service's
+   own service-time flat, and cannot be negative.
+3. **Both descendants also disappear**, consistent with §1.2: `geo`'s own p95 moves 1.02x
+   and 0.91x. A `netem delay` on `search`'s container does not slow `geo`.
+
+Residual scope limit: the 14 pre-2026-09-26 pilot runs still cannot be recomputed, because
+their spans were never written. They are reclassified as **method development**, their
+A/D/U columns are not pooled with campaign data, and the two runs above supersede them for
+the latency condition. The kill-fault ancestor result (§1.3) is unaffected: under kill,
+descendants stop appearing in traces at all, so the affected set was driven by error rate
+on services still receiving traffic, not by inherited percentiles.
 
 ### 6.2 Blast radius — three columns, never one
 
@@ -402,6 +462,8 @@ Family sizes are **computed, not asserted**, by `tools/compute_test_family.py`:
 
 Each family is corrected by **Benjamini–Hochberg FDR at q = 0.05** *within* the family.
 
+**[LOCKED 2026-09-26 — approved as written.] Do not pool into a single 88-test family.**
+
 **Why split rather than pool.** Pooling both fault types gives one family of 88 and
 roughly halves every per-test threshold. The hypothesis is about how a service *failing*
 propagates, and **kill is the canonical failure**; latency is a different failure mode with
@@ -469,8 +531,13 @@ latency. Dropping CPU removes the 270-run alternative, not runs from the plan.
 - **A run with `telemetry_ok = False` is discarded and re-run**, never analysed as zeros.
 - The runner holds a PID lockfile and refuses to start concurrently — the defect that
   corrupted 3 SN pilot runs (`_quarantine/QUARANTINE_LOG.md` item 9).
-- **[v3] Raw spans are persisted per run** (§9), so any future definitional change can be
-  replayed instead of re-run.
+- **[v3] Raw spans are persisted per run** (§9) for **both** the baseline and the fault
+  window, so any future definitional change can be replayed instead of re-run. Measured
+  cost: **~0.55 MB per run** gzipped (2 HR runs produced 1.1 MB in total), so ~100-300 MB
+  for the campaign. An earlier 1-2 GB estimate was wrong by an order of magnitude.
+- **[v3] `baseline_per_service` is recorded for every service**, not just the gateway. The
+  blast-radius rule compares against it, so omitting it made the classification
+  unauditable after the fact.
 
 **Measured timing.** Median run 116 s, mean 133 s over 14 pilot runs (max 244 s, censored).
 
@@ -543,24 +610,24 @@ A failed combination is re-run to preserve balance (§8); a **censored** combina
 |---|---|---|
 | **Q1 — Hotel Reservation's role** | **Held-out, directional only.** Exact permutation tests throughout; the asymptotic Spearman p-value is never used (measured FPR 0.097 at n = 7). **HR is never reported as confirmatory.** | §3, §7.2 |
 | **Q2 — Fault types** | **Drop CPU entirely. Campaign = kill + latency.** | §8 |
-| **Q3 — Per-service metric semantics** | **Fixed at source**, for percentiles *and* error rate. Validated against a real 16 970-span corpus and against both HR latency pilot runs by exact flagged-set prediction. The 14 pilot runs become **method development** and are not pooled with campaign data. | §6.1 |
+| **Q3 — Per-service metric semantics** | **Fixed at source**, for percentiles *and* error rate. Validated three ways: against a real 16 970-span corpus; by exact flagged-set prediction against the earlier latency runs; and **by direct measurement under a live fault on 2 fresh runs (2026-09-26), where the flagged set went `[frontend, geo, profile, rate, reservation]` to `[frontend]` in both reps.** `profile` and `reservation` were an artifact, not contention. The 14 earlier pilot runs become **method development** and are not pooled with campaign data. | §6.1 |
 | **Primary predictor** | **`ancestor_count`**, implemented by graph reversal reusing `descendant_count`. | §5 |
 | **Comparators** | Hybrid, degree, in-degree, out-degree, betweenness, closeness, eigenvector, PageRank, composite, descendant count, dominator subtree size — all retained, none droppable post hoc. | §5 |
 | **Gateways** | Excluded from quantitative correlation; retained as labelled qualitative examples. | §4 |
 | **$T_{rec}$** | From fault removal; 10% tolerance unchanged; min-trace floor and lagged window retained. | §6.3, §6.4 |
 | **FDR family** | **44 confirmatory (kill) + 44 replication (latency)**, corrected separately, derived by `tools/compute_test_family.py`. | §7.1 |
 
-### One decision this document makes that v2 did not put to you
+### Record of the one decision that was escalated
 
-The **confirmatory / replication split** (§7.1) is mine, not one you specified. The
-alternative is a single pooled family of 88 tests, which is more conservative but roughly
-halves every per-test threshold on an already underpowered design. If you prefer pooling,
-change §7.1 before locking — **it cannot be changed after the campaign starts.**
+The **confirmatory / replication split** (§7.1) was flagged in the draft as a decision the
+document made rather than one it had been given, the alternative being a single pooled
+family of 88 tests. It was **put to the principal investigator and approved as written on
+2026-09-26**: two families of 44, each corrected separately by BH-FDR at q = 0.05,
+**not** pooled. It is now locked and may not be revised.
 
 ---
 
-| | |
-|---|---|
-| **Locked by** | ______________________ |
-| **Date** | ______________________ |
-| **Commit at lock** | ______________________ |
+| **Locked by** | Principal investigator, 2026-09-26 (§7.1 approved as written; Q1/Q2/Q3 issued 2026-09-25) |
+| **Date** | 2026-09-26 |
+| **Code and data state at lock** | `eaadaf1` — the commit containing every script the campaign executes, the canonical graphs, and the Q3 live-validation runs |
+| **Frozen copy** | `_audit/preregistration_versions/PREREGISTRATION_v3_LOCKED.md` |
