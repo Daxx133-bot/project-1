@@ -262,3 +262,46 @@ before it ran rather than collecting a second invalid observation.
 **Not salvageable by reprocessing:** the baseline and fault-window metrics were collected
 over the wrong intervals, so no re-derivation from the stored samples can recover a valid
 measurement. Re-run required.
+
+---
+
+## Item 11 — 3 rehearsal campaign runs, superseded by preregistration amendment 1
+
+**Date:** 2026-09-26
+**Moved from:** `data/campaign/runs/`, `data/spans/`
+**Moved to:** `_quarantine/data/campaign/runs_pre_amendment1/` (3 run records),
+`_quarantine/data/spans_pre_amendment1/` (6 span files — baseline + fault window each)
+
+| Run |
+|---|
+| `run_socialnetwork_compose-post-service_kill_1_2026-09-26T04-22-41.json` |
+| `run_socialnetwork_home-timeline-service_kill_1_2026-09-26T04-25-10.json` |
+| `run_socialnetwork_media-service_kill_1_2026-09-26T04-28-24.json` |
+
+**Why.** These are the 3 runs produced by the pre-launch rehearsal (Preregistration v3 §9
+verification sequence). They ran **before** amendment 1 added the 1.0 ms absolute floor to
+the latency-degradation rule, so the pre-floor rule was in force for both of their primary
+outcomes.
+
+Blast radius **was** recoverable: recomputation from their persisted spans gives
+`compose-post-service` 1/1/0 → **1/0/0** (the spurious `url-shorten-service` descendant
+drops out) and leaves the other two unchanged at 2/0/0
+(`_audit/REHEARSAL_RECOMPUTED.txt`).
+
+$T_{rec}$ **was not.** The recovery probe re-applies the same degradation rule once per
+poll over its own short windows, and those windows are not persisted — only the baseline
+and fault windows are. The recorded `recovery_samples` show `downstream_affected` at 1–3 in
+the majority of samples (27/40, 11/20, 9/15), in every case in samples preceding the first
+all-clear, so the contaminated count was actively gating the recovery decision. In
+`compose-post-service|kill|1` the first all-clear is at t = 13.85 s while $T_{rec}$ was
+recorded as 54.39 s.
+
+Since $T_{rec}$ is one of the two primary outcomes and its inflation is not measurable from
+what is on disk, these 3 runs are **not valid corrected observations**. Their manifest
+entries were reset from `done` to `pending` and the campaign will collect them again under
+the amended rule (~8 minutes of an 8–11 hour campaign). Every row in the final dataset is
+then produced by one code path at one commit.
+
+**Retained deliberately.** These records are the primary evidence for amendment 1 and are
+cited by `PREREGISTRATION.md` §12. They are not analysed as campaign data and must never be
+pooled with it.

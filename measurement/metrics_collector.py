@@ -161,10 +161,15 @@ def compute_latency_percentiles(
     durations_ms = [float(s.get("duration", 0)) / 1000.0 for s in spans]
 
     return {
-        "p50_ms": round(float(np.percentile(durations_ms, 50)), 2),
-        "p95_ms": round(float(np.percentile(durations_ms, 95)), 2),
-        "p99_ms": round(float(np.percentile(durations_ms, 99)), 2),
-        "mean_ms": round(float(np.mean(durations_ms)), 2),
+        # NOT rounded. These values are compared against a threshold with a 1.0 ms
+        # absolute floor (see latency_degraded), and rounding to 2 decimals put the
+        # quantisation step at 0.01 ms -- comparable to the whole signal for services
+        # whose own-span p95 is 0.02 ms. Round at the point of display, never before a
+        # comparison.
+        "p50_ms": float(np.percentile(durations_ms, 50)),
+        "p95_ms": float(np.percentile(durations_ms, 95)),
+        "p99_ms": float(np.percentile(durations_ms, 99)),
+        "mean_ms": float(np.mean(durations_ms)),
         "count": len(durations_ms),
         "scope": scope,
     }
@@ -221,6 +226,54 @@ def compute_error_rate(
     return round(errored / denom, 4)
 
 
+# ── The latency-degradation rule ──────────────────────────────────────────────
+#
+# A service counts as latency-affected only when BOTH conditions hold:
+#
+#     p95_fault > DEGRADATION_FACTOR * p95_baseline        (relative)
+#     p95_fault - p95_baseline >= DEGRADATION_FLOOR_MS      (absolute)
+#
+# WHY THE ABSOLUTE FLOOR EXISTS (amendment 1 to Preregistration v3, 2026-09-26)
+# ----------------------------------------------------------------------------
+# The relative condition alone was safe only for as long as "service X's p95" was
+# secretly the END-TO-END p95 of X's trace cohort -- tens of milliseconds for every
+# service, where sub-millisecond noise could never produce a 2x move. Once percentiles
+# became genuinely per-service (Q3 fix, v3 6.1), 8 of 20 services landed in the
+# 0.02-0.58 ms range, and a purely multiplicative threshold there has no physical
+# meaning: `url-shorten-service` moved 0.02 -> 0.06 ms (3.00x) between two FAULT-FREE
+# baseline windows, with nothing running (tools/check_threshold_floor.py).
+#
+# The error-rate branch of the same rule already carried an absolute floor
+# (+0.05 absolute). This is its latency counterpart. 1.0 ms is ~100x the microsecond
+# quantisation of a Jaeger duration, exceeds every observed baseline-to-baseline drift,
+# and sits far below the smallest genuine effect measured in any pilot run (+36.7 ms).
+DEGRADATION_FACTOR = 2.0
+DEGRADATION_FLOOR_MS = 1.0
+ERROR_RATE_ABS_THRESHOLD = 0.05
+
+
+def latency_degraded(
+    baseline_p95_ms: float,
+    fault_p95_ms: float,
+    degradation_factor: float = DEGRADATION_FACTOR,
+    floor_ms: float = DEGRADATION_FLOOR_MS,
+) -> bool:
+    """True when a service's own p95 rose both proportionally and materially.
+
+    Both arguments must be FULL-PRECISION milliseconds. Passing values already rounded
+    for display reintroduces the quantisation this floor exists to defeat.
+
+    A non-positive baseline means there is nothing to compare against, so no claim of
+    degradation is made -- the caller decides whether that is "no signal" or "idle".
+    """
+    if baseline_p95_ms is None or fault_p95_ms is None:
+        return False
+    if baseline_p95_ms <= 0:
+        return False
+    return (fault_p95_ms > degradation_factor * baseline_p95_ms
+            and fault_p95_ms - baseline_p95_ms >= floor_ms)
+
+
 def compute_blast_radius(
     jaeger_url: str,
     all_services: list[str],
@@ -228,14 +281,16 @@ def compute_blast_radius(
     baseline_latencies: dict[str, dict[str, float]],
     fault_start_us: int,
     fault_end_us: int,
-    degradation_factor: float = 2.0,
+    degradation_factor: float = DEGRADATION_FACTOR,
+    degradation_floor_ms: float = DEGRADATION_FLOOR_MS,
 ) -> tuple[int, list[str]]:
     """
     Compute the blast radius: how many OTHER services were affected
     by the fault on `faulted_service`.
 
     A service is considered "affected" if during the fault window:
-      - Its p95 latency exceeds `degradation_factor × baseline_p95`
+      - Its p95 latency exceeds `degradation_factor × baseline_p95` AND rises by at
+        least `degradation_floor_ms` in absolute terms (see `latency_degraded`)
       - OR its error rate increases above baseline
 
     Args:
@@ -246,6 +301,7 @@ def compute_blast_radius(
         fault_start_us: Fault window start (microseconds since epoch).
         fault_end_us: Fault window end (microseconds since epoch).
         degradation_factor: Threshold multiplier for latency degradation.
+        degradation_floor_ms: Minimum absolute p95 increase, in milliseconds.
 
     Returns:
         Tuple of (affected_count, list_of_affected_service_names).
@@ -279,14 +335,15 @@ def compute_blast_radius(
         baseline_p95 = baseline.get("p95_ms", 0.0)
 
         # Check if latency degraded beyond threshold
-        if baseline_p95 > 0 and fault_latency["p95_ms"] > degradation_factor * baseline_p95:
+        if latency_degraded(baseline_p95, fault_latency["p95_ms"],
+                            degradation_factor, degradation_floor_ms):
             affected.append(service)
             continue
 
         # Check if error rate increased
         fault_error = compute_error_rate(fault_traces, service=service)
         baseline_error = baseline.get("error_rate", 0.0)
-        if fault_error > baseline_error + 0.05:  # 5% absolute increase threshold
+        if fault_error > baseline_error + ERROR_RATE_ABS_THRESHOLD:
             affected.append(service)
 
     return len(affected), affected

@@ -38,8 +38,11 @@ from typing import Any, Callable, Optional
 
 from measurement.metrics_collector import (
     collect_baseline_metrics,
+    DEGRADATION_FACTOR,
+    DEGRADATION_FLOOR_MS,
     compute_error_rate,
     compute_latency_percentiles,
+    latency_degraded,
     get_traces_in_window,
 )
 
@@ -135,7 +138,8 @@ def probe_recovery(
     probe_window_s: float = DEFAULT_PROBE_WINDOW_S,
     lag_s: float = DEFAULT_LAG_S,
     min_traces: int = DEFAULT_MIN_TRACES,
-    degradation_factor: float = 2.0,
+    degradation_factor: float = DEGRADATION_FACTOR,
+    degradation_floor_ms: float = DEGRADATION_FLOOR_MS,
     error_rate_abs_threshold: float = 0.05,
     now_fn: Callable[[], float] = time.time,
     sleep_fn: Callable[[float], None] = time.sleep,
@@ -210,7 +214,7 @@ def probe_recovery(
 
         affected = _count_affected(
             jaeger_url, all_services, baseline, window_start_us, window_end_us,
-            degradation_factor, error_rate_abs_threshold,
+            degradation_factor, error_rate_abs_threshold, degradation_floor_ms,
         )
 
         checks = {
@@ -289,6 +293,7 @@ def _count_affected(
     window_end_us: int,
     degradation_factor: float,
     error_rate_abs_threshold: float,
+    degradation_floor_ms: float = DEGRADATION_FLOOR_MS,
 ) -> int:
     """Number of services still degraded in this window, same rule as compute_blast_radius."""
     affected = 0
@@ -305,7 +310,11 @@ def _count_affected(
         # Q3: per-service spans only. Using root spans here made every service on a
         # slow path look degraded, inflating this count and the blast radius.
         lat = compute_latency_percentiles(traces, service=service)
-        if base_p95 > 0 and lat["p95_ms"] > degradation_factor * base_p95:
+        # Same rule as compute_blast_radius, including the 1.0 ms absolute floor: a
+        # recovery probe that counted 50 microseconds of jitter on a 0.02 ms service as
+        # "still degraded" would block recovery indefinitely on noise.
+        if latency_degraded(base_p95, lat["p95_ms"], degradation_factor,
+                            degradation_floor_ms):
             affected += 1
             continue
         if compute_error_rate(traces, service=service) > base_err + error_rate_abs_threshold:

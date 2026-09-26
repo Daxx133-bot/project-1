@@ -7,6 +7,8 @@
 in §11. §7.1 was approved as written. Frozen copy:
 `_audit/preregistration_versions/PREREGISTRATION_v3_LOCKED.md`.
 **Code and data state at lock: commit `eaadaf1`.**
+**Amendments after lock: 1, logged in §12. No campaign data had been analysed when it was
+made.**
 **Supersedes:** every analysis in `_quarantine/` and every number in the current
 manuscript drafts.
 
@@ -340,9 +342,24 @@ on services still receiving traffic, not by inherited percentiles.
 
 ### 6.2 Blast radius — three columns, never one
 
-For every service flagged as degraded during the fault window, classify its graph relation
-to the faulted node and store all three counts separately
-(`measurement/blast_radius.classify_affected`):
+**What counts as "degraded" [amendment 1, 2026-09-26].** A service is flagged for the
+fault window when **either**
+
+* **latency:** `p95_fault > 2.0 × p95_baseline` **AND**
+  `p95_fault − p95_baseline ≥ 1.0 ms` — both conditions required; or
+* **error rate:** `error_fault > error_baseline + 0.05` (absolute).
+
+Both branches are evaluated on that service's **own server spans** (§6.1) and on
+**full-precision** values. Percentiles are not rounded before the comparison; rounding to
+2 decimals put the quantisation step at 0.01 ms, which is comparable to the entire signal
+for a service whose own-span p95 is 0.02 ms. Rounding happens only for display.
+
+The single rule lives in `measurement.metrics_collector.latency_degraded` and is used by
+the runner, the recovery probe and the offline replay tool alike, so the three cannot
+drift apart. Rationale and evidence for the 1.0 ms floor: §12, amendment 1.
+
+For every service so flagged, classify its graph relation to the faulted node and store
+all three counts separately (`measurement/blast_radius.classify_affected`):
 
 | Column | Meaning |
 |---|---|
@@ -627,7 +644,101 @@ family of 88 tests. It was **put to the principal investigator and approved as w
 
 ---
 
+## 12. Amendment log (changes after lock)
+
+Every change made after the lock timestamp appears here, with what was found, the evidence,
+the fix, and when it was made relative to data collection. Nothing in this document is
+edited silently.
+
+### Amendment 1 — absolute floor on the latency-degradation threshold
+
+| | |
+|---|---|
+| **Date** | 2026-09-26 |
+| **Made before any campaign data existed or was analysed?** | **Yes.** Found during the pre-launch rehearsal (§9 verification sequence), before the campaign was launched. 3 rehearsal runs existed; all 3 were invalidated and reset to `pending` rather than kept (see below). No analysis had been run on any campaign data. |
+| **Sections affected** | §6.2 (definition of "degraded") |
+| **Approved by** | Principal investigator, 2026-09-26 |
+
+**What was found.** The blast-radius rule flagged a service on a purely multiplicative
+condition, `p95_fault > 2.0 × p95_baseline`, with no absolute floor. That was safe only for
+as long as "service X's p95" was in fact the **end-to-end** p95 of X's trace cohort — tens
+of milliseconds for every service, where sub-millisecond noise could never produce a 2×
+move. The Q3 fix (§6.1) made percentiles genuinely per-service, which is correct, and in
+doing so moved **8 of 20 services into the 0.02–0.58 ms range**, where a multiplicative
+threshold has no physical meaning. Percentiles were additionally rounded to 2 decimals
+before the comparison, putting the quantisation step at 0.01 ms — roughly half the entire
+baseline value for the smallest services.
+
+**Evidence** (`tools/check_threshold_floor.py`, over 5 fault-free baseline windows from
+persisted spans):
+
+> `socialnetwork url-shorten-service  0.02 → 0.06 ms  (3.00×)  with NO fault present`
+
+Baseline-to-baseline variation alone exceeded the threshold, so the rule reported
+"degraded" for a service nothing had happened to. `url-shorten-service` is precisely the
+service the rehearsal flagged as a degraded **descendant** of `compose-post-service` — the
+first descendant ever flagged in a kill run, and an artifact. Its own-span p95 moved
+0.019 → 0.073 ms: 3.84×, and **+0.054 ms**.
+
+This contaminated `ancestor_affected_count`, the **primary outcome**, and
+`descendant_affected_count`, whose interpretive weight rests entirely on being ≈ 0.
+
+**The fix.** A second, absolute condition is now required alongside the relative one:
+
+```
+p95_fault > 2.0 × p95_baseline          AND     p95_fault − p95_baseline ≥ 1.0 ms
+```
+
+Percentiles are no longer rounded before comparison. `1.0 ms` was chosen because it is
+~100× the microsecond granularity of a Jaeger span duration, exceeds every observed
+baseline-to-baseline drift, and sits far below the smallest genuine effect measured in any
+pilot run (+36.7 ms, CPU stress). The **error-rate branch of the same rule already carried
+an absolute floor** (+0.05 absolute); this is its latency counterpart, not a new kind of
+constraint. Implemented once, in `measurement.metrics_collector.latency_degraded`, and
+shared by the runner, the recovery probe and the offline replay tool. Covered by 8 tests in
+`tests/test_per_service_metrics.py`.
+
+**Effect on the 3 rehearsal runs.** Recomputed from persisted spans
+(`_audit/REHEARSAL_RECOMPUTED.txt`):
+
+| Run | A/D/U as recorded | A/D/U recomputed | Change |
+|---|---|---|---|
+| `socialnetwork \| compose-post-service \| kill \| 1` | **1/1/0** | **1/0/0** | `url-shorten-service` dropped |
+| `socialnetwork \| home-timeline-service \| kill \| 1` | 2/0/0 | 2/0/0 | none |
+| `socialnetwork \| media-service \| kill \| 1` | 2/0/0 | 2/0/0 | none |
+
+With the floor applied, **0 descendants are degraded in any of the 3 runs**, restoring the
+pattern seen in every earlier kill run.
+
+**Why those 3 runs were nevertheless discarded rather than corrected.** Blast radius is
+recomputable from persisted spans; **$T_{rec}$ is not.** The recovery probe re-evaluates
+the same degradation rule once per poll over its own short windows, and those windows were
+**not** persisted — only the baseline and fault windows are. Inspection of the recorded
+`recovery_samples` shows `downstream_affected` was **1–3 in the majority of samples (27/40,
+11/20, 9/15), and in every case in samples preceding the first all-clear**, so the
+contaminated count was actively gating the recovery decision. In
+`compose-post-service|kill|1` the first all-clear sample is at t = 13.85 s while $T_{rec}$
+was recorded as 54.39 s — a 40-second gap that sub-millisecond noise repeatedly breaking
+the 5 s confirmation hold would explain. The size of that inflation cannot be recovered
+from what is on disk.
+
+Since $T_{rec}$ is one of the two primary outcomes, the 3 runs were **reset to `pending`**
+and will be collected again by the campaign under the amended rule. Cost: ~8 minutes of an
+8–11 hour campaign. The benefit is that **every row in the final dataset was produced by
+one code path at one commit**, with no provenance asymmetry to document or defend.
+
+**Provenance note for the paper.** This amendment is disclosed under reporting commitment
+§10.5 (deviations) and §10.7 (measurement bugs disclosed). It is an instance of the
+pre-launch rehearsal doing its job: the defect was introduced by a *correct* fix, was
+invisible in aggregate outputs, and was caught only because the rehearsal produced a single
+anomalous descendant count that was then traced rather than accepted.
+
+---
+
+| | |
+|---|---|
 | **Locked by** | Principal investigator, 2026-09-26 (§7.1 approved as written; Q1/Q2/Q3 issued 2026-09-25) |
 | **Date** | 2026-09-26 |
 | **Code and data state at lock** | `eaadaf1` — the commit containing every script the campaign executes, the canonical graphs, and the Q3 live-validation runs |
 | **Frozen copy** | `_audit/preregistration_versions/PREREGISTRATION_v3_LOCKED.md` |
+| **Amendments after lock** | 1 (§12), 2026-09-26, before any campaign data was analysed |

@@ -35,15 +35,17 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from measurement.metrics_collector import (  # noqa: E402
+    DEGRADATION_FACTOR,
+    DEGRADATION_FLOOR_MS,
+    ERROR_RATE_ABS_THRESHOLD,
     compute_error_rate,
     compute_latency_percentiles,
+    latency_degraded,
     span_service_map,
 )
 from tools.run_pilot import APPS  # noqa: E402
 
 INFRA = ("jaeger", "mongo", "redis", "memcached", "consul")
-DEGRADATION_FACTOR = 2.0        # blast-radius rule: p95 > 2x baseline
-ERROR_ABS_THRESHOLD = 0.05      # or error rate up by 5 absolute points
 
 
 def load_spans(rel: str) -> list[dict]:
@@ -72,15 +74,25 @@ def measure(traces: list[dict], svc: str, per_service: bool) -> dict:
 
 
 def flagged(base: dict, fault: dict) -> tuple[bool, str]:
-    """The blast-radius rule, returning the reason it fired."""
+    """The blast-radius rule, returning the reason it fired.
+
+    Delegates to measurement.latency_degraded so this replay cannot drift away from what
+    the runner actually applied.
+    """
     if fault["n_traces"] == 0:
         return False, "no traffic in fault window (idle)"
     bp, fp = base["p95"], fault["p95"]
+    if latency_degraded(bp, fp):
+        return True, (f"p95 {fp:.3f} > {DEGRADATION_FACTOR:g}x{bp:.3f} "
+                      f"and +{fp - bp:.3f} >= {DEGRADATION_FLOOR_MS:g}ms")
     if bp and bp > 0 and fp is not None and fp > DEGRADATION_FACTOR * bp:
-        return True, f"p95 {fp:.2f} > {DEGRADATION_FACTOR:g}x{bp:.2f}"
+        # Relative condition met, absolute floor not. Name it: under the pre-amendment
+        # rule this service WOULD have been counted.
+        return False, (f"BELOW FLOOR: {fp:.3f} is {fp / bp:.2f}x{bp:.3f} but only "
+                       f"+{fp - bp:.3f} ms (< {DEGRADATION_FLOOR_MS:g} ms)")
     be, fe = (base["err"] or 0.0), (fault["err"] or 0.0)
-    if fe > be + ERROR_ABS_THRESHOLD:
-        return True, f"err {fe:.3f} > {be:.3f}+{ERROR_ABS_THRESHOLD}"
+    if fe > be + ERROR_RATE_ABS_THRESHOLD:
+        return True, f"err {fe:.3f} > {be:.3f}+{ERROR_RATE_ABS_THRESHOLD}"
     return False, "within tolerance"
 
 
@@ -137,7 +149,8 @@ def analyse(run_path: Path) -> dict:
                      "new_flagged": nf_flag, "new_reason": nf_why,
                      "new_base_err": nb["err"], "new_fault_err": nf["err"],
                      "fault_traces": of["n_traces"], "fault_spans": nf.get("n_spans")})
-        fmt = lambda v: ("     -" if v is None else f"{v:10.2f}")
+        fmt = lambda v: ("     -" if v is None else
+                         (f"{v:10.3f}" if v < 1.0 else f"{v:10.2f}"))
         print(f"{s:<15}{relation(s):<11}"
               f"{fmt(ob['p95'])}{fmt(of['p95'])}{('YES' if of_flag else '.'):>10}   "
               f"{fmt(nb['p95'])}{fmt(nf['p95'])}{('YES' if nf_flag else '.'):>10}")

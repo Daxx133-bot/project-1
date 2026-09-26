@@ -8,13 +8,19 @@ The blast-radius rule flags a service when
 
     p95(service, fault) > DEGRADATION_FACTOR * p95(service, baseline)
 
-with DEGRADATION_FACTOR = 2.0 and no absolute floor. That was safe while "a service's p95"
+with DEGRADATION_FACTOR = 2.0 and, BEFORE amendment 1 (2026-09-26), no absolute floor.
+This script is what established that the floor was needed, and is kept as the standing
+check on it. That threshold was safe while "a service's p95"
 was the END-TO-END trace p95 (tens of milliseconds for every service): sub-millisecond
 noise could never produce a 2x move.
 
 The Q3 fix (v3 §6.1) made percentiles per-service, which is correct -- and which moved many
 services into the 0.02-0.60 ms range, where a purely multiplicative threshold has no
 physical meaning. This script measures that directly from persisted baseline spans.
+
+The fix is `DEGRADATION_FLOOR_MS` (currently 1.0 ms), required as a SECOND condition
+alongside the 2x factor. Re-running this script after collecting more baseline windows
+checks that the floor still clears the observed baseline-only drift.
 
 Two questions, both answered from logged data only:
 
@@ -39,15 +45,17 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from measurement.metrics_collector import (  # noqa: E402
+    DEGRADATION_FACTOR,
+    DEGRADATION_FLOOR_MS,
     compute_latency_percentiles,
     span_service_map,
 )
 
 INFRA = ("jaeger", "mongo", "redis", "memcached", "consul")
-DEGRADATION_FACTOR = 2.0
 SUB_MS = 1.0
-# Jaeger stores span durations in whole microseconds and the percentile helper rounds the
-# millisecond value to 2 decimals, so 0.01 ms is the smallest representable difference.
+# Jaeger stores span durations in whole microseconds. Percentiles are no longer rounded
+# before comparison (amendment 1), but 0.01 ms remains the granularity at which these
+# values were historically stored and displayed, so it is the reference scale here.
 QUANTUM_MS = 0.01
 
 

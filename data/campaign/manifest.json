@@ -15,11 +15,11 @@
       "service": "compose-post-service",
       "fault_type": "kill",
       "repetition": 1,
-      "status": "done",
-      "attempts": 1,
-      "result_file": "data/campaign/runs/run_socialnetwork_compose-post-service_kill_1_2026-09-26T04-22-41.035633+00-00.json",
-      "error": null,
-      "updated_at": "2026-09-26T04:22:41.051736+00:00"
+      "status": "pending",
+      "attempts": 0,
+      "result_file": null,
+      "error": "reset by amendment 1 (2026-09-26): run predates the 1.0 ms degradation floor; blast radius was recomputable from spans but T_rec was not, because recovery-probe windows are not persisted",
+      "updated_at": "2026-09-26T04:58:56.307726+00:00"
     },
     {
       "id": "socialnetwork|home-timeline-service|kill|1",
@@ -27,11 +27,11 @@
       "service": "home-timeline-service",
       "fault_type": "kill",
       "repetition": 1,
-      "status": "done",
-      "attempts": 1,
-      "result_file": "data/campaign/runs/run_socialnetwork_home-timeline-service_kill_1_2026-09-26T04-25-10.439641+00-00.json",
-      "error": null,
-      "updated_at": "2026-09-26T04:25:10.455313+00:00"
+      "status": "pending",
+      "attempts": 0,
+      "result_file": null,
+      "error": "reset by amendment 1 (2026-09-26): run predates the 1.0 ms degradation floor; blast radius was recomputable from spans but T_rec was not, because recovery-probe windows are not persisted",
+      "updated_at": "2026-09-26T04:58:56.307758+00:00"
     },
     {
       "id": "socialnetwork|media-service|kill|1",
@@ -39,11 +39,11 @@
       "service": "media-service",
       "fault_type": "kill",
       "repetition": 1,
-      "status": "done",
-      "attempts": 1,
-      "result_file": "data/campaign/runs/run_socialnetwork_media-service_kill_1_2026-09-26T04-28-24.403382+00-00.json",
-      "error": null,
-      "updated_at": "2026-09-26T04:28:24.408750+00:00"
+      "status": "pending",
+      "attempts": 0,
+      "result_file": null,
+      "error": "reset by amendment 1 (2026-09-26): run predates the 1.0 ms degradation floor; blast radius was recomputable from spans but T_rec was not, because recovery-probe windows are not persisted",
+      "updated_at": "2026-09-26T04:58:56.307764+00:00"
     },
     {
       "id": "socialnetwork|post-storage-service|kill|1",
@@ -2168,6 +2168,20 @@
       "result_file": null,
       "error": null,
       "updated_at": null
+    }
+  ],
+  "amendments": [
+    {
+      "amendment": 1,
+      "date": "2026-09-26T04:58:56.307788+00:00",
+      "summary": "absolute 1.0 ms floor added to the latency-degradation rule",
+      "runs_reset": [
+        "socialnetwork|compose-post-service|kill|1",
+        "socialnetwork|home-timeline-service|kill|1",
+        "socialnetwork|media-service|kill|1"
+      ],
+      "reason": "T_rec is not recomputable for these runs; see PREREGISTRATION.md section 12",
+      "originals_preserved_at": "_quarantine/data/campaign/runs_pre_amendment1/"
     }
   ]
 }

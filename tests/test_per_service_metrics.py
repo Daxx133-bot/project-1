@@ -124,3 +124,81 @@ def test_error_rate_denominator_is_traces_the_service_appears_in():
     }
     # geo appears in 1 of 2 traces and errored in it -> 1.0, not 0.5.
     assert compute_error_rate([with_geo, without_geo], service="geo") == 1.0
+
+
+# ── The latency-degradation rule and its absolute floor ──────────────────────
+#
+# Amendment 1 to Preregistration v3 (2026-09-26). A purely multiplicative threshold
+# produces false positives once percentiles are genuinely per-service: measured on real
+# baseline spans, `url-shorten-service` moved 0.02 -> 0.06 ms (3.00x) between two
+# FAULT-FREE windows. The values below are those measurements.
+
+from measurement.metrics_collector import (  # noqa: E402
+    DEGRADATION_FACTOR,
+    DEGRADATION_FLOOR_MS,
+    latency_degraded,
+)
+
+
+def test_floor_is_one_millisecond_and_factor_is_two():
+    assert DEGRADATION_FLOOR_MS == 1.0
+    assert DEGRADATION_FACTOR == 2.0
+
+
+def test_the_observed_false_positive_is_now_rejected():
+    """url-shorten-service, the descendant the rehearsal wrongly flagged."""
+    assert latency_degraded(0.02, 0.07) is False        # 3.50x but only +0.05 ms
+    assert latency_degraded(0.02, 0.06) is False        # baseline-only drift, 3.00x
+
+
+def test_a_large_relative_move_below_the_floor_is_rejected():
+    """Any sub-millisecond service can exceed 2x on noise; the floor is what stops it."""
+    assert latency_degraded(0.02, 0.98) is False        # 49x, +0.96 ms -> still below
+    assert latency_degraded(0.40, 0.90) is False        # 2.25x, +0.50 ms
+
+
+def test_a_real_effect_still_passes():
+    assert latency_degraded(14.50, 1972.13) is True     # HR frontend under netem
+    assert latency_degraded(0.50, 2.00) is True         # 4.00x and +1.50 ms
+    assert latency_degraded(10.0, 21.0) is True         # 2.10x and +11.0 ms
+
+
+def test_the_relative_condition_is_still_required():
+    """Meeting the floor alone is not enough -- a big absolute move on a slow service."""
+    assert latency_degraded(100.0, 150.0) is False      # +50 ms but only 1.50x
+    assert latency_degraded(100.0, 201.0) is True       # 2.01x and +101 ms
+
+
+def test_exactly_at_the_floor_counts_and_just_under_does_not():
+    assert latency_degraded(1.0, 2.0) is False          # 2.00x is not > 2.00x
+    assert latency_degraded(1.0, 2.0001) is True        # just over both
+    # 0.5 and 1.5 are exactly representable in binary, so the difference is exactly 1.0.
+    # Do not use e.g. (0.4, 1.4) here: 1.4 - 0.4 evaluates to 0.9999999999999999, so the
+    # >= comparison fails. The boundary is inherently fuzzy at float precision, which is
+    # harmless -- a real effect clears 1.0 ms by orders of magnitude, and the smallest
+    # genuine effect ever measured is +36.7 ms -- but the test must not assert an equality
+    # binary arithmetic cannot deliver.
+    assert latency_degraded(0.5, 1.5) is True           # 3.00x and exactly +1.0 ms
+    assert latency_degraded(0.5, 1.4999) is False       # +0.9999 ms
+
+
+def test_a_missing_or_nonpositive_baseline_makes_no_claim():
+    assert latency_degraded(0.0, 500.0) is False
+    assert latency_degraded(None, 500.0) is False
+    assert latency_degraded(5.0, None) is False
+    assert latency_degraded(-1.0, 500.0) is False
+
+
+def test_percentiles_are_not_rounded_before_comparison():
+    """Rounding to 2dp put the quantisation step at 0.01 ms -- the size of the signal."""
+    # Three spans of 1, 2 and 1000 microseconds: the p95 interpolates to a value that
+    # 2dp rounding would flatten.
+    trace = {
+        "traceID": "t",
+        "processes": {"p1": {"serviceName": "tiny"}},
+        "spans": [
+            _span("a", "p1", 0.001), _span("b", "p1", 0.002), _span("c", "p1", 1.000),
+        ],
+    }
+    p95 = compute_latency_percentiles([trace], service="tiny")["p95_ms"]
+    assert p95 != round(p95, 2), "value must retain precision beyond 2 decimals"
