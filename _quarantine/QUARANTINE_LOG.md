@@ -393,3 +393,82 @@ baselines.
 **Retained deliberately.** These records are the evidence for the root cause and are cited
 by `PREREGISTRATION.md` §12 amendment 2. They are not campaign data and must never be
 pooled with it.
+
+---
+
+## Item 13 — 11 Social Network latency runs invalidated by a leaked `pumba netem` rule
+
+**Date:** 2026-09-26
+**Moved from:** `data/campaign/runs/`, `data/spans/`
+**Moved to:** `_quarantine/data/campaign/runs_leaked_netem/`,
+`_quarantine/data/spans_leaked_netem/`
+
+| Run | Role |
+|---|---|
+| `socialnetwork\|compose-post-service\|latency\|1` | **Origin.** Its netem delay was never removed. |
+| `socialnetwork\|{home-timeline, media, post-storage, social-graph, text, unique-id, url-shorten, user-mention, user, user-timeline}-service\|latency\|1` | 10 runs whose **baseline** was collected while that delay was still active. |
+
+### What happened
+
+`pumba netem delay --time 500 --jitter 100 --duration 30s` was applied to
+`compose-post-service` at 05:31:41. The runner launched it with `Popen` and waited for the
+process to exit, which it did (`container_restart_time_s = 32.85`). **The tc rule did not go
+away with it.**
+
+Evidence, from the persisted baseline spans of the runs that followed:
+
+| Run start | `compose-post-service` own-span p95 in a **fault-free baseline** |
+|---|---:|
+| 05:31:41 (the origin run itself) | 8.87 ms |
+| 05:34:02 → 05:56:51 (10 runs) | **2153 – 2486 ms** |
+| 07:29:54 onward (rep 2, after a stack teardown) | **9.0 – 9.8 ms** |
+
+The delay persisted for the whole remainder of the Social Network latency rep-1 block and
+was cleared only by the stack teardown at 05:59. Gateway baseline p95 over those 10 runs was
+**3132 – 4046 ms against a campaign median of 54.87 ms** (57–74× the median, 8600–11100 MAD).
+
+### Why this was dangerous rather than merely noisy
+
+The distortion is **systematic and directional**. An inflated baseline makes the fault look
+smaller, because the rule asks whether fault p95 exceeds 2× baseline. The faulted service's
+ancestors — `nginx-web-server` and `compose-post-service` — were **already degraded in the
+baseline**, so they could not clear 2× their own inflated values and went uncounted.
+`ancestor_affected_count`, the primary outcome, came out **lower by exactly 2 in most runs**:
+
+| Service | rep 1 (contaminated) | rep 2 (clean) |
+|---|---:|---:|
+| home-timeline, media, text, unique-id, user, user-timeline | **0** | 2 |
+| social-graph, url-shorten, user-mention | **1** | 3 |
+| post-storage | **2** | 4 |
+
+Every one of the ten is understated. Had this been analysed, it would have flattened the
+Social Network H1 correlation and been indistinguishable from genuine measurement noise. No
+individual run record looked anomalous; only the cross-run comparison exposed it.
+
+The origin run is also invalid, for a different reason: it is recorded as censored with
+`recovery_blocking_indicator = "p95"`, but the fault was **still active** throughout its
+recovery probe. That censoring says nothing about how fast the application recovers.
+
+### Fixes
+
+1. **`one_run` now force-recreates the target container after every non-kill fault run**
+   (`docker compose up -d --force-recreate <svc>`). A fresh container cannot carry a
+   residual qdisc. It runs *after* the fault window and *after* the recovery probe, so it
+   cannot influence the run that just completed — its only job is to guarantee the next run
+   starts clean. Kill runs already received a fresh container by necessity. Recorded per run
+   as `fault_cleanup`.
+2. **`tools/audit_baseline_sanity.py`** added as a standing pre-analysis gate: it flags any
+   run whose baseline p95 is an outlier for its application, by median and MAD. This is the
+   check that caught the incident, and it must report zero flagged runs before any
+   statistics are computed. It is now run alongside `tools/audit_run_topology.py`.
+
+### Scope — verified, not assumed
+
+`tools/audit_baseline_sanity.py` over all 180 runs flags **exactly these 10**; Hotel
+Reservation has **no** run above 3× its median. The 11th (the origin) was identified from its
+fault-removal timing and the demonstrated persistence of its rule. All other 169 runs have
+steady-state baselines and complete topologies
+(`tools/audit_run_topology.py`: 0 of 180 incomplete).
+
+**Retained deliberately.** These records are the evidence for amendment 3 and are cited by
+`PREREGISTRATION.md` §12. They are not campaign data and must never be pooled with it.

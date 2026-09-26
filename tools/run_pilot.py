@@ -326,6 +326,28 @@ def one_run(app: str, service: str, rep: int, cfg: dict, args,
             print(f"  [RECOVERY] CENSORED at {rec.observed_until_s}s "
                   f"(blocked on {rec.blocking_indicator})")
 
+        # A `pumba netem` rule is supposed to expire with its --duration, but it does not
+        # always: on 2026-09-26 a delay applied to compose-post-service survived its own
+        # run and stayed active for the 10 SN latency runs that followed, inflating their
+        # baselines ~60x and systematically UNDER-counting ancestor_affected_count by 2
+        # (the two ancestors were already degraded before the fault). The stack teardown
+        # cleared it, so nothing in the run records revealed it.
+        #
+        # Recreating the container removes any residual qdisc unconditionally. It happens
+        # AFTER the fault window and AFTER the recovery probe, so it cannot influence this
+        # run's measurements -- it exists to guarantee the NEXT run starts clean. Kill runs
+        # already got a fresh container by necessity.
+        fault_cleanup = None
+        if fault_type != FaultType.KILL:
+            print(f"  [CLEANUP] force-recreating {compose_svc} to clear any residual rule")
+            cu = subprocess.run(
+                [docker_exe, "compose", "up", "-d", "--force-recreate", compose_svc],
+                cwd=str(cfg["compose_dir"]), capture_output=True, text=True, timeout=300)
+            fault_cleanup = {"performed": True, "returncode": cu.returncode,
+                             "stderr_tail": cu.stderr.strip()[-300:]}
+            if cu.returncode != 0:
+                print(f"  [WARNING] cleanup recreate failed: {cu.stderr.strip()[-200:]}")
+
         cls = classify_affected(G, service, down_list)
         print(f"  [BLAST] ancestors={cls['ancestor_affected_count']}/{cls['n_ancestors']} "
               f"descendants={cls['descendant_affected_count']}/{cls['n_descendants']} "
@@ -339,6 +361,7 @@ def one_run(app: str, service: str, rep: int, cfg: dict, args,
             "excluded_from_correlation": is_gateway(G, service),
             "fault_removal_offset_s": fault_removal_offset_s,
             "raw_spans": spans_meta,
+            "fault_cleanup": fault_cleanup,
             "baseline_window_us": [baseline_start_us, baseline_end_us],
             "fault_window_us": [fault_start_us, fault_end_us],
             # Per-service baseline for EVERY service, not just the gateway. This is what

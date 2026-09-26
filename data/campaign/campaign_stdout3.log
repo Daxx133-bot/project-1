@@ -1,0 +1,2477 @@
+[2026-09-26T07:02:01.747519+00:00] CAMPAIGN START  144 run(s) to go | {'pending': 144, 'running': 0, 'done': 35, 'censored': 1, 'failed': 0}
+[2026-09-26T07:02:01.748873+00:00] PRE-CLEAN down socialnetwork
+[2026-09-26T07:02:02.069608+00:00] PRE-CLEAN down hotelreservation
+[2026-09-26T07:02:02.341146+00:00] STACK UP   socialnetwork
+
+======================================================================
+  socialnetwork / compose-post-service / kill / rep 2   (container: socialnetwork-compose-post-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.241ms traces=247
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-compose-post-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=1735.8296ms traces=105 downstream=1
+  [SPANS] baseline_window: 292 traces -> data/spans/spans_socialnetwork_compose-post-service_kill_rep2_20260926T070355Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 111 traces -> data/spans/spans_socialnetwork_compose-post-service_kill_rep2_20260926T070355Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 24.19s
+  [BLAST] ancestors=1/1 descendants=0/10 unrelated=0
+[2026-09-26T07:04:30.524335+00:00] DONE     socialnetwork|compose-post-service|kill|2        A/D/U=1/0/0  err=0.2571  dp95=1681.6  T_rec=24.19s | done=36 censored=1 failed=0 pending=143
+
+======================================================================
+  socialnetwork / home-timeline-service / kill / rep 2   (container: socialnetwork-home-timeline-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.01875ms traces=262
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-home-timeline-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=8296.256499999976ms traces=47 downstream=2
+  [SPANS] baseline_window: 296 traces -> data/spans/spans_socialnetwork_home-timeline-service_kill_rep2_20260926T070624Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 50 traces -> data/spans/spans_socialnetwork_home-timeline-service_kill_rep2_20260926T070624Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 16.57s
+  [BLAST] ancestors=2/2 descendants=0/3 unrelated=0
+[2026-09-26T07:06:50.271680+00:00] DONE     socialnetwork|home-timeline-service|kill|2       A/D/U=2/0/0  err=0.617  dp95=8242.2  T_rec=16.57s | done=37 censored=1 failed=0 pending=142
+
+======================================================================
+  socialnetwork / media-service / kill / rep 2   (container: socialnetwork-media-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.04835ms traces=226
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-media-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=6337.0414ms traces=55 downstream=2
+  [SPANS] baseline_window: 258 traces -> data/spans/spans_socialnetwork_media-service_kill_rep2_20260926T070844Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 62 traces -> data/spans/spans_socialnetwork_media-service_kill_rep2_20260926T070844Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 16.5s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T07:09:09.876596+00:00] DONE     socialnetwork|media-service|kill|2               A/D/U=2/0/0  err=0.3091  dp95=6283.0  T_rec=16.5s | done=38 censored=1 failed=0 pending=141
+
+======================================================================
+  socialnetwork / post-storage-service / kill / rep 2   (container: socialnetwork-post-storage-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.9988ms traces=238
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-post-storage-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=4312.11225ms traces=44 downstream=4
+  [SPANS] baseline_window: 274 traces -> data/spans/spans_socialnetwork_post-storage-service_kill_rep2_20260926T071104Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 48 traces -> data/spans/spans_socialnetwork_post-storage-service_kill_rep2_20260926T071104Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.31s
+  [BLAST] ancestors=4/4 descendants=0/0 unrelated=0
+[2026-09-26T07:11:29.306202+00:00] DONE     socialnetwork|post-storage-service|kill|2        A/D/U=4/0/0  err=0.75  dp95=4257.1  T_rec=15.31s | done=39 censored=1 failed=0 pending=140
+
+======================================================================
+  socialnetwork / social-graph-service / kill / rep 2   (container: socialnetwork-social-graph-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.14125ms traces=272
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-social-graph-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3427.0654ms traces=80 downstream=3
+  [SPANS] baseline_window: 305 traces -> data/spans/spans_socialnetwork_social-graph-service_kill_rep2_20260926T071323Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 83 traces -> data/spans/spans_socialnetwork_social-graph-service_kill_rep2_20260926T071323Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 12.68s
+  [BLAST] ancestors=3/3 descendants=0/1 unrelated=0
+[2026-09-26T07:13:45.454087+00:00] DONE     socialnetwork|social-graph-service|kill|2        A/D/U=3/0/0  err=0.225  dp95=3371.9  T_rec=12.68s | done=40 censored=1 failed=0 pending=139
+
+======================================================================
+  socialnetwork / text-service / kill / rep 2   (container: socialnetwork-text-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.38779999999999ms traces=283
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-text-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=6395.3312ms traces=55 downstream=2
+  [SPANS] baseline_window: 289 traces -> data/spans/spans_socialnetwork_text-service_kill_rep2_20260926T071539Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 69 traces -> data/spans/spans_socialnetwork_text-service_kill_rep2_20260926T071539Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.31s
+  [BLAST] ancestors=2/2 descendants=0/2 unrelated=0
+[2026-09-26T07:16:04.399319+00:00] DONE     socialnetwork|text-service|kill|2                A/D/U=2/0/0  err=0.2909  dp95=6339.9  T_rec=15.31s | done=41 censored=1 failed=0 pending=138
+
+======================================================================
+  socialnetwork / unique-id-service / kill / rep 2   (container: socialnetwork-unique-id-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.8919ms traces=253
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-unique-id-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3445.277ms traces=62 downstream=2
+  [SPANS] baseline_window: 262 traces -> data/spans/spans_socialnetwork_unique-id-service_kill_rep2_20260926T071758Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 77 traces -> data/spans/spans_socialnetwork_unique-id-service_kill_rep2_20260926T071758Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 13.89s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T07:18:21.751601+00:00] DONE     socialnetwork|unique-id-service|kill|2           A/D/U=2/0/0  err=0.2258  dp95=3390.4  T_rec=13.89s | done=42 censored=1 failed=0 pending=137
+
+======================================================================
+  socialnetwork / url-shorten-service / kill / rep 2   (container: socialnetwork-url-shorten-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=53.92999999999999ms traces=256
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-url-shorten-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3461.2290000000003ms traces=82 downstream=3
+  [SPANS] baseline_window: 294 traces -> data/spans/spans_socialnetwork_url-shorten-service_kill_rep2_20260926T072016Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 86 traces -> data/spans/spans_socialnetwork_url-shorten-service_kill_rep2_20260926T072016Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 12.65s
+  [BLAST] ancestors=3/3 descendants=0/0 unrelated=0
+[2026-09-26T07:20:37.441440+00:00] DONE     socialnetwork|url-shorten-service|kill|2         A/D/U=3/0/0  err=0.2317  dp95=3407.3  T_rec=12.65s | done=43 censored=1 failed=0 pending=136
+
+======================================================================
+  socialnetwork / user-mention-service / kill / rep 2   (container: socialnetwork-user-mention-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=53.9363ms traces=246
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-user-mention-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3438.6965999999998ms traces=65 downstream=3
+  [SPANS] baseline_window: 273 traces -> data/spans/spans_socialnetwork_user-mention-service_kill_rep2_20260926T072231Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 94 traces -> data/spans/spans_socialnetwork_user-mention-service_kill_rep2_20260926T072231Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 12.68s
+  [BLAST] ancestors=3/3 descendants=0/0 unrelated=0
+[2026-09-26T07:22:53.074513+00:00] DONE     socialnetwork|user-mention-service|kill|2        A/D/U=3/0/0  err=0.2154  dp95=3384.8  T_rec=12.68s | done=44 censored=1 failed=0 pending=135
+
+======================================================================
+  socialnetwork / user-service / kill / rep 2   (container: socialnetwork-user-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.0044ms traces=264
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-user-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=6744.5353ms traces=55 downstream=2
+  [SPANS] baseline_window: 266 traces -> data/spans/spans_socialnetwork_user-service_kill_rep2_20260926T072447Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 65 traces -> data/spans/spans_socialnetwork_user-service_kill_rep2_20260926T072447Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 18.23s
+  [BLAST] ancestors=2/4 descendants=0/0 unrelated=0
+[2026-09-26T07:25:14.855446+00:00] DONE     socialnetwork|user-service|kill|2                A/D/U=2/0/0  err=0.2182  dp95=6689.5  T_rec=18.23s | done=45 censored=1 failed=0 pending=134
+
+======================================================================
+  socialnetwork / user-timeline-service / kill / rep 2   (container: socialnetwork-user-timeline-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.64875000000001ms traces=248
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-user-timeline-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3438.8675000000003ms traces=43 downstream=2
+  [SPANS] baseline_window: 261 traces -> data/spans/spans_socialnetwork_user-timeline-service_kill_rep2_20260926T072709Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 54 traces -> data/spans/spans_socialnetwork_user-timeline-service_kill_rep2_20260926T072709Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.49s
+  [BLAST] ancestors=2/2 descendants=0/1 unrelated=0
+[2026-09-26T07:27:34.042765+00:00] DONE     socialnetwork|user-timeline-service|kill|2       A/D/U=2/0/0  err=0.4186  dp95=3384.2  T_rec=15.49s | done=46 censored=1 failed=0 pending=133
+
+======================================================================
+  socialnetwork / compose-post-service / latency / rep 2   (container: socialnetwork-compose-post-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.027ms traces=286
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-compose-post-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3667.7315499999995ms traces=64 downstream=1
+  [SPANS] baseline_window: 289 traces -> data/spans/spans_socialnetwork_compose-post-service_latency_rep2_20260926T072926Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 72 traces -> data/spans/spans_socialnetwork_compose-post-service_latency_rep2_20260926T072926Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.56s
+  [BLAST] ancestors=1/1 descendants=0/10 unrelated=0
+[2026-09-26T07:29:54.384753+00:00] DONE     socialnetwork|compose-post-service|latency|2     A/D/U=1/0/0  err=0.0  dp95=3612.7  T_rec=15.56s | done=47 censored=1 failed=0 pending=132
+
+======================================================================
+  socialnetwork / home-timeline-service / latency / rep 2   (container: socialnetwork-home-timeline-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.01895ms traces=290
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-home-timeline-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=2752.927600000001ms traces=77 downstream=2
+  [SPANS] baseline_window: 298 traces -> data/spans/spans_socialnetwork_home-timeline-service_latency_rep2_20260926T073146Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 86 traces -> data/spans/spans_socialnetwork_home-timeline-service_latency_rep2_20260926T073146Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.57s
+  [BLAST] ancestors=2/2 descendants=0/3 unrelated=0
+[2026-09-26T07:32:14.844449+00:00] DONE     socialnetwork|home-timeline-service|latency|2    A/D/U=2/0/0  err=0.0  dp95=2697.9  T_rec=15.57s | done=48 censored=1 failed=0 pending=131
+
+======================================================================
+  socialnetwork / media-service / latency / rep 2   (container: socialnetwork-media-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.3598ms traces=281
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-media-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=599.2878999999999ms traces=124 downstream=2
+  [SPANS] baseline_window: 293 traces -> data/spans/spans_socialnetwork_media-service_latency_rep2_20260926T073406Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 142 traces -> data/spans/spans_socialnetwork_media-service_latency_rep2_20260926T073406Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.28s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T07:34:34.228256+00:00] DONE     socialnetwork|media-service|latency|2            A/D/U=2/0/0  err=0.0  dp95=544.9  T_rec=15.28s | done=49 censored=1 failed=0 pending=130
+
+======================================================================
+  socialnetwork / post-storage-service / latency / rep 2   (container: socialnetwork-post-storage-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.8455ms traces=297
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-post-storage-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=1770.3805999999988ms traces=69 downstream=4
+  [SPANS] baseline_window: 300 traces -> data/spans/spans_socialnetwork_post-storage-service_latency_rep2_20260926T073626Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 82 traces -> data/spans/spans_socialnetwork_post-storage-service_latency_rep2_20260926T073626Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.45s
+  [BLAST] ancestors=4/4 descendants=0/0 unrelated=0
+[2026-09-26T07:36:55.958226+00:00] DONE     socialnetwork|post-storage-service|latency|2     A/D/U=4/0/0  err=0.0  dp95=1715.5  T_rec=15.45s | done=50 censored=1 failed=0 pending=129
+
+======================================================================
+  socialnetwork / social-graph-service / latency / rep 2   (container: socialnetwork-social-graph-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.35135ms traces=296
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-social-graph-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=2114.4599999999996ms traces=98 downstream=3
+  [SPANS] baseline_window: 316 traces -> data/spans/spans_socialnetwork_social-graph-service_latency_rep2_20260926T073848Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 117 traces -> data/spans/spans_socialnetwork_social-graph-service_latency_rep2_20260926T073848Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.84s
+  [BLAST] ancestors=3/3 descendants=0/1 unrelated=0
+[2026-09-26T07:39:16.112684+00:00] DONE     socialnetwork|social-graph-service|latency|2     A/D/U=3/0/0  err=0.0  dp95=2059.1  T_rec=15.84s | done=51 censored=1 failed=0 pending=128
+
+======================================================================
+  socialnetwork / text-service / latency / rep 2   (container: socialnetwork-text-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.5063ms traces=269
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-text-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=1563.50475ms traces=86 downstream=2
+  [SPANS] baseline_window: 282 traces -> data/spans/spans_socialnetwork_text-service_latency_rep2_20260926T074108Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 95 traces -> data/spans/spans_socialnetwork_text-service_latency_rep2_20260926T074108Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.39s
+  [BLAST] ancestors=2/2 descendants=0/2 unrelated=0
+[2026-09-26T07:41:34.193347+00:00] DONE     socialnetwork|text-service|latency|2             A/D/U=2/0/0  err=0.0  dp95=1509.0  T_rec=14.39s | done=52 censored=1 failed=0 pending=127
+
+======================================================================
+  socialnetwork / unique-id-service / latency / rep 2   (container: socialnetwork-unique-id-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.5304ms traces=303
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-unique-id-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=585.2167ms traces=122 downstream=2
+  [SPANS] baseline_window: 311 traces -> data/spans/spans_socialnetwork_unique-id-service_latency_rep2_20260926T074326Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 135 traces -> data/spans/spans_socialnetwork_unique-id-service_latency_rep2_20260926T074326Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.64s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T07:43:53.474611+00:00] DONE     socialnetwork|unique-id-service|latency|2        A/D/U=2/0/0  err=0.0  dp95=530.7  T_rec=14.64s | done=53 censored=1 failed=0 pending=126
+
+======================================================================
+  socialnetwork / url-shorten-service / latency / rep 2   (container: socialnetwork-url-shorten-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.2108ms traces=293
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-url-shorten-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=629.9312ms traces=105 downstream=3
+  [SPANS] baseline_window: 297 traces -> data/spans/spans_socialnetwork_url-shorten-service_latency_rep2_20260926T074545Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 116 traces -> data/spans/spans_socialnetwork_url-shorten-service_latency_rep2_20260926T074545Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.23s
+  [BLAST] ancestors=3/3 descendants=0/0 unrelated=0
+[2026-09-26T07:46:13.421478+00:00] DONE     socialnetwork|url-shorten-service|latency|2      A/D/U=3/0/0  err=0.0  dp95=574.7  T_rec=15.23s | done=54 censored=1 failed=0 pending=125
+
+======================================================================
+  socialnetwork / user-mention-service / latency / rep 2   (container: socialnetwork-user-mention-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.456ms traces=285
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-user-mention-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=628.9855ms traces=96 downstream=3
+  [SPANS] baseline_window: 289 traces -> data/spans/spans_socialnetwork_user-mention-service_latency_rep2_20260926T074805Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 100 traces -> data/spans/spans_socialnetwork_user-mention-service_latency_rep2_20260926T074805Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.27s
+  [BLAST] ancestors=3/3 descendants=0/0 unrelated=0
+[2026-09-26T07:48:33.047479+00:00] DONE     socialnetwork|user-mention-service|latency|2     A/D/U=3/0/0  err=0.0  dp95=574.5  T_rec=15.27s | done=55 censored=1 failed=0 pending=124
+
+======================================================================
+  socialnetwork / user-service / latency / rep 2   (container: socialnetwork-user-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.345800000000004ms traces=309
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-user-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=643.8792000000001ms traces=132 downstream=2
+  [SPANS] baseline_window: 310 traces -> data/spans/spans_socialnetwork_user-service_latency_rep2_20260926T075025Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 138 traces -> data/spans/spans_socialnetwork_user-service_latency_rep2_20260926T075025Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.28s
+  [BLAST] ancestors=2/4 descendants=0/0 unrelated=0
+[2026-09-26T07:50:51.741930+00:00] DONE     socialnetwork|user-service|latency|2             A/D/U=2/0/0  err=0.0  dp95=588.5  T_rec=14.28s | done=56 censored=1 failed=0 pending=123
+
+======================================================================
+  socialnetwork / user-timeline-service / latency / rep 2   (container: socialnetwork-user-timeline-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.367000000000004ms traces=242
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-user-timeline-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=2203.8218499999957ms traces=78 downstream=2
+  [SPANS] baseline_window: 289 traces -> data/spans/spans_socialnetwork_user-timeline-service_latency_rep2_20260926T075243Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 80 traces -> data/spans/spans_socialnetwork_user-timeline-service_latency_rep2_20260926T075243Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.88s
+  [BLAST] ancestors=2/2 descendants=0/1 unrelated=0
+[2026-09-26T07:53:10.987792+00:00] DONE     socialnetwork|user-timeline-service|latency|2    A/D/U=2/0/0  err=0.0  dp95=2149.5  T_rec=14.88s | done=57 censored=1 failed=0 pending=122
+[2026-09-26T07:53:30.989270+00:00] STACK DOWN socialnetwork
+[2026-09-26T07:53:41.818807+00:00] STACK UP   hotelreservation
+
+======================================================================
+  hotelreservation / geo / kill / rep 2   (container: hotelreservation-geo-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=13.390349999999994ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-geo-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=5.16535ms traces=500 downstream=2
+  [SPANS] baseline_window: 1111 traces -> data/spans/spans_hotelreservation_geo_kill_rep2_20260926T075535Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 808 traces -> data/spans/spans_hotelreservation_geo_kill_rep2_20260926T075535Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 21.92s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T07:56:10.198645+00:00] DONE     hotelreservation|geo|kill|2                      A/D/U=2/0/0  err=0.52  dp95=-8.2  T_rec=21.92s | done=58 censored=1 failed=0 pending=121
+
+======================================================================
+  hotelreservation / profile / kill / rep 2   (container: hotelreservation-profile-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.5383ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-profile-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=9.317499999999992ms traces=500 downstream=1
+  [SPANS] baseline_window: 1121 traces -> data/spans/spans_hotelreservation_profile_kill_rep2_20260926T075808Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 817 traces -> data/spans/spans_hotelreservation_profile_kill_rep2_20260926T075808Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 27.0s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T07:58:51.057111+00:00] DONE     hotelreservation|profile|kill|2                  A/D/U=1/0/0  err=0.63  dp95=-3.2  T_rec=27.0s | done=59 censored=1 failed=0 pending=120
+
+======================================================================
+  hotelreservation / rate / kill / rep 2   (container: hotelreservation-rate-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.953449999999998ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-rate-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=5.090249999999999ms traces=500 downstream=2
+  [SPANS] baseline_window: 1119 traces -> data/spans/spans_hotelreservation_rate_kill_rep2_20260926T080047Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 806 traces -> data/spans/spans_hotelreservation_rate_kill_rep2_20260926T080047Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 19.7s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T08:01:19.755805+00:00] DONE     hotelreservation|rate|kill|2                     A/D/U=2/0/0  err=0.592  dp95=-7.9  T_rec=19.7s | done=60 censored=1 failed=0 pending=119
+
+======================================================================
+  hotelreservation / recommendation / kill / rep 2   (container: hotelreservation-recommendation-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=13.11405ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-recommendation-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=12.873449999999998ms traces=500 downstream=1
+  [SPANS] baseline_window: 1160 traces -> data/spans/spans_hotelreservation_recommendation_kill_rep2_20260926T080317Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 792 traces -> data/spans/spans_hotelreservation_recommendation_kill_rep2_20260926T080317Z_fault_window.json.gz (0.3 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 34.57s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T08:04:09.582164+00:00] DONE     hotelreservation|recommendation|kill|2           A/D/U=1/0/0  err=0.092  dp95=-0.2  T_rec=34.57s | done=61 censored=1 failed=0 pending=118
+
+======================================================================
+  hotelreservation / reservation / kill / rep 2   (container: hotelreservation-reservation-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.632449999999999ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-reservation-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=7.043799999999999ms traces=500 downstream=1
+  [SPANS] baseline_window: 1126 traces -> data/spans/spans_hotelreservation_reservation_kill_rep2_20260926T080605Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 801 traces -> data/spans/spans_hotelreservation_reservation_kill_rep2_20260926T080605Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 19.06s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T08:06:38.443204+00:00] DONE     hotelreservation|reservation|kill|2              A/D/U=1/0/0  err=0.692  dp95=-5.6  T_rec=19.06s | done=62 censored=1 failed=0 pending=117
+
+======================================================================
+  hotelreservation / search / kill / rep 2   (container: hotelreservation-search-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.535299999999998ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-search-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=4.925299999999999ms traces=500 downstream=1
+  [SPANS] baseline_window: 1121 traces -> data/spans/spans_hotelreservation_search_kill_rep2_20260926T080834Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 670 traces -> data/spans/spans_hotelreservation_search_kill_rep2_20260926T080834Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 39.9s
+  [BLAST] ancestors=1/1 descendants=0/2 unrelated=0
+[2026-09-26T08:09:26.569719+00:00] DONE     hotelreservation|search|kill|2                   A/D/U=1/0/0  err=0.526  dp95=-7.6  T_rec=39.9s | done=63 censored=1 failed=0 pending=116
+
+======================================================================
+  hotelreservation / user / kill / rep 2   (container: hotelreservation-user-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=11.94079999999999ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-user-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=12.95785ms traces=500 downstream=1
+  [SPANS] baseline_window: 1121 traces -> data/spans/spans_hotelreservation_user_kill_rep2_20260926T081124Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 734 traces -> data/spans/spans_hotelreservation_user_kill_rep2_20260926T081124Z_fault_window.json.gz (0.3 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 50.03s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T08:12:29.130426+00:00] DONE     hotelreservation|user|kill|2                     A/D/U=1/0/0  err=0.354  dp95=1.0  T_rec=50.03s | done=64 censored=1 failed=0 pending=115
+
+======================================================================
+  hotelreservation / geo / latency / rep 2   (container: hotelreservation-geo-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=13.608549999999992ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-geo-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=601.8753999999999ms traces=500 downstream=2
+  [SPANS] baseline_window: 1117 traces -> data/spans/spans_hotelreservation_geo_latency_rep2_20260926T081423Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 601 traces -> data/spans/spans_hotelreservation_geo_latency_rep2_20260926T081423Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 19.24s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T08:14:58.304862+00:00] DONE     hotelreservation|geo|latency|2                   A/D/U=2/0/0  err=0.0  dp95=588.3  T_rec=19.24s | done=65 censored=1 failed=0 pending=114
+
+======================================================================
+  hotelreservation / profile / latency / rep 2   (container: hotelreservation-profile-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=13.50085ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-profile-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=7342.267299999998ms traces=282 downstream=1
+  [SPANS] baseline_window: 1137 traces -> data/spans/spans_hotelreservation_profile_latency_rep2_20260926T081652Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 307 traces -> data/spans/spans_hotelreservation_profile_latency_rep2_20260926T081652Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.31s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T08:17:21.063998+00:00] DONE     hotelreservation|profile|latency|2               A/D/U=1/0/0  err=0.0  dp95=7328.8  T_rec=15.31s | done=66 censored=1 failed=0 pending=113
+
+======================================================================
+  hotelreservation / rate / latency / rep 2   (container: hotelreservation-rate-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=13.624799999999997ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-rate-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=5817.24325ms traces=336 downstream=2
+  [SPANS] baseline_window: 1119 traces -> data/spans/spans_hotelreservation_rate_latency_rep2_20260926T081914Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 354 traces -> data/spans/spans_hotelreservation_rate_latency_rep2_20260926T081914Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.69s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T08:19:44.251709+00:00] DONE     hotelreservation|rate|latency|2                  A/D/U=2/0/0  err=0.0  dp95=5803.6  T_rec=15.69s | done=67 censored=1 failed=0 pending=112
+
+======================================================================
+  hotelreservation / recommendation / latency / rep 2   (container: hotelreservation-recommendation-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.4541ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-recommendation-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=555.0211ms traces=500 downstream=1
+  [SPANS] baseline_window: 1160 traces -> data/spans/spans_hotelreservation_recommendation_latency_rep2_20260926T082139Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 705 traces -> data/spans/spans_hotelreservation_recommendation_latency_rep2_20260926T082139Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 25.45s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T08:22:19.288311+00:00] DONE     hotelreservation|recommendation|latency|2        A/D/U=1/0/0  err=0.0  dp95=542.6  T_rec=25.45s | done=68 censored=1 failed=0 pending=111
+
+======================================================================
+  hotelreservation / reservation / latency / rep 2   (container: hotelreservation-reservation-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.759249999999986ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-reservation-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=1819.6462499999996ms traces=400 downstream=1
+  [SPANS] baseline_window: 1145 traces -> data/spans/spans_hotelreservation_reservation_latency_rep2_20260926T082413Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 421 traces -> data/spans/spans_hotelreservation_reservation_latency_rep2_20260926T082413Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 46.75s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T08:25:14.111431+00:00] DONE     hotelreservation|reservation|latency|2           A/D/U=1/0/0  err=0.0  dp95=1806.9  T_rec=46.75s | done=69 censored=1 failed=0 pending=110
+
+======================================================================
+  hotelreservation / search / latency / rep 2   (container: hotelreservation-search-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=13.044999999999991ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-search-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=2080.9256ms traces=420 downstream=1
+  [SPANS] baseline_window: 1126 traces -> data/spans/spans_hotelreservation_search_latency_rep2_20260926T082708Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 449 traces -> data/spans/spans_hotelreservation_search_latency_rep2_20260926T082708Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.34s
+  [BLAST] ancestors=1/1 descendants=0/2 unrelated=0
+[2026-09-26T08:27:37.584745+00:00] DONE     hotelreservation|search|latency|2                A/D/U=1/0/0  err=0.0  dp95=2067.9  T_rec=15.34s | done=70 censored=1 failed=0 pending=109
+
+======================================================================
+  hotelreservation / user / latency / rep 2   (container: hotelreservation-user-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=13.345099999999997ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-user-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=662.3163499999996ms traces=500 downstream=1
+  [SPANS] baseline_window: 1133 traces -> data/spans/spans_hotelreservation_user_latency_rep2_20260926T082932Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 632 traces -> data/spans/spans_hotelreservation_user_latency_rep2_20260926T082932Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 12.65s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T08:30:00.194446+00:00] DONE     hotelreservation|user|latency|2                  A/D/U=1/0/0  err=0.0  dp95=649.0  T_rec=12.65s | done=71 censored=1 failed=0 pending=108
+[2026-09-26T08:30:20.198306+00:00] STACK DOWN hotelreservation
+[2026-09-26T08:30:25.076054+00:00] STACK UP   socialnetwork
+
+======================================================================
+  socialnetwork / compose-post-service / kill / rep 3   (container: socialnetwork-compose-post-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.95369999999999ms traces=273
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-compose-post-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=1805.6263499999977ms traces=100 downstream=3
+  [SPANS] baseline_window: 298 traces -> data/spans/spans_socialnetwork_compose-post-service_kill_rep3_20260926T083218Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 101 traces -> data/spans/spans_socialnetwork_compose-post-service_kill_rep3_20260926T083218Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 26.56s
+  [BLAST] ancestors=1/1 descendants=2/10 unrelated=0
+[2026-09-26T08:32:55.220456+00:00] DONE     socialnetwork|compose-post-service|kill|3        A/D/U=1/2/0  err=0.26  dp95=1750.7  T_rec=26.56s | done=72 censored=1 failed=0 pending=107
+
+======================================================================
+  socialnetwork / home-timeline-service / kill / rep 3   (container: socialnetwork-home-timeline-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.99179999999999ms traces=241
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-home-timeline-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3420.0386000000003ms traces=59 downstream=2
+  [SPANS] baseline_window: 275 traces -> data/spans/spans_socialnetwork_home-timeline-service_kill_rep3_20260926T083450Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 66 traces -> data/spans/spans_socialnetwork_home-timeline-service_kill_rep3_20260926T083450Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.49s
+  [BLAST] ancestors=2/2 descendants=0/3 unrelated=0
+[2026-09-26T08:35:14.961753+00:00] DONE     socialnetwork|home-timeline-service|kill|3       A/D/U=2/0/0  err=0.5763  dp95=3365.0  T_rec=14.49s | done=73 censored=1 failed=0 pending=106
+
+======================================================================
+  socialnetwork / media-service / kill / rep 3   (container: socialnetwork-media-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.6989ms traces=236
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-media-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=6328.4969ms traces=59 downstream=2
+  [SPANS] baseline_window: 276 traces -> data/spans/spans_socialnetwork_media-service_kill_rep3_20260926T083709Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 66 traces -> data/spans/spans_socialnetwork_media-service_kill_rep3_20260926T083709Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 20.64s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T08:37:40.697333+00:00] DONE     socialnetwork|media-service|kill|3               A/D/U=2/0/0  err=0.2373  dp95=6273.8  T_rec=20.64s | done=74 censored=1 failed=0 pending=105
+
+======================================================================
+  socialnetwork / post-storage-service / kill / rep 3   (container: socialnetwork-post-storage-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.994ms traces=247
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-post-storage-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=4257.3333ms traces=35 downstream=4
+  [SPANS] baseline_window: 261 traces -> data/spans/spans_socialnetwork_post-storage-service_kill_rep3_20260926T083935Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 44 traces -> data/spans/spans_socialnetwork_post-storage-service_kill_rep3_20260926T083935Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.35s
+  [BLAST] ancestors=4/4 descendants=0/0 unrelated=0
+[2026-09-26T08:40:00.903834+00:00] DONE     socialnetwork|post-storage-service|kill|3        A/D/U=4/0/0  err=0.7143  dp95=4202.3  T_rec=15.35s | done=75 censored=1 failed=0 pending=104
+
+======================================================================
+  socialnetwork / social-graph-service / kill / rep 3   (container: socialnetwork-social-graph-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.43755ms traces=246
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-social-graph-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3450.1915ms traces=51 downstream=3
+  [SPANS] baseline_window: 267 traces -> data/spans/spans_socialnetwork_social-graph-service_kill_rep3_20260926T084155Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 69 traces -> data/spans/spans_socialnetwork_social-graph-service_kill_rep3_20260926T084155Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.99s
+  [BLAST] ancestors=3/3 descendants=0/1 unrelated=0
+[2026-09-26T08:42:21.056354+00:00] DONE     socialnetwork|social-graph-service|kill|3        A/D/U=3/0/0  err=0.2745  dp95=3395.8  T_rec=14.99s | done=76 censored=1 failed=0 pending=103
+
+======================================================================
+  socialnetwork / text-service / kill / rep 3   (container: socialnetwork-text-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.077799999999996ms traces=265
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-text-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=8893.9078ms traces=59 downstream=2
+  [SPANS] baseline_window: 285 traces -> data/spans/spans_socialnetwork_text-service_kill_rep3_20260926T084416Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 87 traces -> data/spans/spans_socialnetwork_text-service_kill_rep3_20260926T084416Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 17.45s
+  [BLAST] ancestors=2/2 descendants=0/2 unrelated=0
+[2026-09-26T08:44:44.677990+00:00] DONE     socialnetwork|text-service|kill|3                A/D/U=2/0/0  err=0.1695  dp95=8838.8  T_rec=17.45s | done=77 censored=1 failed=0 pending=102
+
+======================================================================
+  socialnetwork / unique-id-service / kill / rep 3   (container: socialnetwork-unique-id-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.7044ms traces=239
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-unique-id-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3446.87115ms traces=60 downstream=2
+  [SPANS] baseline_window: 286 traces -> data/spans/spans_socialnetwork_unique-id-service_kill_rep3_20260926T084639Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 72 traces -> data/spans/spans_socialnetwork_unique-id-service_kill_rep3_20260926T084639Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.71s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T08:47:04.270903+00:00] DONE     socialnetwork|unique-id-service|kill|3           A/D/U=2/0/0  err=0.2333  dp95=3392.2  T_rec=14.71s | done=78 censored=1 failed=0 pending=101
+
+======================================================================
+  socialnetwork / url-shorten-service / kill / rep 3   (container: socialnetwork-url-shorten-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=53.96535ms traces=240
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-url-shorten-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3433.0775ms traces=91 downstream=3
+  [SPANS] baseline_window: 279 traces -> data/spans/spans_socialnetwork_url-shorten-service_kill_rep3_20260926T084859Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 97 traces -> data/spans/spans_socialnetwork_url-shorten-service_kill_rep3_20260926T084859Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 16.05s
+  [BLAST] ancestors=3/3 descendants=0/0 unrelated=0
+[2026-09-26T08:49:25.949049+00:00] DONE     socialnetwork|url-shorten-service|kill|3         A/D/U=3/0/0  err=0.1978  dp95=3379.1  T_rec=16.05s | done=79 censored=1 failed=0 pending=100
+
+======================================================================
+  socialnetwork / user-mention-service / kill / rep 3   (container: socialnetwork-user-mention-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.575900000000004ms traces=216
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-user-mention-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3699.2011499999985ms traces=74 downstream=3
+  [SPANS] baseline_window: 257 traces -> data/spans/spans_socialnetwork_user-mention-service_kill_rep3_20260926T085120Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 83 traces -> data/spans/spans_socialnetwork_user-mention-service_kill_rep3_20260926T085120Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 11.59s
+  [BLAST] ancestors=3/3 descendants=0/0 unrelated=0
+[2026-09-26T08:51:42.322567+00:00] DONE     socialnetwork|user-mention-service|kill|3        A/D/U=3/0/0  err=0.2162  dp95=3644.6  T_rec=11.59s | done=80 censored=1 failed=0 pending=99
+
+======================================================================
+  socialnetwork / user-service / kill / rep 3   (container: socialnetwork-user-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.2365ms traces=257
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-user-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=7631.157749999996ms traces=60 downstream=2
+  [SPANS] baseline_window: 278 traces -> data/spans/spans_socialnetwork_user-service_kill_rep3_20260926T085337Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 63 traces -> data/spans/spans_socialnetwork_user-service_kill_rep3_20260926T085337Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 9.72s
+  [BLAST] ancestors=2/4 descendants=0/0 unrelated=0
+[2026-09-26T08:53:57.301635+00:00] DONE     socialnetwork|user-service|kill|3                A/D/U=2/0/0  err=0.3167  dp95=7576.9  T_rec=9.72s | done=81 censored=1 failed=0 pending=98
+
+======================================================================
+  socialnetwork / user-timeline-service / kill / rep 3   (container: socialnetwork-user-timeline-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.513ms traces=299
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-user-timeline-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3443.86575ms traces=56 downstream=2
+  [SPANS] baseline_window: 302 traces -> data/spans/spans_socialnetwork_user-timeline-service_kill_rep3_20260926T085552Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 75 traces -> data/spans/spans_socialnetwork_user-timeline-service_kill_rep3_20260926T085552Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 16.12s
+  [BLAST] ancestors=2/2 descendants=0/1 unrelated=0
+[2026-09-26T08:56:19.588052+00:00] DONE     socialnetwork|user-timeline-service|kill|3       A/D/U=2/0/0  err=0.4107  dp95=3388.4  T_rec=16.12s | done=82 censored=1 failed=0 pending=97
+
+======================================================================
+  socialnetwork / compose-post-service / latency / rep 3   (container: socialnetwork-compose-post-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.9345ms traces=277
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-compose-post-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=2885.4986999999996ms traces=67 downstream=1
+  [SPANS] baseline_window: 292 traces -> data/spans/spans_socialnetwork_compose-post-service_latency_rep3_20260926T085812Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 76 traces -> data/spans/spans_socialnetwork_compose-post-service_latency_rep3_20260926T085812Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 13.6s
+  [BLAST] ancestors=1/1 descendants=0/10 unrelated=0
+[2026-09-26T08:58:38.410267+00:00] DONE     socialnetwork|compose-post-service|latency|3     A/D/U=1/0/0  err=0.0  dp95=2830.6  T_rec=13.6s | done=83 censored=1 failed=0 pending=96
+
+======================================================================
+  socialnetwork / home-timeline-service / latency / rep 3   (container: socialnetwork-home-timeline-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.6615ms traces=269
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-home-timeline-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=2071.45175ms traces=76 downstream=2
+  [SPANS] baseline_window: 275 traces -> data/spans/spans_socialnetwork_home-timeline-service_latency_rep3_20260926T090030Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 84 traces -> data/spans/spans_socialnetwork_home-timeline-service_latency_rep3_20260926T090030Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.2s
+  [BLAST] ancestors=2/2 descendants=0/3 unrelated=0
+[2026-09-26T09:00:58.773370+00:00] DONE     socialnetwork|home-timeline-service|latency|3    A/D/U=2/0/0  err=0.0  dp95=2016.8  T_rec=15.2s | done=84 censored=1 failed=0 pending=95
+
+======================================================================
+  socialnetwork / media-service / latency / rep 3   (container: socialnetwork-media-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.14995ms traces=270
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-media-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=647.77275ms traces=114 downstream=2
+  [SPANS] baseline_window: 285 traces -> data/spans/spans_socialnetwork_media-service_latency_rep3_20260926T090251Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 131 traces -> data/spans/spans_socialnetwork_media-service_latency_rep3_20260926T090251Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.15s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T09:03:19.482857+00:00] DONE     socialnetwork|media-service|latency|3            A/D/U=2/0/0  err=0.0  dp95=592.6  T_rec=15.15s | done=85 censored=1 failed=0 pending=94
+
+======================================================================
+  socialnetwork / post-storage-service / latency / rep 3   (container: socialnetwork-post-storage-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.19965ms traces=266
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-post-storage-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=1622.2584999999995ms traces=58 downstream=3
+  [SPANS] baseline_window: 283 traces -> data/spans/spans_socialnetwork_post-storage-service_latency_rep3_20260926T090512Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 79 traces -> data/spans/spans_socialnetwork_post-storage-service_latency_rep3_20260926T090512Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.26s
+  [BLAST] ancestors=3/4 descendants=0/0 unrelated=0
+[2026-09-26T09:05:40.571651+00:00] DONE     socialnetwork|post-storage-service|latency|3     A/D/U=3/0/0  err=0.0  dp95=1567.1  T_rec=15.26s | done=86 censored=1 failed=0 pending=93
+
+======================================================================
+  socialnetwork / social-graph-service / latency / rep 3   (container: socialnetwork-social-graph-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.9503ms traces=276
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-social-graph-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=1949.570149999999ms traces=84 downstream=3
+  [SPANS] baseline_window: 293 traces -> data/spans/spans_socialnetwork_social-graph-service_latency_rep3_20260926T090733Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 107 traces -> data/spans/spans_socialnetwork_social-graph-service_latency_rep3_20260926T090733Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 13.95s
+  [BLAST] ancestors=3/3 descendants=0/1 unrelated=0
+[2026-09-26T09:08:00.196424+00:00] DONE     socialnetwork|social-graph-service|latency|3     A/D/U=3/0/0  err=0.0  dp95=1893.6  T_rec=13.95s | done=87 censored=1 failed=0 pending=92
+
+======================================================================
+  socialnetwork / text-service / latency / rep 3   (container: socialnetwork-text-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.6642ms traces=271
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-text-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=1324.2799999999995ms traces=105 downstream=2
+  [SPANS] baseline_window: 282 traces -> data/spans/spans_socialnetwork_text-service_latency_rep3_20260926T090952Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 131 traces -> data/spans/spans_socialnetwork_text-service_latency_rep3_20260926T090952Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 19.74s
+  [BLAST] ancestors=2/2 descendants=0/2 unrelated=0
+[2026-09-26T09:10:25.326401+00:00] DONE     socialnetwork|text-service|latency|3             A/D/U=2/0/0  err=0.0  dp95=1268.6  T_rec=19.74s | done=88 censored=1 failed=0 pending=91
+
+======================================================================
+  socialnetwork / unique-id-service / latency / rep 3   (container: socialnetwork-unique-id-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.53135ms traces=248
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-unique-id-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=744.0343499999982ms traces=108 downstream=2
+  [SPANS] baseline_window: 296 traces -> data/spans/spans_socialnetwork_unique-id-service_latency_rep3_20260926T091217Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 109 traces -> data/spans/spans_socialnetwork_unique-id-service_latency_rep3_20260926T091217Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.21s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T09:12:44.413227+00:00] DONE     socialnetwork|unique-id-service|latency|3        A/D/U=2/0/0  err=0.0  dp95=689.5  T_rec=14.21s | done=89 censored=1 failed=0 pending=90
+
+======================================================================
+  socialnetwork / url-shorten-service / latency / rep 3   (container: socialnetwork-url-shorten-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.6044ms traces=229
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-url-shorten-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=717.4949999999972ms traces=93 downstream=3
+  [SPANS] baseline_window: 271 traces -> data/spans/spans_socialnetwork_url-shorten-service_latency_rep3_20260926T091437Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 127 traces -> data/spans/spans_socialnetwork_url-shorten-service_latency_rep3_20260926T091437Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 16.01s
+  [BLAST] ancestors=3/3 descendants=0/0 unrelated=0
+[2026-09-26T09:15:04.901046+00:00] DONE     socialnetwork|url-shorten-service|latency|3      A/D/U=3/0/0  err=0.0  dp95=661.9  T_rec=16.01s | done=90 censored=1 failed=0 pending=89
+
+======================================================================
+  socialnetwork / user-mention-service / latency / rep 3   (container: socialnetwork-user-mention-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.117000000000004ms traces=252
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-user-mention-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=618.9938ms traces=129 downstream=3
+  [SPANS] baseline_window: 290 traces -> data/spans/spans_socialnetwork_user-mention-service_latency_rep3_20260926T091657Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 129 traces -> data/spans/spans_socialnetwork_user-mention-service_latency_rep3_20260926T091657Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 13.26s
+  [BLAST] ancestors=3/3 descendants=0/0 unrelated=0
+[2026-09-26T09:17:23.462305+00:00] DONE     socialnetwork|user-mention-service|latency|3     A/D/U=3/0/0  err=0.0  dp95=563.9  T_rec=13.26s | done=91 censored=1 failed=0 pending=88
+
+======================================================================
+  socialnetwork / user-service / latency / rep 3   (container: socialnetwork-user-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.52035ms traces=248
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-user-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=647.2061ms traces=79 downstream=2
+  [SPANS] baseline_window: 284 traces -> data/spans/spans_socialnetwork_user-service_latency_rep3_20260926T091916Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 123 traces -> data/spans/spans_socialnetwork_user-service_latency_rep3_20260926T091916Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.83s
+  [BLAST] ancestors=2/4 descendants=0/0 unrelated=0
+[2026-09-26T09:19:44.250805+00:00] DONE     socialnetwork|user-service|latency|3             A/D/U=2/0/0  err=0.0  dp95=591.7  T_rec=14.83s | done=92 censored=1 failed=0 pending=87
+
+======================================================================
+  socialnetwork / user-timeline-service / latency / rep 3   (container: socialnetwork-user-timeline-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.0278ms traces=259
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-user-timeline-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=2785.5256ms traces=68 downstream=2
+  [SPANS] baseline_window: 292 traces -> data/spans/spans_socialnetwork_user-timeline-service_latency_rep3_20260926T092136Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 98 traces -> data/spans/spans_socialnetwork_user-timeline-service_latency_rep3_20260926T092136Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.73s
+  [BLAST] ancestors=2/2 descendants=0/1 unrelated=0
+[2026-09-26T09:22:04.808357+00:00] DONE     socialnetwork|user-timeline-service|latency|3    A/D/U=2/0/0  err=0.0  dp95=2730.5  T_rec=14.73s | done=93 censored=1 failed=0 pending=86
+[2026-09-26T09:22:24.810714+00:00] STACK DOWN socialnetwork
+[2026-09-26T09:22:31.518289+00:00] STACK UP   hotelreservation
+
+======================================================================
+  hotelreservation / geo / kill / rep 3   (container: hotelreservation-geo-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.469499999999998ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-geo-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=5.093099999999999ms traces=500 downstream=2
+  [SPANS] baseline_window: 1133 traces -> data/spans/spans_hotelreservation_geo_kill_rep3_20260926T092425Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 825 traces -> data/spans/spans_hotelreservation_geo_kill_rep3_20260926T092425Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 22.01s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T09:25:00.230967+00:00] DONE     hotelreservation|geo|kill|3                      A/D/U=2/0/0  err=0.538  dp95=-7.4  T_rec=22.01s | done=94 censored=1 failed=0 pending=85
+
+======================================================================
+  hotelreservation / profile / kill / rep 3   (container: hotelreservation-profile-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=13.106749999999993ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-profile-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=10.4613ms traces=500 downstream=1
+  [SPANS] baseline_window: 1138 traces -> data/spans/spans_hotelreservation_profile_kill_rep3_20260926T092658Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 807 traces -> data/spans/spans_hotelreservation_profile_kill_rep3_20260926T092658Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 16.65s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T09:27:29.941977+00:00] DONE     hotelreservation|profile|kill|3                  A/D/U=1/0/0  err=0.65  dp95=-2.6  T_rec=16.65s | done=95 censored=1 failed=0 pending=84
+
+======================================================================
+  hotelreservation / rate / kill / rep 3   (container: hotelreservation-rate-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=13.120199999999999ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-rate-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=5.29625ms traces=500 downstream=2
+  [SPANS] baseline_window: 1132 traces -> data/spans/spans_hotelreservation_rate_kill_rep3_20260926T092926Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 802 traces -> data/spans/spans_hotelreservation_rate_kill_rep3_20260926T092926Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 25.88s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T09:30:04.971263+00:00] DONE     hotelreservation|rate|kill|3                     A/D/U=2/0/0  err=0.56  dp95=-7.8  T_rec=25.88s | done=96 censored=1 failed=0 pending=83
+
+======================================================================
+  hotelreservation / recommendation / kill / rep 3   (container: hotelreservation-recommendation-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.55435ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-recommendation-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=12.746049999999999ms traces=500 downstream=1
+  [SPANS] baseline_window: 1129 traces -> data/spans/spans_hotelreservation_recommendation_kill_rep3_20260926T093202Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 780 traces -> data/spans/spans_hotelreservation_recommendation_kill_rep3_20260926T093202Z_fault_window.json.gz (0.3 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 22.63s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T09:32:42.203165+00:00] DONE     hotelreservation|recommendation|kill|3           A/D/U=1/0/0  err=0.074  dp95=0.2  T_rec=22.63s | done=97 censored=1 failed=0 pending=82
+
+======================================================================
+  hotelreservation / reservation / kill / rep 3   (container: hotelreservation-reservation-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=13.294299999999998ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-reservation-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=6.646299999999999ms traces=500 downstream=1
+  [SPANS] baseline_window: 1148 traces -> data/spans/spans_hotelreservation_reservation_kill_rep3_20260926T093438Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 815 traces -> data/spans/spans_hotelreservation_reservation_kill_rep3_20260926T093438Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 21.52s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T09:35:10.448140+00:00] DONE     hotelreservation|reservation|kill|3              A/D/U=1/0/0  err=0.758  dp95=-6.6  T_rec=21.52s | done=98 censored=1 failed=0 pending=81
+
+======================================================================
+  hotelreservation / search / kill / rep 3   (container: hotelreservation-search-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=19.3142ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-search-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=4.917399999999999ms traces=499 downstream=1
+  [SPANS] baseline_window: 1138 traces -> data/spans/spans_hotelreservation_search_kill_rep3_20260926T093708Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 686 traces -> data/spans/spans_hotelreservation_search_kill_rep3_20260926T093708Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 22.28s
+  [BLAST] ancestors=1/1 descendants=0/2 unrelated=0
+[2026-09-26T09:37:45.764488+00:00] DONE     hotelreservation|search|kill|3                   A/D/U=1/0/0  err=0.556  dp95=-14.4  T_rec=22.28s | done=99 censored=1 failed=0 pending=80
+
+======================================================================
+  hotelreservation / user / kill / rep 3   (container: hotelreservation-user-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=13.327399999999997ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-user-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=13.673149999999998ms traces=500 downstream=1
+  [SPANS] baseline_window: 1121 traces -> data/spans/spans_hotelreservation_user_kill_rep3_20260926T093943Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 699 traces -> data/spans/spans_hotelreservation_user_kill_rep3_20260926T093943Z_fault_window.json.gz (0.3 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 18.04s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T09:40:16.230768+00:00] DONE     hotelreservation|user|kill|3                     A/D/U=1/0/0  err=0.356  dp95=0.3  T_rec=18.04s | done=100 censored=1 failed=0 pending=79
+
+======================================================================
+  hotelreservation / geo / latency / rep 3   (container: hotelreservation-geo-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.779349999999994ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-geo-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=714.5748999999998ms traces=500 downstream=2
+  [SPANS] baseline_window: 1137 traces -> data/spans/spans_hotelreservation_geo_latency_rep3_20260926T094210Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 606 traces -> data/spans/spans_hotelreservation_geo_latency_rep3_20260926T094210Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 13.56s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T09:42:37.852247+00:00] DONE     hotelreservation|geo|latency|3                   A/D/U=2/0/0  err=0.0  dp95=701.8  T_rec=13.56s | done=101 censored=1 failed=0 pending=78
+
+======================================================================
+  hotelreservation / profile / latency / rep 3   (container: hotelreservation-profile-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=13.634899999999998ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-profile-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=2697.8415ms traces=351 downstream=1
+  [SPANS] baseline_window: 1123 traces -> data/spans/spans_hotelreservation_profile_latency_rep3_20260926T094431Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 376 traces -> data/spans/spans_hotelreservation_profile_latency_rep3_20260926T094431Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.15s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T09:44:58.799210+00:00] DONE     hotelreservation|profile|latency|3               A/D/U=1/0/0  err=0.0  dp95=2684.2  T_rec=14.15s | done=102 censored=1 failed=0 pending=77
+
+======================================================================
+  hotelreservation / rate / latency / rep 3   (container: hotelreservation-rate-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.834499999999998ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-rate-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=10935.793300000001ms traces=283 downstream=2
+  [SPANS] baseline_window: 1101 traces -> data/spans/spans_hotelreservation_rate_latency_rep3_20260926T094652Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 302 traces -> data/spans/spans_hotelreservation_rate_latency_rep3_20260926T094652Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 22.92s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T09:47:28.158386+00:00] DONE     hotelreservation|rate|latency|3                  A/D/U=2/0/0  err=0.0  dp95=10923.0  T_rec=22.92s | done=103 censored=1 failed=0 pending=76
+
+======================================================================
+  hotelreservation / recommendation / latency / rep 3   (container: hotelreservation-recommendation-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.81495ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-recommendation-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=500.1903999999997ms traces=500 downstream=1
+  [SPANS] baseline_window: 1119 traces -> data/spans/spans_hotelreservation_recommendation_latency_rep3_20260926T094923Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 726 traces -> data/spans/spans_hotelreservation_recommendation_latency_rep3_20260926T094923Z_fault_window.json.gz (0.3 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 25.41s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T09:50:03.552501+00:00] DONE     hotelreservation|recommendation|latency|3        A/D/U=1/0/0  err=0.0  dp95=487.4  T_rec=25.41s | done=104 censored=1 failed=0 pending=75
+
+======================================================================
+  hotelreservation / reservation / latency / rep 3   (container: hotelreservation-reservation-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=13.400949999999996ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-reservation-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=1746.7908ms traces=433 downstream=1
+  [SPANS] baseline_window: 1132 traces -> data/spans/spans_hotelreservation_reservation_latency_rep3_20260926T095159Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 455 traces -> data/spans/spans_hotelreservation_reservation_latency_rep3_20260926T095159Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 16.55s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T09:52:33.691208+00:00] DONE     hotelreservation|reservation|latency|3           A/D/U=1/0/0  err=0.0  dp95=1733.4  T_rec=16.55s | done=105 censored=1 failed=0 pending=74
+
+======================================================================
+  hotelreservation / search / latency / rep 3   (container: hotelreservation-search-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.894949999999994ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-search-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=1997.317ms traces=446 downstream=1
+  [SPANS] baseline_window: 1120 traces -> data/spans/spans_hotelreservation_search_latency_rep3_20260926T095428Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 470 traces -> data/spans/spans_hotelreservation_search_latency_rep3_20260926T095428Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 79.18s
+  [BLAST] ancestors=1/1 descendants=0/2 unrelated=0
+[2026-09-26T09:56:02.938642+00:00] DONE     hotelreservation|search|latency|3                A/D/U=1/0/0  err=0.0  dp95=1984.4  T_rec=79.18s | done=106 censored=1 failed=0 pending=73
+
+======================================================================
+  hotelreservation / user / latency / rep 3   (container: hotelreservation-user-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=14.743799999999997ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-user-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=577.59615ms traces=500 downstream=1
+  [SPANS] baseline_window: 1108 traces -> data/spans/spans_hotelreservation_user_latency_rep3_20260926T095759Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 662 traces -> data/spans/spans_hotelreservation_user_latency_rep3_20260926T095759Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.98s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T09:58:33.368528+00:00] DONE     hotelreservation|user|latency|3                  A/D/U=1/0/0  err=0.0  dp95=562.9  T_rec=14.98s | done=107 censored=1 failed=0 pending=72
+[2026-09-26T09:58:53.371403+00:00] STACK DOWN hotelreservation
+[2026-09-26T09:58:59.148074+00:00] STACK UP   socialnetwork
+
+======================================================================
+  socialnetwork / compose-post-service / kill / rep 4   (container: socialnetwork-compose-post-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=56.17475ms traces=218
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-compose-post-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=1741.04905ms traces=100 downstream=1
+  [SPANS] baseline_window: 266 traces -> data/spans/spans_socialnetwork_compose-post-service_kill_rep4_20260926T100100Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 104 traces -> data/spans/spans_socialnetwork_compose-post-service_kill_rep4_20260926T100100Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.55s
+  [BLAST] ancestors=1/1 descendants=0/10 unrelated=0
+[2026-09-26T10:01:26.902043+00:00] DONE     socialnetwork|compose-post-service|kill|4        A/D/U=1/0/0  err=0.24  dp95=1684.9  T_rec=15.55s | done=108 censored=1 failed=0 pending=71
+
+======================================================================
+  socialnetwork / home-timeline-service / kill / rep 4   (container: socialnetwork-home-timeline-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.17275ms traces=292
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-home-timeline-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3653.0865000000003ms traces=51 downstream=2
+  [SPANS] baseline_window: 294 traces -> data/spans/spans_socialnetwork_home-timeline-service_kill_rep4_20260926T100322Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 60 traces -> data/spans/spans_socialnetwork_home-timeline-service_kill_rep4_20260926T100322Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.67s
+  [BLAST] ancestors=2/2 descendants=0/3 unrelated=0
+[2026-09-26T10:03:48.441015+00:00] DONE     socialnetwork|home-timeline-service|kill|4       A/D/U=2/0/0  err=0.5098  dp95=3597.9  T_rec=15.67s | done=109 censored=1 failed=0 pending=70
+
+======================================================================
+  socialnetwork / media-service / kill / rep 4   (container: socialnetwork-media-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.6766ms traces=269
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-media-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=7295.93125ms traces=56 downstream=2
+  [SPANS] baseline_window: 279 traces -> data/spans/spans_socialnetwork_media-service_kill_rep4_20260926T100544Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 73 traces -> data/spans/spans_socialnetwork_media-service_kill_rep4_20260926T100544Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 12.16s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T10:06:07.394838+00:00] DONE     socialnetwork|media-service|kill|4               A/D/U=2/0/0  err=0.1429  dp95=7241.3  T_rec=12.16s | done=110 censored=1 failed=0 pending=69
+
+======================================================================
+  socialnetwork / post-storage-service / kill / rep 4   (container: socialnetwork-post-storage-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=53.234ms traces=287
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-post-storage-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=4271.9137ms traces=44 downstream=4
+  [SPANS] baseline_window: 292 traces -> data/spans/spans_socialnetwork_post-storage-service_kill_rep4_20260926T100803Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 48 traces -> data/spans/spans_socialnetwork_post-storage-service_kill_rep4_20260926T100803Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 16.51s
+  [BLAST] ancestors=4/4 descendants=0/0 unrelated=0
+[2026-09-26T10:08:29.071249+00:00] DONE     socialnetwork|post-storage-service|kill|4        A/D/U=4/0/0  err=0.5682  dp95=4218.7  T_rec=16.51s | done=111 censored=1 failed=0 pending=68
+
+======================================================================
+  socialnetwork / social-graph-service / kill / rep 4   (container: socialnetwork-social-graph-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=53.215799999999994ms traces=263
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-social-graph-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3467.6989000000003ms traces=47 downstream=3
+  [SPANS] baseline_window: 279 traces -> data/spans/spans_socialnetwork_social-graph-service_kill_rep4_20260926T101023Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 66 traces -> data/spans/spans_socialnetwork_social-graph-service_kill_rep4_20260926T101023Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 16.24s
+  [BLAST] ancestors=3/3 descendants=0/1 unrelated=0
+[2026-09-26T10:10:50.449735+00:00] DONE     socialnetwork|social-graph-service|kill|4        A/D/U=3/0/0  err=0.2553  dp95=3414.5  T_rec=16.24s | done=112 censored=1 failed=0 pending=67
+
+======================================================================
+  socialnetwork / text-service / kill / rep 4   (container: socialnetwork-text-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.0681ms traces=254
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-text-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=6325.3211ms traces=47 downstream=2
+  [SPANS] baseline_window: 276 traces -> data/spans/spans_socialnetwork_text-service_kill_rep4_20260926T101245Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 59 traces -> data/spans/spans_socialnetwork_text-service_kill_rep4_20260926T101245Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 12.33s
+  [BLAST] ancestors=2/2 descendants=0/2 unrelated=0
+[2026-09-26T10:13:07.117550+00:00] DONE     socialnetwork|text-service|kill|4                A/D/U=2/0/0  err=0.1915  dp95=6271.3  T_rec=12.33s | done=113 censored=1 failed=0 pending=66
+
+======================================================================
+  socialnetwork / unique-id-service / kill / rep 4   (container: socialnetwork-unique-id-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.5522ms traces=263
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-unique-id-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3422.70575ms traces=68 downstream=2
+  [SPANS] baseline_window: 263 traces -> data/spans/spans_socialnetwork_unique-id-service_kill_rep4_20260926T101502Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 82 traces -> data/spans/spans_socialnetwork_unique-id-service_kill_rep4_20260926T101502Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.15s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T10:15:26.873231+00:00] DONE     socialnetwork|unique-id-service|kill|4           A/D/U=2/0/0  err=0.1618  dp95=3367.2  T_rec=14.15s | done=114 censored=1 failed=0 pending=65
+
+======================================================================
+  socialnetwork / url-shorten-service / kill / rep 4   (container: socialnetwork-url-shorten-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.0005ms traces=297
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-url-shorten-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3447.0088ms traces=74 downstream=3
+  [SPANS] baseline_window: 300 traces -> data/spans/spans_socialnetwork_url-shorten-service_kill_rep4_20260926T101721Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 78 traces -> data/spans/spans_socialnetwork_url-shorten-service_kill_rep4_20260926T101721Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 16.37s
+  [BLAST] ancestors=3/3 descendants=0/0 unrelated=0
+[2026-09-26T10:17:48.936474+00:00] DONE     socialnetwork|url-shorten-service|kill|4         A/D/U=3/0/0  err=0.2027  dp95=3392.0  T_rec=16.37s | done=115 censored=1 failed=0 pending=64
+
+======================================================================
+  socialnetwork / user-mention-service / kill / rep 4   (container: socialnetwork-user-mention-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.73909999999999ms traces=265
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-user-mention-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3433.6055ms traces=55 downstream=3
+  [SPANS] baseline_window: 281 traces -> data/spans/spans_socialnetwork_user-mention-service_kill_rep4_20260926T101943Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 65 traces -> data/spans/spans_socialnetwork_user-mention-service_kill_rep4_20260926T101943Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.51s
+  [BLAST] ancestors=3/3 descendants=0/0 unrelated=0
+[2026-09-26T10:20:08.563632+00:00] DONE     socialnetwork|user-mention-service|kill|4        A/D/U=3/0/0  err=0.2182  dp95=3378.9  T_rec=14.51s | done=116 censored=1 failed=0 pending=63
+
+======================================================================
+  socialnetwork / user-service / kill / rep 4   (container: socialnetwork-user-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.5991ms traces=285
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-user-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=5665.386399999996ms traces=50 downstream=2
+  [SPANS] baseline_window: 294 traces -> data/spans/spans_socialnetwork_user-service_kill_rep4_20260926T102203Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 63 traces -> data/spans/spans_socialnetwork_user-service_kill_rep4_20260926T102203Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 20.76s
+  [BLAST] ancestors=2/4 descendants=0/0 unrelated=0
+[2026-09-26T10:22:34.626655+00:00] DONE     socialnetwork|user-service|kill|4                A/D/U=2/0/0  err=0.1  dp95=5610.8  T_rec=20.76s | done=117 censored=1 failed=0 pending=62
+
+======================================================================
+  socialnetwork / user-timeline-service / kill / rep 4   (container: socialnetwork-user-timeline-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.04745ms traces=226
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-user-timeline-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3462.0099999999998ms traces=54 downstream=2
+  [SPANS] baseline_window: 273 traces -> data/spans/spans_socialnetwork_user-timeline-service_kill_rep4_20260926T102429Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 57 traces -> data/spans/spans_socialnetwork_user-timeline-service_kill_rep4_20260926T102429Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.73s
+  [BLAST] ancestors=2/2 descendants=0/1 unrelated=0
+[2026-09-26T10:24:55.724735+00:00] DONE     socialnetwork|user-timeline-service|kill|4       A/D/U=2/0/0  err=0.4815  dp95=3407.0  T_rec=15.73s | done=118 censored=1 failed=0 pending=61
+
+======================================================================
+  socialnetwork / compose-post-service / latency / rep 4   (container: socialnetwork-compose-post-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.807ms traces=251
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-compose-post-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3310.14325ms traces=76 downstream=1
+  [SPANS] baseline_window: 251 traces -> data/spans/spans_socialnetwork_compose-post-service_latency_rep4_20260926T102647Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 79 traces -> data/spans/spans_socialnetwork_compose-post-service_latency_rep4_20260926T102647Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 13.25s
+  [BLAST] ancestors=1/1 descendants=0/10 unrelated=0
+[2026-09-26T10:27:13.865203+00:00] DONE     socialnetwork|compose-post-service|latency|4     A/D/U=1/0/0  err=0.0  dp95=3255.3  T_rec=13.25s | done=119 censored=1 failed=0 pending=60
+
+======================================================================
+  socialnetwork / home-timeline-service / latency / rep 4   (container: socialnetwork-home-timeline-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.905699999999996ms traces=241
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-home-timeline-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=5759.51375ms traces=56 downstream=2
+  [SPANS] baseline_window: 282 traces -> data/spans/spans_socialnetwork_home-timeline-service_latency_rep4_20260926T102906Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 75 traces -> data/spans/spans_socialnetwork_home-timeline-service_latency_rep4_20260926T102906Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 16.05s
+  [BLAST] ancestors=2/2 descendants=0/3 unrelated=0
+[2026-09-26T10:29:35.082452+00:00] DONE     socialnetwork|home-timeline-service|latency|4    A/D/U=2/0/0  err=0.0  dp95=5704.6  T_rec=16.05s | done=120 censored=1 failed=0 pending=59
+
+======================================================================
+  socialnetwork / media-service / latency / rep 4   (container: socialnetwork-media-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.64834999999999ms traces=246
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-media-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=629.01ms traces=111 downstream=2
+  [SPANS] baseline_window: 285 traces -> data/spans/spans_socialnetwork_media-service_latency_rep4_20260926T103127Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 114 traces -> data/spans/spans_socialnetwork_media-service_latency_rep4_20260926T103127Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 13.86s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T10:31:54.571935+00:00] DONE     socialnetwork|media-service|latency|4            A/D/U=2/0/0  err=0.0  dp95=574.4  T_rec=13.86s | done=121 censored=1 failed=0 pending=58
+
+======================================================================
+  socialnetwork / post-storage-service / latency / rep 4   (container: socialnetwork-post-storage-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.5595ms traces=221
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-post-storage-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=2987.2828999999992ms traces=83 downstream=4
+  [SPANS] baseline_window: 260 traces -> data/spans/spans_socialnetwork_post-storage-service_latency_rep4_20260926T103346Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 85 traces -> data/spans/spans_socialnetwork_post-storage-service_latency_rep4_20260926T103346Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.89s
+  [BLAST] ancestors=4/4 descendants=0/0 unrelated=0
+[2026-09-26T10:34:14.553968+00:00] DONE     socialnetwork|post-storage-service|latency|4     A/D/U=4/0/0  err=0.0  dp95=2932.7  T_rec=15.89s | done=122 censored=1 failed=0 pending=57
+
+======================================================================
+  socialnetwork / social-graph-service / latency / rep 4   (container: socialnetwork-social-graph-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.571999999999996ms traces=252
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-social-graph-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=2913.3609999999985ms traces=98 downstream=3
+  [SPANS] baseline_window: 302 traces -> data/spans/spans_socialnetwork_social-graph-service_latency_rep4_20260926T103607Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 103 traces -> data/spans/spans_socialnetwork_social-graph-service_latency_rep4_20260926T103607Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.03s
+  [BLAST] ancestors=3/3 descendants=0/1 unrelated=0
+[2026-09-26T10:36:35.485326+00:00] DONE     socialnetwork|social-graph-service|latency|4     A/D/U=3/0/0  err=0.0  dp95=2858.8  T_rec=15.03s | done=123 censored=1 failed=0 pending=56
+
+======================================================================
+  socialnetwork / text-service / latency / rep 4   (container: socialnetwork-text-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.721999999999994ms traces=219
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-text-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=1224.3358999999998ms traces=123 downstream=2
+  [SPANS] baseline_window: 275 traces -> data/spans/spans_socialnetwork_text-service_latency_rep4_20260926T103827Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 124 traces -> data/spans/spans_socialnetwork_text-service_latency_rep4_20260926T103827Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.65s
+  [BLAST] ancestors=2/2 descendants=0/2 unrelated=0
+[2026-09-26T10:38:53.756507+00:00] DONE     socialnetwork|text-service|latency|4             A/D/U=2/0/0  err=0.0  dp95=1169.6  T_rec=14.65s | done=124 censored=1 failed=0 pending=55
+
+======================================================================
+  socialnetwork / unique-id-service / latency / rep 4   (container: socialnetwork-unique-id-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.17125ms traces=236
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-unique-id-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=651.871ms traces=89 downstream=2
+  [SPANS] baseline_window: 274 traces -> data/spans/spans_socialnetwork_unique-id-service_latency_rep4_20260926T104046Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 131 traces -> data/spans/spans_socialnetwork_unique-id-service_latency_rep4_20260926T104046Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.92s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T10:41:12.560617+00:00] DONE     socialnetwork|unique-id-service|latency|4        A/D/U=2/0/0  err=0.0  dp95=597.7  T_rec=14.92s | done=125 censored=1 failed=0 pending=54
+
+======================================================================
+  socialnetwork / url-shorten-service / latency / rep 4   (container: socialnetwork-url-shorten-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.6391ms traces=248
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-url-shorten-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=596.2468000000001ms traces=82 downstream=3
+  [SPANS] baseline_window: 280 traces -> data/spans/spans_socialnetwork_url-shorten-service_latency_rep4_20260926T104305Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 109 traces -> data/spans/spans_socialnetwork_url-shorten-service_latency_rep4_20260926T104305Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.58s
+  [BLAST] ancestors=3/3 descendants=0/0 unrelated=0
+[2026-09-26T10:43:31.643425+00:00] DONE     socialnetwork|url-shorten-service|latency|4      A/D/U=3/0/0  err=0.0  dp95=541.6  T_rec=14.58s | done=126 censored=1 failed=0 pending=53
+
+======================================================================
+  socialnetwork / user-mention-service / latency / rep 4   (container: socialnetwork-user-mention-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.508199999999995ms traces=234
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-user-mention-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=650.81245ms traces=104 downstream=3
+  [SPANS] baseline_window: 268 traces -> data/spans/spans_socialnetwork_user-mention-service_latency_rep4_20260926T104524Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 130 traces -> data/spans/spans_socialnetwork_user-mention-service_latency_rep4_20260926T104524Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.4s
+  [BLAST] ancestors=3/3 descendants=0/0 unrelated=0
+[2026-09-26T10:45:51.479492+00:00] DONE     socialnetwork|user-mention-service|latency|4     A/D/U=3/0/0  err=0.0  dp95=596.3  T_rec=14.4s | done=127 censored=1 failed=0 pending=52
+
+======================================================================
+  socialnetwork / user-service / latency / rep 4   (container: socialnetwork-user-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.7887ms traces=249
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-user-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=1012.51ms traces=106 downstream=2
+  [SPANS] baseline_window: 280 traces -> data/spans/spans_socialnetwork_user-service_latency_rep4_20260926T104744Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 139 traces -> data/spans/spans_socialnetwork_user-service_latency_rep4_20260926T104744Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.54s
+  [BLAST] ancestors=2/4 descendants=0/0 unrelated=0
+[2026-09-26T10:48:11.166978+00:00] DONE     socialnetwork|user-service|latency|4             A/D/U=2/0/0  err=0.0  dp95=957.7  T_rec=15.54s | done=128 censored=1 failed=0 pending=51
+
+======================================================================
+  socialnetwork / user-timeline-service / latency / rep 4   (container: socialnetwork-user-timeline-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.23165ms traces=274
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-user-timeline-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=4673.777ms traces=61 downstream=2
+  [SPANS] baseline_window: 295 traces -> data/spans/spans_socialnetwork_user-timeline-service_latency_rep4_20260926T105003Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 84 traces -> data/spans/spans_socialnetwork_user-timeline-service_latency_rep4_20260926T105003Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.72s
+  [BLAST] ancestors=2/2 descendants=0/1 unrelated=0
+[2026-09-26T10:50:30.875596+00:00] DONE     socialnetwork|user-timeline-service|latency|4    A/D/U=2/0/0  err=0.0  dp95=4618.5  T_rec=15.72s | done=129 censored=1 failed=0 pending=50
+[2026-09-26T10:50:50.878734+00:00] STACK DOWN socialnetwork
+[2026-09-26T10:50:57.239112+00:00] STACK UP   hotelreservation
+
+======================================================================
+  hotelreservation / geo / kill / rep 4   (container: hotelreservation-geo-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.203099999999997ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-geo-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=5.001799999999999ms traces=500 downstream=2
+  [SPANS] baseline_window: 1140 traces -> data/spans/spans_hotelreservation_geo_kill_rep4_20260926T105250Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 811 traces -> data/spans/spans_hotelreservation_geo_kill_rep4_20260926T105250Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 20.19s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T10:53:23.391847+00:00] DONE     hotelreservation|geo|kill|4                      A/D/U=2/0/0  err=0.552  dp95=-7.2  T_rec=20.19s | done=130 censored=1 failed=0 pending=49
+
+======================================================================
+  hotelreservation / profile / kill / rep 4   (container: hotelreservation-profile-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.752949999999997ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-profile-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=14.695ms traces=500 downstream=3
+  [SPANS] baseline_window: 1134 traces -> data/spans/spans_hotelreservation_profile_kill_rep4_20260926T105527Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 923 traces -> data/spans/spans_hotelreservation_profile_kill_rep4_20260926T105527Z_fault_window.json.gz (0.3 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 52.64s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=2
+[2026-09-26T10:56:38.664991+00:00] DONE     hotelreservation|profile|kill|4                  A/D/U=1/0/2  err=0.616  dp95=1.9  T_rec=52.64s | done=131 censored=1 failed=0 pending=48
+
+======================================================================
+  hotelreservation / rate / kill / rep 4   (container: hotelreservation-rate-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=13.132449999999999ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-rate-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=5.070899999999999ms traces=500 downstream=2
+  [SPANS] baseline_window: 1144 traces -> data/spans/spans_hotelreservation_rate_kill_rep4_20260926T105835Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 816 traces -> data/spans/spans_hotelreservation_rate_kill_rep4_20260926T105835Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 29.52s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T10:59:18.512835+00:00] DONE     hotelreservation|rate|kill|4                     A/D/U=2/0/0  err=0.552  dp95=-8.1  T_rec=29.52s | done=132 censored=1 failed=0 pending=47
+
+======================================================================
+  hotelreservation / recommendation / kill / rep 4   (container: hotelreservation-recommendation-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=13.4809ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-recommendation-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=13.042049999999987ms traces=500 downstream=1
+  [SPANS] baseline_window: 1139 traces -> data/spans/spans_hotelreservation_recommendation_kill_rep4_20260926T110117Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 784 traces -> data/spans/spans_hotelreservation_recommendation_kill_rep4_20260926T110117Z_fault_window.json.gz (0.3 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 18.11s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T11:01:51.622188+00:00] DONE     hotelreservation|recommendation|kill|4           A/D/U=1/0/0  err=0.09  dp95=-0.4  T_rec=18.11s | done=133 censored=1 failed=0 pending=46
+
+======================================================================
+  hotelreservation / reservation / kill / rep 4   (container: hotelreservation-reservation-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.267149999999994ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-reservation-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=6.3866499999999995ms traces=500 downstream=1
+  [SPANS] baseline_window: 1078 traces -> data/spans/spans_hotelreservation_reservation_kill_rep4_20260926T110348Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 816 traces -> data/spans/spans_hotelreservation_reservation_kill_rep4_20260926T110348Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 156.27s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T11:06:40.535761+00:00] DONE     hotelreservation|reservation|kill|4              A/D/U=1/0/0  err=0.744  dp95=-5.9  T_rec=156.27s | done=134 censored=1 failed=0 pending=45
+
+======================================================================
+  hotelreservation / search / kill / rep 4   (container: hotelreservation-search-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=14.570899999999998ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-search-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=4.796199999999999ms traces=500 downstream=1
+  [SPANS] baseline_window: 1129 traces -> data/spans/spans_hotelreservation_search_kill_rep4_20260926T110836Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 681 traces -> data/spans/spans_hotelreservation_search_kill_rep4_20260926T110836Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 22.06s
+  [BLAST] ancestors=1/1 descendants=0/2 unrelated=0
+[2026-09-26T11:09:11.458561+00:00] DONE     hotelreservation|search|kill|4                   A/D/U=1/0/0  err=0.528  dp95=-9.8  T_rec=22.06s | done=135 censored=1 failed=0 pending=44
+
+======================================================================
+  hotelreservation / user / kill / rep 4   (container: hotelreservation-user-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=13.471299999999994ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-user-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=16.24549999999999ms traces=500 downstream=1
+  [SPANS] baseline_window: 1132 traces -> data/spans/spans_hotelreservation_user_kill_rep4_20260926T111111Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 745 traces -> data/spans/spans_hotelreservation_user_kill_rep4_20260926T111111Z_fault_window.json.gz (0.3 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 63.43s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T11:12:34.001871+00:00] DONE     hotelreservation|user|kill|4                     A/D/U=1/0/0  err=0.38  dp95=2.8  T_rec=63.43s | done=136 censored=1 failed=0 pending=43
+
+======================================================================
+  hotelreservation / geo / latency / rep 4   (container: hotelreservation-geo-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=14.182349999999994ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-geo-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=673.2611499999999ms traces=500 downstream=2
+  [SPANS] baseline_window: 1126 traces -> data/spans/spans_hotelreservation_geo_latency_rep4_20260926T111429Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 593 traces -> data/spans/spans_hotelreservation_geo_latency_rep4_20260926T111429Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 114.81s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T11:16:42.291262+00:00] DONE     hotelreservation|geo|latency|4                   A/D/U=2/0/0  err=0.0  dp95=659.1  T_rec=114.81s | done=137 censored=1 failed=0 pending=42
+
+======================================================================
+  hotelreservation / profile / latency / rep 4   (container: hotelreservation-profile-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=11.53975ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-profile-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=6128.51455ms traces=330 downstream=1
+  [SPANS] baseline_window: 1089 traces -> data/spans/spans_hotelreservation_profile_latency_rep4_20260926T111836Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 352 traces -> data/spans/spans_hotelreservation_profile_latency_rep4_20260926T111836Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 29.0s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T11:19:18.510517+00:00] DONE     hotelreservation|profile|latency|4               A/D/U=1/0/0  err=0.0  dp95=6117.0  T_rec=29.0s | done=138 censored=1 failed=0 pending=41
+
+======================================================================
+  hotelreservation / rate / latency / rep 4   (container: hotelreservation-rate-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.126399999999997ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-rate-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=2899.6522999999997ms traces=367 downstream=2
+  [SPANS] baseline_window: 1129 traces -> data/spans/spans_hotelreservation_rate_latency_rep4_20260926T112112Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 393 traces -> data/spans/spans_hotelreservation_rate_latency_rep4_20260926T112112Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.35s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T11:21:41.665182+00:00] DONE     hotelreservation|rate|latency|4                  A/D/U=2/0/0  err=0.0  dp95=2887.5  T_rec=15.35s | done=139 censored=1 failed=0 pending=40
+
+======================================================================
+  hotelreservation / recommendation / latency / rep 4   (container: hotelreservation-recommendation-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=11.954599999999994ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-recommendation-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=543.2702999999996ms traces=500 downstream=1
+  [SPANS] baseline_window: 1119 traces -> data/spans/spans_hotelreservation_recommendation_latency_rep4_20260926T112336Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 707 traces -> data/spans/spans_hotelreservation_recommendation_latency_rep4_20260926T112336Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 33.03s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T11:24:24.732887+00:00] DONE     hotelreservation|recommendation|latency|4        A/D/U=1/0/0  err=0.0  dp95=531.3  T_rec=33.03s | done=140 censored=1 failed=0 pending=39
+
+======================================================================
+  hotelreservation / reservation / latency / rep 4   (container: hotelreservation-reservation-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.719299999999997ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-reservation-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=1792.8795ms traces=431 downstream=1
+  [SPANS] baseline_window: 1120 traces -> data/spans/spans_hotelreservation_reservation_latency_rep4_20260926T112619Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 440 traces -> data/spans/spans_hotelreservation_reservation_latency_rep4_20260926T112619Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.58s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T11:26:49.589580+00:00] DONE     hotelreservation|reservation|latency|4           A/D/U=1/0/0  err=0.0  dp95=1780.2  T_rec=14.58s | done=141 censored=1 failed=0 pending=38
+
+======================================================================
+  hotelreservation / search / latency / rep 4   (container: hotelreservation-search-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.3082ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-search-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=1934.9648ms traces=439 downstream=1
+  [SPANS] baseline_window: 1099 traces -> data/spans/spans_hotelreservation_search_latency_rep4_20260926T112844Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 454 traces -> data/spans/spans_hotelreservation_search_latency_rep4_20260926T112844Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 24.74s
+  [BLAST] ancestors=1/1 descendants=0/2 unrelated=0
+[2026-09-26T11:29:23.098915+00:00] DONE     hotelreservation|search|latency|4                A/D/U=1/0/0  err=0.0  dp95=1922.7  T_rec=24.74s | done=142 censored=1 failed=0 pending=37
+
+======================================================================
+  hotelreservation / user / latency / rep 4   (container: hotelreservation-user-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.1551ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-user-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=591.1551499999999ms traces=500 downstream=1
+  [SPANS] baseline_window: 1113 traces -> data/spans/spans_hotelreservation_user_latency_rep4_20260926T113117Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 650 traces -> data/spans/spans_hotelreservation_user_latency_rep4_20260926T113117Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 18.94s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T11:31:52.456717+00:00] DONE     hotelreservation|user|latency|4                  A/D/U=1/0/0  err=0.0  dp95=579.0  T_rec=18.94s | done=143 censored=1 failed=0 pending=36
+[2026-09-26T11:32:12.459771+00:00] STACK DOWN hotelreservation
+[2026-09-26T11:32:17.568277+00:00] STACK UP   socialnetwork
+
+======================================================================
+  socialnetwork / compose-post-service / kill / rep 5   (container: socialnetwork-compose-post-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.445ms traces=222
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-compose-post-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=1729.9936ms traces=89 downstream=1
+  [SPANS] baseline_window: 264 traces -> data/spans/spans_socialnetwork_compose-post-service_kill_rep5_20260926T113410Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 93 traces -> data/spans/spans_socialnetwork_compose-post-service_kill_rep5_20260926T113410Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.43s
+  [BLAST] ancestors=1/1 descendants=0/10 unrelated=0
+[2026-09-26T11:34:35.968388+00:00] DONE     socialnetwork|compose-post-service|kill|5        A/D/U=1/0/0  err=0.236  dp95=1674.5  T_rec=15.43s | done=144 censored=1 failed=0 pending=35
+
+======================================================================
+  socialnetwork / home-timeline-service / kill / rep 5   (container: socialnetwork-home-timeline-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.3491ms traces=218
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-home-timeline-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3408.29ms traces=54 downstream=2
+  [SPANS] baseline_window: 266 traces -> data/spans/spans_socialnetwork_home-timeline-service_kill_rep5_20260926T113631Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 63 traces -> data/spans/spans_socialnetwork_home-timeline-service_kill_rep5_20260926T113631Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.75s
+  [BLAST] ancestors=2/2 descendants=0/3 unrelated=0
+[2026-09-26T11:36:56.374636+00:00] DONE     socialnetwork|home-timeline-service|kill|5       A/D/U=2/0/0  err=0.5741  dp95=3352.9  T_rec=14.75s | done=145 censored=1 failed=0 pending=34
+
+======================================================================
+  socialnetwork / media-service / kill / rep 5   (container: socialnetwork-media-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.414249999999996ms traces=230
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-media-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=6344.7828ms traces=60 downstream=2
+  [SPANS] baseline_window: 264 traces -> data/spans/spans_socialnetwork_media-service_kill_rep5_20260926T113851Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 73 traces -> data/spans/spans_socialnetwork_media-service_kill_rep5_20260926T113851Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.16s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T11:39:16.537971+00:00] DONE     socialnetwork|media-service|kill|5               A/D/U=2/0/0  err=0.15  dp95=6289.4  T_rec=14.16s | done=146 censored=1 failed=0 pending=33
+
+======================================================================
+  socialnetwork / post-storage-service / kill / rep 5   (container: socialnetwork-post-storage-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.14ms traces=222
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-post-storage-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3560.2981999999975ms traces=54 downstream=4
+  [SPANS] baseline_window: 266 traces -> data/spans/spans_socialnetwork_post-storage-service_kill_rep5_20260926T114111Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 56 traces -> data/spans/spans_socialnetwork_post-storage-service_kill_rep5_20260926T114111Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 13.9s
+  [BLAST] ancestors=4/4 descendants=0/0 unrelated=0
+[2026-09-26T11:41:34.491128+00:00] DONE     socialnetwork|post-storage-service|kill|5        A/D/U=4/0/0  err=0.7222  dp95=3506.2  T_rec=13.9s | done=147 censored=1 failed=0 pending=32
+
+======================================================================
+  socialnetwork / social-graph-service / kill / rep 5   (container: socialnetwork-social-graph-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.4508ms traces=250
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-social-graph-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3456.1376ms traces=89 downstream=3
+  [SPANS] baseline_window: 285 traces -> data/spans/spans_socialnetwork_social-graph-service_kill_rep5_20260926T114329Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 94 traces -> data/spans/spans_socialnetwork_social-graph-service_kill_rep5_20260926T114329Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.75s
+  [BLAST] ancestors=3/3 descendants=0/1 unrelated=0
+[2026-09-26T11:43:54.224271+00:00] DONE     socialnetwork|social-graph-service|kill|5        A/D/U=3/0/0  err=0.2472  dp95=3401.7  T_rec=15.75s | done=148 censored=1 failed=0 pending=31
+
+======================================================================
+  socialnetwork / text-service / kill / rep 5   (container: socialnetwork-text-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.737ms traces=252
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-text-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=6337.16755ms traces=68 downstream=2
+  [SPANS] baseline_window: 290 traces -> data/spans/spans_socialnetwork_text-service_kill_rep5_20260926T114549Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 73 traces -> data/spans/spans_socialnetwork_text-service_kill_rep5_20260926T114549Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.5s
+  [BLAST] ancestors=2/2 descendants=0/2 unrelated=0
+[2026-09-26T11:46:14.955137+00:00] DONE     socialnetwork|text-service|kill|5                A/D/U=2/0/0  err=0.1618  dp95=6282.4  T_rec=15.5s | done=149 censored=1 failed=0 pending=30
+
+======================================================================
+  socialnetwork / unique-id-service / kill / rep 5   (container: socialnetwork-unique-id-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.74005ms traces=254
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-unique-id-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3433.9795ms traces=79 downstream=2
+  [SPANS] baseline_window: 290 traces -> data/spans/spans_socialnetwork_unique-id-service_kill_rep5_20260926T114809Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 80 traces -> data/spans/spans_socialnetwork_unique-id-service_kill_rep5_20260926T114809Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.15s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T11:48:33.868354+00:00] DONE     socialnetwork|unique-id-service|kill|5           A/D/U=2/0/0  err=0.1266  dp95=3379.2  T_rec=14.15s | done=150 censored=1 failed=0 pending=29
+
+======================================================================
+  socialnetwork / url-shorten-service / kill / rep 5   (container: socialnetwork-url-shorten-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.5212ms traces=253
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-url-shorten-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3438.3295ms traces=68 downstream=3
+  [SPANS] baseline_window: 282 traces -> data/spans/spans_socialnetwork_url-shorten-service_kill_rep5_20260926T115029Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 72 traces -> data/spans/spans_socialnetwork_url-shorten-service_kill_rep5_20260926T115029Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 16.17s
+  [BLAST] ancestors=3/3 descendants=0/0 unrelated=0
+[2026-09-26T11:50:55.732404+00:00] DONE     socialnetwork|url-shorten-service|kill|5         A/D/U=3/0/0  err=0.1912  dp95=3383.8  T_rec=16.17s | done=151 censored=1 failed=0 pending=28
+
+======================================================================
+  socialnetwork / user-mention-service / kill / rep 5   (container: socialnetwork-user-mention-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.73199999999999ms traces=249
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-user-mention-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3455.4545ms traces=71 downstream=3
+  [SPANS] baseline_window: 286 traces -> data/spans/spans_socialnetwork_user-mention-service_kill_rep5_20260926T115250Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 74 traces -> data/spans/spans_socialnetwork_user-mention-service_kill_rep5_20260926T115250Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.76s
+  [BLAST] ancestors=3/3 descendants=0/0 unrelated=0
+[2026-09-26T11:53:15.892166+00:00] DONE     socialnetwork|user-mention-service|kill|5        A/D/U=3/0/0  err=0.2535  dp95=3400.7  T_rec=14.76s | done=152 censored=1 failed=0 pending=27
+
+======================================================================
+  socialnetwork / user-service / kill / rep 5   (container: socialnetwork-user-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.16279999999999ms traces=240
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-user-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=6350.6597ms traces=50 downstream=2
+  [SPANS] baseline_window: 280 traces -> data/spans/spans_socialnetwork_user-service_kill_rep5_20260926T115510Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 53 traces -> data/spans/spans_socialnetwork_user-service_kill_rep5_20260926T115510Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.52s
+  [BLAST] ancestors=2/4 descendants=0/0 unrelated=0
+[2026-09-26T11:55:35.295318+00:00] DONE     socialnetwork|user-service|kill|5                A/D/U=2/0/0  err=0.18  dp95=6296.5  T_rec=14.52s | done=153 censored=1 failed=0 pending=26
+
+======================================================================
+  socialnetwork / user-timeline-service / kill / rep 5   (container: socialnetwork-user-timeline-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.393ms traces=247
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL socialnetwork-user-timeline-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3880.248ms traces=53 downstream=2
+  [SPANS] baseline_window: 286 traces -> data/spans/spans_socialnetwork_user-timeline-service_kill_rep5_20260926T115730Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 58 traces -> data/spans/spans_socialnetwork_user-timeline-service_kill_rep5_20260926T115730Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 16.0s
+  [BLAST] ancestors=2/2 descendants=0/1 unrelated=0
+[2026-09-26T11:57:56.483173+00:00] DONE     socialnetwork|user-timeline-service|kill|5       A/D/U=2/0/0  err=0.4528  dp95=3824.9  T_rec=16.0s | done=154 censored=1 failed=0 pending=25
+
+======================================================================
+  socialnetwork / compose-post-service / latency / rep 5   (container: socialnetwork-compose-post-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.7505ms traces=237
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-compose-post-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3611.2745ms traces=90 downstream=1
+  [SPANS] baseline_window: 282 traces -> data/spans/spans_socialnetwork_compose-post-service_latency_rep5_20260926T115948Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 90 traces -> data/spans/spans_socialnetwork_compose-post-service_latency_rep5_20260926T115948Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 17.3s
+  [BLAST] ancestors=1/1 descendants=0/10 unrelated=0
+[2026-09-26T12:00:19.348713+00:00] DONE     socialnetwork|compose-post-service|latency|5     A/D/U=1/0/0  err=0.0  dp95=3555.5  T_rec=17.3s | done=155 censored=1 failed=0 pending=24
+
+======================================================================
+  socialnetwork / home-timeline-service / latency / rep 5   (container: socialnetwork-home-timeline-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.6142ms traces=275
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-home-timeline-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=4467.0222ms traces=67 downstream=2
+  [SPANS] baseline_window: 279 traces -> data/spans/spans_socialnetwork_home-timeline-service_latency_rep5_20260926T120211Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 72 traces -> data/spans/spans_socialnetwork_home-timeline-service_latency_rep5_20260926T120211Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 21.45s
+  [BLAST] ancestors=2/2 descendants=0/3 unrelated=0
+[2026-09-26T12:02:45.624227+00:00] DONE     socialnetwork|home-timeline-service|latency|5    A/D/U=2/0/0  err=0.0  dp95=4412.4  T_rec=21.45s | done=156 censored=1 failed=0 pending=23
+
+======================================================================
+  socialnetwork / media-service / latency / rep 5   (container: socialnetwork-media-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.9356ms traces=238
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-media-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=625.2411999999999ms traces=100 downstream=2
+  [SPANS] baseline_window: 274 traces -> data/spans/spans_socialnetwork_media-service_latency_rep5_20260926T120438Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 141 traces -> data/spans/spans_socialnetwork_media-service_latency_rep5_20260926T120438Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.83s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T12:05:05.874578+00:00] DONE     socialnetwork|media-service|latency|5            A/D/U=2/0/0  err=0.0  dp95=570.3  T_rec=14.83s | done=157 censored=1 failed=0 pending=22
+
+======================================================================
+  socialnetwork / post-storage-service / latency / rep 5   (container: socialnetwork-post-storage-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.1074ms traces=241
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-post-storage-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=2885.8208499999996ms traces=100 downstream=4
+  [SPANS] baseline_window: 286 traces -> data/spans/spans_socialnetwork_post-storage-service_latency_rep5_20260926T120658Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 100 traces -> data/spans/spans_socialnetwork_post-storage-service_latency_rep5_20260926T120658Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 16.72s
+  [BLAST] ancestors=4/4 descendants=0/0 unrelated=0
+[2026-09-26T12:07:30.849747+00:00] DONE     socialnetwork|post-storage-service|latency|5     A/D/U=4/0/0  err=0.0  dp95=2830.7  T_rec=16.72s | done=158 censored=1 failed=0 pending=21
+
+======================================================================
+  socialnetwork / social-graph-service / latency / rep 5   (container: socialnetwork-social-graph-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.7496ms traces=286
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-social-graph-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=2020.1942000000001ms traces=77 downstream=3
+  [SPANS] baseline_window: 302 traces -> data/spans/spans_socialnetwork_social-graph-service_latency_rep5_20260926T120923Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 102 traces -> data/spans/spans_socialnetwork_social-graph-service_latency_rep5_20260926T120923Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.9s
+  [BLAST] ancestors=3/3 descendants=0/1 unrelated=0
+[2026-09-26T12:09:51.329356+00:00] DONE     socialnetwork|social-graph-service|latency|5     A/D/U=3/0/0  err=0.0  dp95=1965.4  T_rec=15.9s | done=159 censored=1 failed=0 pending=20
+
+======================================================================
+  socialnetwork / text-service / latency / rep 5   (container: socialnetwork-text-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.1425ms traces=257
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-text-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=1274.139049999998ms traces=98 downstream=2
+  [SPANS] baseline_window: 277 traces -> data/spans/spans_socialnetwork_text-service_latency_rep5_20260926T121143Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 120 traces -> data/spans/spans_socialnetwork_text-service_latency_rep5_20260926T121143Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.39s
+  [BLAST] ancestors=2/2 descendants=0/2 unrelated=0
+[2026-09-26T12:12:11.065176+00:00] DONE     socialnetwork|text-service|latency|5             A/D/U=2/0/0  err=0.0  dp95=1219.0  T_rec=14.39s | done=160 censored=1 failed=0 pending=19
+
+======================================================================
+  socialnetwork / unique-id-service / latency / rep 5   (container: socialnetwork-unique-id-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.038349999999994ms traces=260
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-unique-id-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=601.3294999999999ms traces=114 downstream=2
+  [SPANS] baseline_window: 284 traces -> data/spans/spans_socialnetwork_unique-id-service_latency_rep5_20260926T121403Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 128 traces -> data/spans/spans_socialnetwork_unique-id-service_latency_rep5_20260926T121403Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 16.03s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T12:14:30.964854+00:00] DONE     socialnetwork|unique-id-service|latency|5        A/D/U=2/0/0  err=0.0  dp95=546.3  T_rec=16.03s | done=161 censored=1 failed=0 pending=18
+
+======================================================================
+  socialnetwork / url-shorten-service / latency / rep 5   (container: socialnetwork-url-shorten-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.69995ms traces=230
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-url-shorten-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=619.9770499999998ms traces=98 downstream=3
+  [SPANS] baseline_window: 248 traces -> data/spans/spans_socialnetwork_url-shorten-service_latency_rep5_20260926T121623Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 117 traces -> data/spans/spans_socialnetwork_url-shorten-service_latency_rep5_20260926T121623Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.82s
+  [BLAST] ancestors=3/3 descendants=0/0 unrelated=0
+[2026-09-26T12:16:49.482172+00:00] DONE     socialnetwork|url-shorten-service|latency|5      A/D/U=3/0/0  err=0.0  dp95=565.3  T_rec=14.82s | done=162 censored=1 failed=0 pending=17
+
+======================================================================
+  socialnetwork / user-mention-service / latency / rep 5   (container: socialnetwork-user-mention-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=53.9932ms traces=271
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-user-mention-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=651.4139999999999ms traces=112 downstream=3
+  [SPANS] baseline_window: 280 traces -> data/spans/spans_socialnetwork_user-mention-service_latency_rep5_20260926T121842Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 130 traces -> data/spans/spans_socialnetwork_user-mention-service_latency_rep5_20260926T121842Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.45s
+  [BLAST] ancestors=3/3 descendants=0/0 unrelated=0
+[2026-09-26T12:19:08.960395+00:00] DONE     socialnetwork|user-mention-service|latency|5     A/D/U=3/0/0  err=0.0  dp95=597.4  T_rec=14.45s | done=163 censored=1 failed=0 pending=16
+
+======================================================================
+  socialnetwork / user-service / latency / rep 5   (container: socialnetwork-user-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=54.885ms traces=277
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-user-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=650.1168499999999ms traces=122 downstream=2
+  [SPANS] baseline_window: 284 traces -> data/spans/spans_socialnetwork_user-service_latency_rep5_20260926T122101Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 129 traces -> data/spans/spans_socialnetwork_user-service_latency_rep5_20260926T122101Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 14.71s
+  [BLAST] ancestors=2/4 descendants=0/0 unrelated=0
+[2026-09-26T12:21:28.828336+00:00] DONE     socialnetwork|user-service|latency|5             A/D/U=2/0/0  err=0.0  dp95=595.2  T_rec=14.71s | done=164 censored=1 failed=0 pending=15
+
+======================================================================
+  socialnetwork / user-timeline-service / latency / rep 5   (container: socialnetwork-user-timeline-service-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=55.260299999999994ms traces=289
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 socialnetwork-user-timeline-service-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=2329.286149999997ms traces=94 downstream=2
+  [SPANS] baseline_window: 294 traces -> data/spans/spans_socialnetwork_user-timeline-service_latency_rep5_20260926T122321Z_baseline_window.json.gz (0.1 MB)
+  [SPANS] fault_window: 98 traces -> data/spans/spans_socialnetwork_user-timeline-service_latency_rep5_20260926T122321Z_fault_window.json.gz (0.0 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 25.39s
+  [BLAST] ancestors=2/2 descendants=0/1 unrelated=0
+[2026-09-26T12:23:59.482393+00:00] DONE     socialnetwork|user-timeline-service|latency|5    A/D/U=2/0/0  err=0.0  dp95=2274.0  T_rec=25.39s | done=165 censored=1 failed=0 pending=14
+[2026-09-26T12:24:19.485102+00:00] STACK DOWN socialnetwork
+[2026-09-26T12:24:26.513684+00:00] STACK UP   hotelreservation
+
+======================================================================
+  hotelreservation / geo / kill / rep 5   (container: hotelreservation-geo-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.254ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-geo-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=4.96345ms traces=500 downstream=2
+  [SPANS] baseline_window: 1131 traces -> data/spans/spans_hotelreservation_geo_kill_rep5_20260926T122620Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 803 traces -> data/spans/spans_hotelreservation_geo_kill_rep5_20260926T122620Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 25.25s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T12:27:01.461328+00:00] DONE     hotelreservation|geo|kill|5                      A/D/U=2/0/0  err=0.56  dp95=-7.3  T_rec=25.25s | done=166 censored=1 failed=0 pending=13
+
+======================================================================
+  hotelreservation / profile / kill / rep 5   (container: hotelreservation-profile-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=11.8653ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-profile-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=9.7091ms traces=500 downstream=1
+  [SPANS] baseline_window: 1117 traces -> data/spans/spans_hotelreservation_profile_kill_rep5_20260926T122858Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 813 traces -> data/spans/spans_hotelreservation_profile_kill_rep5_20260926T122858Z_fault_window.json.gz (0.3 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 96.12s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T12:30:48.559718+00:00] DONE     hotelreservation|profile|kill|5                  A/D/U=1/0/0  err=0.632  dp95=-2.2  T_rec=96.12s | done=167 censored=1 failed=0 pending=12
+
+======================================================================
+  hotelreservation / rate / kill / rep 5   (container: hotelreservation-rate-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=13.359499999999999ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-rate-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=5.0440499999999995ms traces=500 downstream=2
+  [SPANS] baseline_window: 1117 traces -> data/spans/spans_hotelreservation_rate_kill_rep5_20260926T123244Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 817 traces -> data/spans/spans_hotelreservation_rate_kill_rep5_20260926T123244Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 20.85s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T12:33:19.131099+00:00] DONE     hotelreservation|rate|kill|5                     A/D/U=2/0/0  err=0.564  dp95=-8.3  T_rec=20.85s | done=168 censored=1 failed=0 pending=11
+
+======================================================================
+  hotelreservation / recommendation / kill / rep 5   (container: hotelreservation-recommendation-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=11.977849999999997ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-recommendation-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=12.51019999999999ms traces=500 downstream=1
+  [SPANS] baseline_window: 1142 traces -> data/spans/spans_hotelreservation_recommendation_kill_rep5_20260926T123516Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 779 traces -> data/spans/spans_hotelreservation_recommendation_kill_rep5_20260926T123516Z_fault_window.json.gz (0.3 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 18.83s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T12:35:49.868565+00:00] DONE     hotelreservation|recommendation|kill|5           A/D/U=1/0/0  err=0.082  dp95=0.5  T_rec=18.83s | done=169 censored=1 failed=0 pending=10
+
+======================================================================
+  hotelreservation / reservation / kill / rep 5   (container: hotelreservation-reservation-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=13.663899999999996ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-reservation-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=6.3809499999999995ms traces=500 downstream=1
+  [SPANS] baseline_window: 1100 traces -> data/spans/spans_hotelreservation_reservation_kill_rep5_20260926T123746Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 811 traces -> data/spans/spans_hotelreservation_reservation_kill_rep5_20260926T123746Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 19.33s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T12:38:19.604056+00:00] DONE     hotelreservation|reservation|kill|5              A/D/U=1/0/0  err=0.7  dp95=-7.3  T_rec=19.33s | done=170 censored=1 failed=0 pending=9
+
+======================================================================
+  hotelreservation / search / kill / rep 5   (container: hotelreservation-search-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.809649999999992ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-search-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=4.9456ms traces=500 downstream=1
+  [SPANS] baseline_window: 1120 traces -> data/spans/spans_hotelreservation_search_kill_rep5_20260926T124016Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 671 traces -> data/spans/spans_hotelreservation_search_kill_rep5_20260926T124016Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 20.36s
+  [BLAST] ancestors=1/1 descendants=0/2 unrelated=0
+[2026-09-26T12:40:49.619127+00:00] DONE     hotelreservation|search|kill|5                   A/D/U=1/0/0  err=0.56  dp95=-7.9  T_rec=20.36s | done=171 censored=1 failed=0 pending=8
+
+======================================================================
+  hotelreservation / user / kill / rep 5   (container: hotelreservation-user-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.571849999999984ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-user-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=11.875949999999996ms traces=500 downstream=1
+  [SPANS] baseline_window: 1126 traces -> data/spans/spans_hotelreservation_user_kill_rep5_20260926T124247Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 700 traces -> data/spans/spans_hotelreservation_user_kill_rep5_20260926T124247Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 16.23s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T12:43:18.563051+00:00] DONE     hotelreservation|user|kill|5                     A/D/U=1/0/0  err=0.36  dp95=-0.7  T_rec=16.23s | done=172 censored=1 failed=0 pending=7
+
+======================================================================
+  hotelreservation / geo / latency / rep 5   (container: hotelreservation-geo-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.578249999999999ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-geo-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=678.2019999999998ms traces=500 downstream=2
+  [SPANS] baseline_window: 1117 traces -> data/spans/spans_hotelreservation_geo_latency_rep5_20260926T124512Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 613 traces -> data/spans/spans_hotelreservation_geo_latency_rep5_20260926T124512Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 17.69s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T12:45:44.150075+00:00] DONE     hotelreservation|geo|latency|5                   A/D/U=2/0/0  err=0.0  dp95=665.6  T_rec=17.69s | done=173 censored=1 failed=0 pending=6
+
+======================================================================
+  hotelreservation / profile / latency / rep 5   (container: hotelreservation-profile-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=11.822549999999994ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-profile-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=3384.477ms traces=356 downstream=1
+  [SPANS] baseline_window: 1141 traces -> data/spans/spans_hotelreservation_profile_latency_rep5_20260926T124738Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 380 traces -> data/spans/spans_hotelreservation_profile_latency_rep5_20260926T124738Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 28.22s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T12:48:19.375012+00:00] DONE     hotelreservation|profile|latency|5               A/D/U=1/0/0  err=0.0  dp95=3372.7  T_rec=28.22s | done=174 censored=1 failed=0 pending=5
+
+======================================================================
+  hotelreservation / rate / latency / rep 5   (container: hotelreservation-rate-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.268500000000001ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-rate-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=14271.293199999996ms traces=213 downstream=2
+  [SPANS] baseline_window: 1124 traces -> data/spans/spans_hotelreservation_rate_latency_rep5_20260926T125012Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 238 traces -> data/spans/spans_hotelreservation_rate_latency_rep5_20260926T125012Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 16.87s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T12:50:43.225829+00:00] DONE     hotelreservation|rate|latency|5                  A/D/U=2/0/0  err=0.0  dp95=14259.0  T_rec=16.87s | done=175 censored=1 failed=0 pending=4
+
+======================================================================
+  hotelreservation / recommendation / latency / rep 5   (container: hotelreservation-recommendation-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.679799999999998ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-recommendation-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=534.44125ms traces=500 downstream=1
+  [SPANS] baseline_window: 1134 traces -> data/spans/spans_hotelreservation_recommendation_latency_rep5_20260926T125238Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 712 traces -> data/spans/spans_hotelreservation_recommendation_latency_rep5_20260926T125238Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 26.96s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T12:53:19.629307+00:00] DONE     hotelreservation|recommendation|latency|5        A/D/U=1/0/0  err=0.0  dp95=521.8  T_rec=26.96s | done=176 censored=1 failed=0 pending=3
+
+======================================================================
+  hotelreservation / reservation / latency / rep 5   (container: hotelreservation-reservation-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.610449999999993ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-reservation-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=1810.99815ms traces=414 downstream=1
+  [SPANS] baseline_window: 1102 traces -> data/spans/spans_hotelreservation_reservation_latency_rep5_20260926T125513Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 427 traces -> data/spans/spans_hotelreservation_reservation_latency_rep5_20260926T125513Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 64.55s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T12:56:32.820658+00:00] DONE     hotelreservation|reservation|latency|5           A/D/U=1/0/0  err=0.0  dp95=1798.4  T_rec=64.55s | done=177 censored=1 failed=0 pending=2
+
+======================================================================
+  hotelreservation / search / latency / rep 5   (container: hotelreservation-search-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.054349999999998ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-search-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=2117.3849499999997ms traces=424 downstream=1
+  [SPANS] baseline_window: 1136 traces -> data/spans/spans_hotelreservation_search_latency_rep5_20260926T125826Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 442 traces -> data/spans/spans_hotelreservation_search_latency_rep5_20260926T125826Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 38.49s
+  [BLAST] ancestors=1/1 descendants=0/2 unrelated=0
+[2026-09-26T12:59:20.956212+00:00] DONE     hotelreservation|search|latency|5                A/D/U=1/0/0  err=0.0  dp95=2105.3  T_rec=38.49s | done=178 censored=1 failed=0 pending=1
+
+======================================================================
+  hotelreservation / user / latency / rep 5   (container: hotelreservation-user-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.978899999999992ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-user-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=593.563ms traces=499 downstream=1
+  [SPANS] baseline_window: 1128 traces -> data/spans/spans_hotelreservation_user_latency_rep5_20260926T130115Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 634 traces -> data/spans/spans_hotelreservation_user_latency_rep5_20260926T130115Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 12.86s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T13:01:43.525518+00:00] DONE     hotelreservation|user|latency|5                  A/D/U=1/0/0  err=0.0  dp95=580.6  T_rec=12.86s | done=179 censored=1 failed=0 pending=0
+[2026-09-26T13:02:03.529155+00:00] STACK DOWN hotelreservation
+[2026-09-26T13:02:08.631513+00:00] CAMPAIGN STOP  | {'pending': 0, 'running': 0, 'done': 179, 'censored': 1, 'failed': 0}
+
+manifest  : data/campaign/manifest.json
+created   : 2026-09-25T00:00:47.337673+00:00   prereg v3 (2026-09-25)
+progress  : 180/180 terminal (100.0%)
+  done     : 179
+  censored : 1
+  failed   : 0
+  running  : 0
+  pending  : 0
