@@ -7,8 +7,8 @@
 in §11. §7.1 was approved as written. Frozen copy:
 `_audit/preregistration_versions/PREREGISTRATION_v3_LOCKED.md`.
 **Code and data state at lock: commit `eaadaf1`.**
-**Amendments after lock: 1, logged in §12. No campaign data had been analysed when it was
-made.**
+**Amendments after lock: 2, logged in §12. Neither was made after analysing campaign
+data.**
 **Supersedes:** every analysis in `_quarantine/` and every number in the current
 manuscript drafts.
 
@@ -735,10 +735,80 @@ anomalous descendant count that was then traced rather than accepted.
 
 ---
 
+### Amendment 2 — fault targeting resolved by compose label, and stack completeness enforced
+
+| | |
+|---|---|
+| **Date** | 2026-09-26 |
+| **Made after analysing campaign data?** | **No.** Found by a run *failure* 79 minutes into the campaign, which was stopped immediately. No analysis had been run on any campaign output. |
+| **Sections affected** | §8 (fault targeting), §9 (execution requirements) |
+| **Campaign runs invalidated** | 3 of the 30 completed; quarantined as item 12 and reset to `pending` |
+
+**What was found — two defects, one silent.**
+
+*Defect A: the fault was injected into the wrong container.* `container_for()` resolved a
+compose service name to a container by **substring match on the container name**, taking the
+shortest match. The compose project is `hotelReservation`, so every container is prefixed
+`hotelreservation-`, which **contains the substring `reservation`**. For
+`service="reservation"` every container in the project matched and the shortest was selected:
+
+```
+container_for('reservation')  ->  hotelreservation-geo-1
+```
+
+So `reservation|kill|1` **SIGKILLed `geo`** and recorded the run as a `reservation` fault.
+Restoration then ran `docker compose up -d reservation`, restarting a service that had never
+been down and **leaving `geo` dead**.
+
+*Defect B: a partial stack passed the health check.* `stack_healthy()` verified only that
+Jaeger answered and that the gateway answered HTTP. Both remained true with `geo` dead — the
+gateway keeps serving. So the next two runs, `search|kill|1` and `user|kill|1`, executed
+against a stack missing `geo` (and with `rate` consequently receiving no traffic, since the
+HR path is `frontend → search → {geo, rate}` and fails at `geo`), and were marked **`done`**
+with `A/D/U = 0/0/0, T_rec = 0.0 s` and `T_rec = 140.08 s` respectively.
+
+`geo|latency|1` then failed with `no running container matches 'geo'`. **That failure was the
+symptom, three runs downstream of the cause.** Had `geo` not itself been due for a fault, the
+contamination would have continued silently.
+
+**The fixes.**
+
+1. `container_for()` resolves by the **`com.docker.compose.service` label**, an exact value;
+   it re-verifies the returned label, and **raises on zero matches or on an ambiguous match
+   rather than guessing**. Quietly faulting a service other than the one being recorded is
+   never preferable to stopping.
+2. `stack_healthy()` additionally requires that **every service in the canonical graph has a
+   running container**, and names any missing ones in the progress log.
+3. `tools/audit_run_topology.py` re-derives per-run topology completeness from each run's
+   **fault-free baseline spans**. This is a standing pre-analysis gate: it must be run over
+   the campaign output and report zero incomplete runs before any statistics are computed.
+4. 21 regression tests in `tests/test_container_resolution.py`, including the exact
+   `reservation` → `geo` case, the `user-service` / `user-timeline-service` confusion it
+   could have caused in Social Network, ambiguous-match refusal, and the partial-stack health
+   case. Full suite: 93 passing.
+
+**Scope of the damage — bounded, and verified rather than assumed.** The topology audit over
+all 30 completed runs found **2 with an incomplete baseline**; the third invalid run is the
+mis-targeted one, identified from its recorded `container` field. **All 22 Social Network runs
+were clean**, and the collision cannot occur there: no Social Network service name is a
+substring of the project name `socialnetwork`. The 5 surviving HR runs targeted their own
+containers and had complete baselines.
+
+**Why this is disclosed rather than quietly repaired.** Under §10.7 every measurement bug is
+reported with the runs affected. It also revises one claim made earlier in this document: §9
+asserted that crash isolation plus a health check made unattended running safe. It did not —
+the health check was too weak to notice a missing service, and the runner's own failure
+handling restored the *named* service rather than verifying the stack. Both are now addressed,
+but the general lesson belongs in Limitations: **an unattended fault-injection campaign needs
+to verify the topology it is measuring before every run, not only that the front door
+answers.**
+
+---
+
 | | |
 |---|---|
 | **Locked by** | Principal investigator, 2026-09-26 (§7.1 approved as written; Q1/Q2/Q3 issued 2026-09-25) |
 | **Date** | 2026-09-26 |
 | **Code and data state at lock** | `eaadaf1` — the commit containing every script the campaign executes, the canonical graphs, and the Q3 live-validation runs |
 | **Frozen copy** | `_audit/preregistration_versions/PREREGISTRATION_v3_LOCKED.md` |
-| **Amendments after lock** | 1 (§12), 2026-09-26, before any campaign data was analysed |
+| **Amendments after lock** | 2 (§12), both 2026-09-26, neither after analysing campaign data |
