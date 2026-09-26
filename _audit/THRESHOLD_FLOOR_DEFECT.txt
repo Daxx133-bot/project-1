@@ -1,0 +1,40 @@
+============================================================================================
+BASELINE per-service p95, across 5 fault-free baseline windows
+============================================================================================
+app              service                   n     min     max  max/min  quanta  note
+--------------------------------------------------------------------------------------------
+hotelreservatio  frontend                  2   12.34   14.50     1.18  1234.0  
+hotelreservatio  geo                       2    0.52    0.58     1.12    52.0  sub-ms
+hotelreservatio  profile                   2    1.39    1.58     1.14   139.0  
+hotelreservatio  rate                      2    2.61    2.68     1.03   261.0  
+hotelreservatio  recommendation            2    0.12    0.18     1.50    12.0  sub-ms
+hotelreservatio  reservation               2    3.75    4.25     1.13   375.0  
+hotelreservatio  search                    2    6.35    6.50     1.02   635.0  
+hotelreservatio  user                      2    0.04    0.05     1.25     4.0  sub-ms
+socialnetwork    compose-post-service      3    8.69    9.16     1.05   869.0  
+socialnetwork    home-timeline-service     3    2.29    2.80     1.22   229.0  
+socialnetwork    media-service             3    0.02    0.02     1.00     2.0  sub-ms
+socialnetwork    nginx-web-server          3   54.02   55.77     1.03  5402.0  
+socialnetwork    post-storage-service      3    1.29    1.95     1.51   129.0  
+socialnetwork    social-graph-service      3    1.83    2.13     1.16   183.0  
+socialnetwork    text-service              3    1.91    2.14     1.12   191.0  
+socialnetwork    unique-id-service         3    0.04    0.04     1.00     4.0  sub-ms
+socialnetwork    url-shorten-service       3    0.02    0.06     3.00     2.0  sub-ms, BASELINE ALONE EXCEEDS 2x
+socialnetwork    user-mention-service      3    0.02    0.02     1.00     2.0  sub-ms
+socialnetwork    user-service              3    0.02    0.02     1.00     2.0  sub-ms
+socialnetwork    user-timeline-service     3    2.62    3.63     1.39   262.0  
+
+  services with baseline per-service p95 < 1 ms : 8 of 20
+  services whose BASELINE-only variation already exceeds the 2x threshold: 1
+    socialnetwork    url-shorten-service     0.02 -> 0.06 ms  (3.00x) with NO fault present
+
+============================================================================================
+VERDICT
+============================================================================================
+  The purely multiplicative threshold is NOT SAFE at this scale. At least one
+  service exceeds it between two fault-free windows, so the rule will report
+  'degraded' for services nothing happened to. Any count built on it -- and
+  ancestor_affected_count is the PRIMARY outcome -- is contaminated.
+
+  The error-rate branch of the same rule already carries an absolute floor
+  (+0.05 absolute). The latency branch needs the equivalent.

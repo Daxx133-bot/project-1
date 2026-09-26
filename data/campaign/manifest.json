@@ -15,11 +15,11 @@
       "service": "compose-post-service",
       "fault_type": "kill",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_compose-post-service_kill_1_2026-09-26T04-22-41.035633+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T04:22:41.051736+00:00"
     },
     {
       "id": "socialnetwork|home-timeline-service|kill|1",
@@ -27,11 +27,11 @@
       "service": "home-timeline-service",
       "fault_type": "kill",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_home-timeline-service_kill_1_2026-09-26T04-25-10.439641+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T04:25:10.455313+00:00"
     },
     {
       "id": "socialnetwork|media-service|kill|1",
@@ -39,11 +39,11 @@
       "service": "media-service",
       "fault_type": "kill",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_media-service_kill_1_2026-09-26T04-28-24.403382+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T04:28:24.408750+00:00"
     },
     {
       "id": "socialnetwork|post-storage-service|kill|1",
