@@ -79,7 +79,13 @@ sys.path.insert(0, str(ROOT))
 from faultinjection.fault_config import FaultType  # noqa: E402
 from infra.docker_utils import find_docker_executable  # noqa: E402
 from measurement.blast_radius import is_gateway  # noqa: E402
-from tools.run_pilot import APPS, RunLock, load_graph, one_run  # noqa: E402
+from tools.run_pilot import (  # noqa: E402
+    APPS,
+    RunLock,
+    compose_service,
+    load_graph,
+    one_run,
+)
 
 CAMPAIGN_DIR = ROOT / "data" / "campaign"
 MANIFEST = CAMPAIGN_DIR / "manifest.json"
@@ -210,14 +216,47 @@ def running_services(app: str) -> set[str]:
 
 
 def missing_services(app: str) -> list[str]:
-    """Application services from the canonical graph that have no running container.
+    """Graph services that have no running container, reported by their GRAPH name.
 
     The graph is the authority on which services the experiment depends on. Anything in it
     that is not running means the topology under measurement is not the topology being
     reported.
+
+    Graph names are translated to compose names first (`compose_service`): a service's
+    identity in a trace is whatever it reports to Jaeger, which need not equal the compose
+    service that runs it. Comparing the two directly made the Social Network gateway look
+    permanently absent and aborted the campaign on a healthy stack.
     """
-    expected = set(load_graph(APPS[app]["graph"]).nodes())
-    return sorted(expected - running_services(app))
+    running = running_services(app)
+    return sorted(g for g in load_graph(APPS[app]["graph"]).nodes()
+                  if compose_service(app, g) not in running)
+
+
+def preflight_service_names() -> list[str]:
+    """Check every graph service maps to a real compose service, before anything starts.
+
+    A mismatch here is a configuration error, and the only sane time to discover it is at
+    launch. It was previously discovered 28 minutes into a campaign, when the runner
+    switched applications and the stack-completeness check rejected a healthy stack.
+    """
+    problems = []
+    docker = find_docker_executable()
+    for app, cfg in APPS.items():
+        r = subprocess.run([docker, "compose", "config", "--services"],
+                           cwd=str(cfg["compose_dir"]), capture_output=True, text=True,
+                           timeout=180)
+        if r.returncode != 0:
+            problems.append(f"{app}: cannot read compose services: {r.stderr.strip()[-300:]}")
+            continue
+        declared = {ln.strip() for ln in r.stdout.splitlines() if ln.strip()}
+        for g in sorted(load_graph(cfg["graph"]).nodes()):
+            cs = compose_service(app, g)
+            if cs not in declared:
+                problems.append(
+                    f"{app}: graph service '{g}' maps to compose service '{cs}', which "
+                    f"the compose file does not declare. Add or correct an entry in "
+                    f"APPS['{app}']['compose_aliases'].")
+    return problems
 
 
 def stack_healthy(app: str, timeout_s: float = 240.0) -> bool:
@@ -490,6 +529,13 @@ def main() -> int:
         print("[DONE] nothing pending.")
         print_status(doc)
         return 0
+
+    problems = preflight_service_names()
+    if problems:
+        print("[REFUSED] service-name preflight failed; nothing was started:")
+        for pr in problems:
+            print(f"  - {pr}")
+        return 2
 
     rc = 0
     current_app = None

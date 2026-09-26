@@ -180,3 +180,56 @@ def test_a_complete_stack_is_healthy(monkeypatch):
     monkeypatch.setattr(rc, "missing_services", lambda app: [])
     monkeypatch.setattr(rc.time, "sleep", lambda s: None)
     assert rc.stack_healthy("hotelreservation", timeout_s=5.0) is True
+
+
+# ── graph name vs compose service name ───────────────────────────────────────
+#
+# A service's identity in a trace is whatever it reports to Jaeger, which need not equal
+# the compose service that runs it. The Social Network gateway reports "nginx-web-server"
+# but is the compose service "nginx-thrift". Conflating the two made the stack-completeness
+# check declare the gateway permanently missing and abort the campaign on a healthy stack.
+
+def test_social_network_gateway_maps_to_its_compose_service():
+    assert rp.compose_service("socialnetwork", "nginx-web-server") == "nginx-thrift"
+
+
+def test_every_other_social_network_service_maps_to_itself():
+    for svc in ["compose-post-service", "media-service", "user-service",
+                "user-timeline-service", "post-storage-service"]:
+        assert rp.compose_service("socialnetwork", svc) == svc
+
+
+def test_hotel_reservation_names_are_all_identity():
+    for svc in ["frontend", "geo", "profile", "rate", "recommendation",
+                "reservation", "search", "user"]:
+        assert rp.compose_service("hotelreservation", svc) == svc
+
+
+def test_missing_services_translates_before_comparing(monkeypatch):
+    """A complete SN stack reports 'nginx-thrift'; nothing may be called missing."""
+    graph = set(rc.load_graph(rc.APPS["socialnetwork"]["graph"]).nodes())
+    running = {rp.compose_service("socialnetwork", g) for g in graph}
+    monkeypatch.setattr(rc, "running_services", lambda app: running)
+    assert rc.missing_services("socialnetwork") == []
+
+
+def test_missing_services_reports_the_gateway_by_its_graph_name(monkeypatch):
+    """When nginx-thrift really is down, the report names it as the graph knows it."""
+    graph = set(rc.load_graph(rc.APPS["socialnetwork"]["graph"]).nodes())
+    running = {rp.compose_service("socialnetwork", g) for g in graph} - {"nginx-thrift"}
+    monkeypatch.setattr(rc, "running_services", lambda app: running)
+    assert rc.missing_services("socialnetwork") == ["nginx-web-server"]
+
+
+def test_preflight_rejects_a_graph_service_with_no_compose_counterpart(monkeypatch):
+    """Fail at launch, not 28 minutes in."""
+    import subprocess as sp
+
+    def fake_run(cmd, **kwargs):
+        return sp.CompletedProcess(cmd, 0, "frontend\ngeo\n", "")
+
+    monkeypatch.setattr(rc.subprocess, "run", fake_run)
+    monkeypatch.setattr(rc, "find_docker_executable", lambda: "docker")
+    problems = rc.preflight_service_names()
+    assert problems, "a compose file missing most services must be rejected"
+    assert any("compose_aliases" in p for p in problems), "must say how to fix it"

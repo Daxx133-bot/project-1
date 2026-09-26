@@ -1,0 +1,172 @@
+[2026-09-26T06:31:48.125241+00:00] CAMPAIGN START  153 run(s) to go | {'pending': 153, 'running': 0, 'done': 26, 'censored': 1, 'failed': 0}
+[2026-09-26T06:31:48.126198+00:00] PRE-CLEAN down socialnetwork
+[2026-09-26T06:31:48.360951+00:00] PRE-CLEAN down hotelreservation
+[2026-09-26T06:31:48.581339+00:00] STACK UP   hotelreservation
+
+======================================================================
+  hotelreservation / reservation / kill / rep 1   (container: hotelreservation-reservation-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=14.202899999999993ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-reservation-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=7.830199999999992ms traces=500 downstream=1
+  [SPANS] baseline_window: 1130 traces -> data/spans/spans_hotelreservation_reservation_kill_rep1_20260926T063343Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 818 traces -> data/spans/spans_hotelreservation_reservation_kill_rep1_20260926T063343Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 17.21s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T06:34:14.128621+00:00] DONE     hotelreservation|reservation|kill|1              A/D/U=1/0/0  err=0.734  dp95=-6.4  T_rec=17.21s | done=27 censored=1 failed=0 pending=152
+
+======================================================================
+  hotelreservation / search / kill / rep 1   (container: hotelreservation-search-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=13.176799999999986ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-search-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=5.920749999999999ms traces=500 downstream=1
+  [SPANS] baseline_window: 1110 traces -> data/spans/spans_hotelreservation_search_kill_rep1_20260926T063612Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 725 traces -> data/spans/spans_hotelreservation_search_kill_rep1_20260926T063612Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 28.35s
+  [BLAST] ancestors=1/1 descendants=0/2 unrelated=0
+[2026-09-26T06:36:58.776314+00:00] DONE     hotelreservation|search|kill|1                   A/D/U=1/0/0  err=0.53  dp95=-7.3  T_rec=28.35s | done=28 censored=1 failed=0 pending=151
+
+======================================================================
+  hotelreservation / user / kill / rep 1   (container: hotelreservation-user-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.75615ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba kill --signal SIGKILL hotelreservation-user-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=13.709349999999997ms traces=500 downstream=1
+  [SPANS] baseline_window: 1126 traces -> data/spans/spans_hotelreservation_user_kill_rep1_20260926T063856Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 732 traces -> data/spans/spans_hotelreservation_user_kill_rep1_20260926T063856Z_fault_window.json.gz (0.3 MB)
+  [RESTORE] docker compose up -d
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 19.69s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T06:39:35.945499+00:00] DONE     hotelreservation|user|kill|1                     A/D/U=1/0/0  err=0.42  dp95=1.0  T_rec=19.69s | done=29 censored=1 failed=0 pending=150
+
+======================================================================
+  hotelreservation / geo / latency / rep 1   (container: hotelreservation-geo-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=14.279449999999988ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-geo-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=669.7393999999996ms traces=500 downstream=2
+  [SPANS] baseline_window: 1103 traces -> data/spans/spans_hotelreservation_geo_latency_rep1_20260926T064130Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 612 traces -> data/spans/spans_hotelreservation_geo_latency_rep1_20260926T064130Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 16.09s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T06:42:03.497037+00:00] DONE     hotelreservation|geo|latency|1                   A/D/U=2/0/0  err=0.0  dp95=655.5  T_rec=16.09s | done=30 censored=1 failed=0 pending=149
+
+======================================================================
+  hotelreservation / rate / latency / rep 1   (container: hotelreservation-rate-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.59344999999999ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-rate-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=4288.8705ms traces=316 downstream=2
+  [SPANS] baseline_window: 1134 traces -> data/spans/spans_hotelreservation_rate_latency_rep1_20260926T064358Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 339 traces -> data/spans/spans_hotelreservation_rate_latency_rep1_20260926T064358Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 44.02s
+  [BLAST] ancestors=2/2 descendants=0/0 unrelated=0
+[2026-09-26T06:45:05.308601+00:00] DONE     hotelreservation|rate|latency|1                  A/D/U=2/0/0  err=0.0  dp95=4276.3  T_rec=44.02s | done=31 censored=1 failed=0 pending=148
+
+======================================================================
+  hotelreservation / recommendation / latency / rep 1   (container: hotelreservation-recommendation-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=15.202299999999997ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-recommendation-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=562.3720999999997ms traces=500 downstream=1
+  [SPANS] baseline_window: 1137 traces -> data/spans/spans_hotelreservation_recommendation_latency_rep1_20260926T064700Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 706 traces -> data/spans/spans_hotelreservation_recommendation_latency_rep1_20260926T064700Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 12.93s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T06:47:29.910851+00:00] DONE     hotelreservation|recommendation|latency|1        A/D/U=1/0/0  err=0.0  dp95=547.2  T_rec=12.93s | done=32 censored=1 failed=0 pending=147
+
+======================================================================
+  hotelreservation / reservation / latency / rep 1   (container: hotelreservation-reservation-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=14.624199999999993ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-reservation-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=2624.1162ms traces=395 downstream=1
+  [SPANS] baseline_window: 1135 traces -> data/spans/spans_hotelreservation_reservation_latency_rep1_20260926T064924Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 412 traces -> data/spans/spans_hotelreservation_reservation_latency_rep1_20260926T064924Z_fault_window.json.gz (0.1 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 15.9s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T06:49:54.218099+00:00] DONE     hotelreservation|reservation|latency|1           A/D/U=1/0/0  err=0.0  dp95=2609.5  T_rec=15.9s | done=33 censored=1 failed=0 pending=146
+
+======================================================================
+  hotelreservation / search / latency / rep 1   (container: hotelreservation-search-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.508849999999999ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-search-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=1914.5058ms traces=429 downstream=1
+  [SPANS] baseline_window: 1126 traces -> data/spans/spans_hotelreservation_search_latency_rep1_20260926T065148Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 445 traces -> data/spans/spans_hotelreservation_search_latency_rep1_20260926T065148Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 16.25s
+  [BLAST] ancestors=1/1 descendants=0/2 unrelated=0
+[2026-09-26T06:52:18.004648+00:00] DONE     hotelreservation|search|latency|1                A/D/U=1/0/0  err=0.0  dp95=1902.0  T_rec=16.25s | done=34 censored=1 failed=0 pending=145
+
+======================================================================
+  hotelreservation / user / latency / rep 1   (container: hotelreservation-user-1)
+======================================================================
+  [WARMUP] 60s
+  [BASELINE] collecting
+  [BASELINE] gateway p95=12.2296ms traces=500
+  [FAULT] C:\Users\daksh\AppData\Local\Programs\DockerDesktop\resources\bin\docker.EXE run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/alexei-led/pumba netem --duration 30s delay --time 500 --jitter 100 hotelreservation-user-1
+  [FAULT] holding 30s
+  [FAULT] gateway p95=594.63645ms traces=500 downstream=1
+  [SPANS] baseline_window: 1136 traces -> data/spans/spans_hotelreservation_user_latency_rep1_20260926T065412Z_baseline_window.json.gz (0.3 MB)
+  [SPANS] fault_window: 644 traces -> data/spans/spans_hotelreservation_user_latency_rep1_20260926T065412Z_fault_window.json.gz (0.2 MB)
+  [RESTORE] waiting for latency rule to expire...
+  [RECOVERY] probing (poll=1.0s, max_wait=180.0s)
+  [RECOVERY] recovered at 13.64s
+  [BLAST] ancestors=1/1 descendants=0/0 unrelated=0
+[2026-09-26T06:54:40.605640+00:00] DONE     hotelreservation|user|latency|1                  A/D/U=1/0/0  err=0.0  dp95=582.4  T_rec=13.64s | done=35 censored=1 failed=0 pending=144
+[2026-09-26T06:55:00.608488+00:00] STACK DOWN hotelreservation
+[2026-09-26T06:55:05.605126+00:00] STACK UP   socialnetwork
+[2026-09-26T06:59:18.187502+00:00] UNHEALTHY socialnetwork: services not running: ['nginx-web-server']
+[2026-09-26T06:59:18.191035+00:00] ABORT: cannot bring up socialnetwork; campaign paused, manifest intact
+[2026-09-26T06:59:18.193610+00:00] STACK DOWN hotelreservation
+[2026-09-26T06:59:18.459958+00:00] CAMPAIGN STOP  | {'pending': 144, 'running': 0, 'done': 35, 'censored': 1, 'failed': 0}
+
+manifest  : data/campaign/manifest.json
+created   : 2026-09-25T00:00:47.337673+00:00   prereg v3 (2026-09-25)
+progress  : 36/180 terminal (20.0%)
+  done     : 35
+  censored : 1
+  failed   : 0
+  running  : 0
+  pending  : 144

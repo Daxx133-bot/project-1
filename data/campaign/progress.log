@@ -52,3 +52,22 @@
 [2026-09-26T06:19:32.637541+00:00] RESTORE L1 hotelreservation
 [2026-09-26T06:19:34.077757+00:00] RESTORE OK at L1 hotelreservation
 [2026-09-26T06:22:01.756264+00:00] DONE     hotelreservation|profile|latency|1               A/D/U=1/0/0  err=0.0  dp95=2124.3  T_rec=18.66s | done=28 censored=2 failed=1 pending=149
+[2026-09-26T06:31:48.125241+00:00] CAMPAIGN START  153 run(s) to go | {'pending': 153, 'running': 0, 'done': 26, 'censored': 1, 'failed': 0}
+[2026-09-26T06:31:48.126198+00:00] PRE-CLEAN down socialnetwork
+[2026-09-26T06:31:48.360951+00:00] PRE-CLEAN down hotelreservation
+[2026-09-26T06:31:48.581339+00:00] STACK UP   hotelreservation
+[2026-09-26T06:34:14.128621+00:00] DONE     hotelreservation|reservation|kill|1              A/D/U=1/0/0  err=0.734  dp95=-6.4  T_rec=17.21s | done=27 censored=1 failed=0 pending=152
+[2026-09-26T06:36:58.776314+00:00] DONE     hotelreservation|search|kill|1                   A/D/U=1/0/0  err=0.53  dp95=-7.3  T_rec=28.35s | done=28 censored=1 failed=0 pending=151
+[2026-09-26T06:39:35.945499+00:00] DONE     hotelreservation|user|kill|1                     A/D/U=1/0/0  err=0.42  dp95=1.0  T_rec=19.69s | done=29 censored=1 failed=0 pending=150
+[2026-09-26T06:42:03.497037+00:00] DONE     hotelreservation|geo|latency|1                   A/D/U=2/0/0  err=0.0  dp95=655.5  T_rec=16.09s | done=30 censored=1 failed=0 pending=149
+[2026-09-26T06:45:05.308601+00:00] DONE     hotelreservation|rate|latency|1                  A/D/U=2/0/0  err=0.0  dp95=4276.3  T_rec=44.02s | done=31 censored=1 failed=0 pending=148
+[2026-09-26T06:47:29.910851+00:00] DONE     hotelreservation|recommendation|latency|1        A/D/U=1/0/0  err=0.0  dp95=547.2  T_rec=12.93s | done=32 censored=1 failed=0 pending=147
+[2026-09-26T06:49:54.218099+00:00] DONE     hotelreservation|reservation|latency|1           A/D/U=1/0/0  err=0.0  dp95=2609.5  T_rec=15.9s | done=33 censored=1 failed=0 pending=146
+[2026-09-26T06:52:18.004648+00:00] DONE     hotelreservation|search|latency|1                A/D/U=1/0/0  err=0.0  dp95=1902.0  T_rec=16.25s | done=34 censored=1 failed=0 pending=145
+[2026-09-26T06:54:40.605640+00:00] DONE     hotelreservation|user|latency|1                  A/D/U=1/0/0  err=0.0  dp95=582.4  T_rec=13.64s | done=35 censored=1 failed=0 pending=144
+[2026-09-26T06:55:00.608488+00:00] STACK DOWN hotelreservation
+[2026-09-26T06:55:05.605126+00:00] STACK UP   socialnetwork
+[2026-09-26T06:59:18.187502+00:00] UNHEALTHY socialnetwork: services not running: ['nginx-web-server']
+[2026-09-26T06:59:18.191035+00:00] ABORT: cannot bring up socialnetwork; campaign paused, manifest intact
+[2026-09-26T06:59:18.193610+00:00] STACK DOWN hotelreservation
+[2026-09-26T06:59:18.459958+00:00] CAMPAIGN STOP  | {'pending': 144, 'running': 0, 'done': 35, 'censored': 1, 'failed': 0}

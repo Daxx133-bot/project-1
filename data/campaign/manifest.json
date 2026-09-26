@@ -327,11 +327,11 @@
       "service": "reservation",
       "fault_type": "kill",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
-      "error": "INVALID, reset 2026-09-26: container_for('reservation') resolved to hotelreservation-geo-1; this run SIGKILLed geo, not reservation",
-      "updated_at": "2026-09-26T06:29:54.133155+00:00"
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_hotelreservation_reservation_kill_1_2026-09-26T06-34-14.113154+00-00.json",
+      "error": null,
+      "updated_at": "2026-09-26T06:34:14.123487+00:00"
     },
     {
       "id": "hotelreservation|search|kill|1",
@@ -339,11 +339,11 @@
       "service": "search",
       "fault_type": "kill",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
-      "error": "INVALID, reset 2026-09-26: ran with geo dead (and rate therefore untraffricked); baseline topology incomplete",
-      "updated_at": "2026-09-26T06:29:54.135081+00:00"
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_hotelreservation_search_kill_1_2026-09-26T06-36-58.749675+00-00.json",
+      "error": null,
+      "updated_at": "2026-09-26T06:36:58.767075+00:00"
     },
     {
       "id": "hotelreservation|user|kill|1",
@@ -351,11 +351,11 @@
       "service": "user",
       "fault_type": "kill",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
-      "error": "INVALID, reset 2026-09-26: ran with geo dead (and rate therefore untraffricked); baseline topology incomplete",
-      "updated_at": "2026-09-26T06:29:54.136916+00:00"
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_hotelreservation_user_kill_1_2026-09-26T06-39-35.929275+00-00.json",
+      "error": null,
+      "updated_at": "2026-09-26T06:39:35.934027+00:00"
     },
     {
       "id": "hotelreservation|geo|latency|1",
@@ -363,11 +363,11 @@
       "service": "geo",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
-      "error": "reset 2026-09-26: failed because geo had been killed by the mis-targeted reservation run; root cause fixed (label-based container resolution)",
-      "updated_at": "2026-09-26T06:30:12.677857+00:00"
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_hotelreservation_geo_latency_1_2026-09-26T06-42-03.460479+00-00.json",
+      "error": null,
+      "updated_at": "2026-09-26T06:42:03.478361+00:00"
     },
     {
       "id": "hotelreservation|profile|latency|1",
@@ -387,11 +387,11 @@
       "service": "rate",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 1,
-      "result_file": null,
-      "error": "reset: campaign was stopped deliberately while this run was in flight",
-      "updated_at": "2026-09-26T06:22:21.758740+00:00"
+      "status": "done",
+      "attempts": 2,
+      "result_file": "data/campaign/runs/run_hotelreservation_rate_latency_1_2026-09-26T06-45-05.292356+00-00.json",
+      "error": null,
+      "updated_at": "2026-09-26T06:45:05.299372+00:00"
     },
     {
       "id": "hotelreservation|recommendation|latency|1",
@@ -399,11 +399,11 @@
       "service": "recommendation",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_hotelreservation_recommendation_latency_1_2026-09-26T06-47-29.865431+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T06:47:29.880716+00:00"
     },
     {
       "id": "hotelreservation|reservation|latency|1",
@@ -411,11 +411,11 @@
       "service": "reservation",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_hotelreservation_reservation_latency_1_2026-09-26T06-49-54.191027+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T06:49:54.207761+00:00"
     },
     {
       "id": "hotelreservation|search|latency|1",
@@ -423,11 +423,11 @@
       "service": "search",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_hotelreservation_search_latency_1_2026-09-26T06-52-17.980074+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T06:52:17.994642+00:00"
     },
     {
       "id": "hotelreservation|user|latency|1",
@@ -435,11 +435,11 @@
       "service": "user",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_hotelreservation_user_latency_1_2026-09-26T06-54-40.586471+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T06:54:40.598093+00:00"
     },
     {
       "id": "socialnetwork|compose-post-service|kill|2",

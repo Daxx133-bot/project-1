@@ -47,6 +47,14 @@ APPS = {
         "locustfile": ROOT / "infra" / "_locustfile_baseline.py",
         "graph": ROOT / "data" / "graphs" / "sn_CANONICAL.json",
         "compose_dir": ROOT.parent / "DeathStarBench" / "socialNetwork",
+        # Graph/Jaeger service name -> docker compose service name, where they differ.
+        # A service's name in a trace is whatever it reports to Jaeger, which need not
+        # match the compose service that runs it. The Social Network gateway reports
+        # itself as "nginx-web-server" but is the compose service "nginx-thrift".
+        # Everything that talks to Jaeger uses the graph name; everything that talks to
+        # Docker must use the compose name. Conflating them made the stack-completeness
+        # check declare "nginx-web-server" permanently missing.
+        "compose_aliases": {"nginx-web-server": "nginx-thrift"},
     },
     "hotelreservation": {
         "jaeger": "http://localhost:16687",
@@ -55,6 +63,8 @@ APPS = {
         "locustfile": ROOT / "infra" / "_locustfile_hotel.py",
         "graph": ROOT / "data" / "graphs" / "hr_CANONICAL.json",
         "compose_dir": ROOT.parent / "DeathStarBench" / "hotelReservation",
+        # Every Hotel Reservation graph name equals its compose service name.
+        "compose_aliases": {},
     },
 }
 
@@ -94,6 +104,14 @@ def graph_services(path: Path) -> list[str]:
 
 def load_graph(path: Path) -> "nx.DiGraph":
     return nx.node_link_graph(json.loads(path.read_text(encoding="utf-8")), edges="edges")
+
+
+def compose_service(app: str, graph_service: str) -> str:
+    """Translate a graph/Jaeger service name into its docker compose service name.
+
+    Identity for all but the Social Network gateway; see `compose_aliases` in APPS.
+    """
+    return APPS[app].get("compose_aliases", {}).get(graph_service, graph_service)
 
 
 def container_for(service: str, docker_exe: str) -> str:
@@ -191,7 +209,10 @@ def persist_spans(jaeger_url: str, services: list[str], start_us: int, end_us: i
 def one_run(app: str, service: str, rep: int, cfg: dict, args,
             fault_type: FaultType = FaultType.KILL) -> dict:
     docker_exe = find_docker_executable()
-    container = container_for(service, docker_exe)
+    # `service` is the graph/Jaeger name throughout this function, because that is what
+    # Jaeger queries and the graph both use. Docker operations need the compose name.
+    compose_svc = compose_service(app, service)
+    container = container_for(compose_svc, docker_exe)
     services = graph_services(cfg["graph"])
     G = load_graph(cfg["graph"])
     t0 = time.time()
@@ -273,7 +294,7 @@ def one_run(app: str, service: str, rep: int, cfg: dict, args,
         restart_t0 = time.time()
         if fault_type == FaultType.KILL:
             print("  [RESTORE] docker compose up -d")
-            subprocess.run([docker_exe, "compose", "up", "-d", service],
+            subprocess.run([docker_exe, "compose", "up", "-d", compose_svc],
                            cwd=str(cfg["compose_dir"]), capture_output=True, timeout=180)
         else:
             # The rule expires with the pumba process. Wait for it so the removal instant
