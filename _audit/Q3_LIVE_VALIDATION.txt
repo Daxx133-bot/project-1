@@ -1,0 +1,60 @@
+  ancestors=['frontend']  descendants=['geo', 'rate']
+================================================================================================================
+service        rel          OLD base  OLD fault  OLD flag     NEW base  NEW fault  NEW flag
+----------------------------------------------------------------------------------------------------------------
+frontend       ANCESTOR        14.50   1972.13       YES        14.50   1972.13       YES
+geo            DESCENDANT      16.43   2041.61       YES         0.52      0.53         .
+profile        UNRELATED       16.14   2024.35       YES         1.58      1.76         .
+rate           DESCENDANT      16.43   2041.61       YES         2.61      3.00         .
+recommendation UNRELATED        5.70      4.66         .         0.18      0.13         .
+reservation    UNRELATED       15.80   2018.45       YES         4.25      4.01         .
+search         FAULTED         16.43   2041.61       YES         6.50   1425.39       YES
+user           UNRELATED        7.49      7.94         .         0.05      0.04         .
+
+  OLD flagged set (5): ['frontend', 'geo', 'profile', 'rate', 'reservation']
+  NEW flagged set (1): ['frontend']
+  dropped by the fix  : ['geo', 'profile', 'rate', 'reservation']
+  still flagged       : ['frontend']
+  newly flagged       : []
+  A/D/U  OLD=1/2/2   NEW=1/0/0
+  (the run itself recorded A/D/U = 1/0/0 and flagged ['frontend'])
+
+  WHY each still-flagged service fires under the CORRECTED definition:
+    frontend        ANCESTOR    own-span p95 14.50 -> 1972.13 ms (136.01x), err 0.000 -> 0.000  [p95 1972.13 > 2x14.50]
+
+================================================================================================================
+pilot_hotelreservation_search_latency_rep2_2026-09-26T04-14-37.596034+00-00.json
+  app=hotelreservation  faulted=search  fault=latency  rep=2
+  baseline spans file: 1142 traces   fault spans file: 506 traces
+  ancestors=['frontend']  descendants=['geo', 'rate']
+================================================================================================================
+service        rel          OLD base  OLD fault  OLD flag     NEW base  NEW fault  NEW flag
+----------------------------------------------------------------------------------------------------------------
+frontend       ANCESTOR        12.34   2046.80       YES        12.34   2046.80       YES
+geo            DESCENDANT      15.91   2275.87       YES         0.58      0.53         .
+profile        UNRELATED       15.13   2209.83       YES         1.39      1.73         .
+rate           DESCENDANT      15.91   2275.87       YES         2.68      3.27         .
+recommendation UNRELATED        4.19      5.02         .         0.12      0.10         .
+reservation    UNRELATED       14.67   2159.41       YES         3.75      3.77         .
+search         FAULTED         15.91   2275.87       YES         6.35   1594.33       YES
+user           UNRELATED        6.86      6.48         .         0.04      0.05         .
+
+  OLD flagged set (5): ['frontend', 'geo', 'profile', 'rate', 'reservation']
+  NEW flagged set (1): ['frontend']
+  dropped by the fix  : ['geo', 'profile', 'rate', 'reservation']
+  still flagged       : ['frontend']
+  newly flagged       : []
+  A/D/U  OLD=1/2/2   NEW=1/0/0
+  (the run itself recorded A/D/U = 1/0/0 and flagged ['frontend'])
+
+  WHY each still-flagged service fires under the CORRECTED definition:
+    frontend        ANCESTOR    own-span p95 12.34 -> 2046.80 ms (165.87x), err 0.000 -> 0.000  [p95 2046.80 > 2x12.34]
+
+================================================================================================================
+REPRODUCIBILITY ACROSS REPS
+================================================================================================================
+  pilot_hotelreservation_search_latency_rep1_2026-09-26T04-11-53.112863+   NEW=['frontend']
+  pilot_hotelreservation_search_latency_rep2_2026-09-26T04-14-37.596034+   NEW=['frontend']
+  identical NEW flagged set across 2 reps: YES
+
+[WROTE] _audit\Q3_LIVE_VALIDATION.json
