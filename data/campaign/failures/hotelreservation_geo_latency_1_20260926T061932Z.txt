@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "C:\Users\daksh\.gemini\antigravity-ide\scratch\microservice-failure-analysis\tools\run_campaign.py", line 333, in execute
+    res = one_run(app, svc, entry["repetition"], APPS[app], RunArgs(),
+                  FaultType(entry["fault_type"]))
+  File "C:\Users\daksh\.gemini\antigravity-ide\scratch\microservice-failure-analysis\tools\run_pilot.py", line 156, in one_run
+    container = container_for(service, docker_exe)
+  File "C:\Users\daksh\.gemini\antigravity-ide\scratch\microservice-failure-analysis\tools\run_pilot.py", line 104, in container_for
+    raise SystemExit(f"[FAIL] no running container matches '{service}'")
+SystemExit: [FAIL] no running container matches 'geo'

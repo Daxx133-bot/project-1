@@ -13,3 +13,42 @@
 [2026-09-26T04:28:24.421349+00:00] DONE     socialnetwork|media-service|kill|1               A/D/U=2/0/0  err=0.1786  dp95=6539.6  T_rec=13.66s | done=3 censored=0 failed=0 pending=177
 [2026-09-26T04:28:44.424704+00:00] STACK DOWN socialnetwork
 [2026-09-26T04:28:50.988695+00:00] CAMPAIGN STOP  | {'pending': 177, 'running': 0, 'done': 3, 'censored': 0, 'failed': 0}
+[2026-09-26T05:00:32.872462+00:00] CAMPAIGN START  180 run(s) to go | {'pending': 180, 'running': 0, 'done': 0, 'censored': 0, 'failed': 0}
+[2026-09-26T05:00:32.873169+00:00] PRE-CLEAN down socialnetwork
+[2026-09-26T05:00:33.079812+00:00] PRE-CLEAN down hotelreservation
+[2026-09-26T05:00:33.315279+00:00] STACK UP   socialnetwork
+[2026-09-26T05:02:52.356981+00:00] DONE     socialnetwork|compose-post-service|kill|1        A/D/U=1/0/0  err=0.2706  dp95=2384.1  T_rec=15.06s | done=1 censored=0 failed=0 pending=179
+[2026-09-26T05:05:11.375296+00:00] DONE     socialnetwork|home-timeline-service|kill|1       A/D/U=2/0/0  err=0.5417  dp95=7650.2  T_rec=15.38s | done=2 censored=0 failed=0 pending=178
+[2026-09-26T05:07:32.163696+00:00] DONE     socialnetwork|media-service|kill|1               A/D/U=2/0/0  err=0.2459  dp95=6270.7  T_rec=16.06s | done=3 censored=0 failed=0 pending=177
+[2026-09-26T05:09:51.052584+00:00] DONE     socialnetwork|post-storage-service|kill|1        A/D/U=4/0/0  err=0.7105  dp95=4192.2  T_rec=14.75s | done=4 censored=0 failed=0 pending=176
+[2026-09-26T05:12:08.704401+00:00] DONE     socialnetwork|social-graph-service|kill|1        A/D/U=3/0/0  err=0.2125  dp95=4259.6  T_rec=14.06s | done=5 censored=0 failed=0 pending=175
+[2026-09-26T05:14:28.839188+00:00] DONE     socialnetwork|text-service|kill|1                A/D/U=2/0/0  err=0.125  dp95=6224.8  T_rec=15.04s | done=6 censored=0 failed=0 pending=174
+[2026-09-26T05:16:50.354729+00:00] DONE     socialnetwork|unique-id-service|kill|1           A/D/U=2/0/0  err=0.1692  dp95=3356.3  T_rec=15.91s | done=7 censored=0 failed=0 pending=173
+[2026-09-26T05:19:08.443780+00:00] DONE     socialnetwork|url-shorten-service|kill|1         A/D/U=3/0/0  err=0.25  dp95=3395.5  T_rec=11.42s | done=8 censored=0 failed=0 pending=172
+[2026-09-26T05:21:32.400214+00:00] DONE     socialnetwork|user-mention-service|kill|1        A/D/U=3/0/0  err=0.2615  dp95=3365.5  T_rec=17.79s | done=9 censored=0 failed=0 pending=171
+[2026-09-26T05:23:53.204253+00:00] DONE     socialnetwork|user-service|kill|1                A/D/U=2/0/0  err=0.2361  dp95=6770.9  T_rec=14.48s | done=10 censored=0 failed=0 pending=170
+[2026-09-26T05:26:12.068059+00:00] DONE     socialnetwork|user-timeline-service|kill|1       A/D/U=2/0/0  err=0.4058  dp95=4233.0  T_rec=14.33s | done=11 censored=0 failed=0 pending=169
+[2026-09-26T05:31:41.757132+00:00] CENSORED socialnetwork|compose-post-service|latency|1     A/D/U=1/0/0  err=0.0  dp95=3579.9  T_rec=CENS | done=11 censored=1 failed=0 pending=168
+[2026-09-26T05:34:02.198762+00:00] DONE     socialnetwork|home-timeline-service|latency|1    A/D/U=0/0/0  err=0.0  dp95=1288.1  T_rec=16.1s | done=12 censored=1 failed=0 pending=167
+[2026-09-26T05:36:41.708273+00:00] DONE     socialnetwork|media-service|latency|1            A/D/U=0/0/0  err=0.0  dp95=969.6  T_rec=35.89s | done=13 censored=1 failed=0 pending=166
+[2026-09-26T05:39:11.676355+00:00] DONE     socialnetwork|post-storage-service|latency|1     A/D/U=2/0/0  err=0.0  dp95=1420.4  T_rec=25.29s | done=14 censored=1 failed=0 pending=165
+[2026-09-26T05:41:46.913981+00:00] DONE     socialnetwork|social-graph-service|latency|1     A/D/U=1/0/0  err=0.0  dp95=1875.4  T_rec=31.37s | done=15 censored=1 failed=0 pending=164
+[2026-09-26T05:44:22.282483+00:00] DONE     socialnetwork|text-service|latency|1             A/D/U=0/0/0  err=0.0  dp95=250.8  T_rec=30.55s | done=16 censored=1 failed=0 pending=163
+[2026-09-26T05:46:31.712384+00:00] DONE     socialnetwork|unique-id-service|latency|1        A/D/U=0/0/0  err=0.0  dp95=407.6  T_rec=1.48s | done=17 censored=1 failed=0 pending=162
+[2026-09-26T05:49:51.420438+00:00] DONE     socialnetwork|url-shorten-service|latency|1      A/D/U=1/0/0  err=0.0  dp95=244.3  T_rec=74.23s | done=18 censored=1 failed=0 pending=161
+[2026-09-26T05:52:12.811312+00:00] DONE     socialnetwork|user-mention-service|latency|1     A/D/U=1/0/0  err=0.0  dp95=212.5  T_rec=15.71s | done=19 censored=1 failed=0 pending=160
+[2026-09-26T05:54:33.100462+00:00] DONE     socialnetwork|user-service|latency|1             A/D/U=0/0/0  err=0.0  dp95=-322.3  T_rec=14.11s | done=20 censored=1 failed=0 pending=159
+[2026-09-26T05:56:51.780695+00:00] DONE     socialnetwork|user-timeline-service|latency|1    A/D/U=0/0/0  err=0.0  dp95=1812.4  T_rec=13.56s | done=21 censored=1 failed=0 pending=158
+[2026-09-26T05:57:11.784498+00:00] STACK DOWN socialnetwork
+[2026-09-26T05:57:18.181477+00:00] STACK UP   hotelreservation
+[2026-09-26T05:59:48.591497+00:00] DONE     hotelreservation|geo|kill|1                      A/D/U=2/0/0  err=0.56  dp95=-8.7  T_rec=22.25s | done=22 censored=1 failed=0 pending=157
+[2026-09-26T06:02:22.534000+00:00] DONE     hotelreservation|profile|kill|1                  A/D/U=1/0/0  err=0.634  dp95=-1.4  T_rec=19.77s | done=23 censored=1 failed=0 pending=156
+[2026-09-26T06:04:54.413220+00:00] DONE     hotelreservation|rate|kill|1                     A/D/U=2/0/0  err=0.53  dp95=-9.0  T_rec=19.45s | done=24 censored=1 failed=0 pending=155
+[2026-09-26T06:07:39.193530+00:00] DONE     hotelreservation|recommendation|kill|1           A/D/U=1/0/0  err=0.086  dp95=0.3  T_rec=28.07s | done=25 censored=1 failed=0 pending=154
+[2026-09-26T06:12:43.331003+00:00] CENSORED hotelreservation|reservation|kill|1              A/D/U=1/0/1  err=0.568  dp95=-10.0  T_rec=CENS | done=25 censored=2 failed=0 pending=153
+[2026-09-26T06:14:47.956544+00:00] DONE     hotelreservation|search|kill|1                   A/D/U=0/0/0  err=0.528  dp95=0.1  T_rec=0.0s | done=26 censored=2 failed=0 pending=152
+[2026-09-26T06:19:12.353647+00:00] DONE     hotelreservation|user|kill|1                     A/D/U=1/0/0  err=0.926  dp95=-1.9  T_rec=140.08s | done=27 censored=2 failed=0 pending=151
+[2026-09-26T06:19:32.635396+00:00] FAILED   hotelreservation|geo|latency|1                   SystemExit: [FAIL] no running container matches 'geo' | traceback=data/campaign/failures/hotelreservation_geo_latency_1_20260926T061932Z.txt | done=27 censored=2 failed=1
+[2026-09-26T06:19:32.637541+00:00] RESTORE L1 hotelreservation
+[2026-09-26T06:19:34.077757+00:00] RESTORE OK at L1 hotelreservation
+[2026-09-26T06:22:01.756264+00:00] DONE     hotelreservation|profile|latency|1               A/D/U=1/0/0  err=0.0  dp95=2124.3  T_rec=18.66s | done=28 censored=2 failed=1 pending=149

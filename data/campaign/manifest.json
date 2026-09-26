@@ -15,11 +15,11 @@
       "service": "compose-post-service",
       "fault_type": "kill",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
-      "error": "reset by amendment 1 (2026-09-26): run predates the 1.0 ms degradation floor; blast radius was recomputable from spans but T_rec was not, because recovery-probe windows are not persisted",
-      "updated_at": "2026-09-26T04:58:56.307726+00:00"
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_compose-post-service_kill_1_2026-09-26T05-02-52.343566+00-00.json",
+      "error": null,
+      "updated_at": "2026-09-26T05:02:52.347839+00:00"
     },
     {
       "id": "socialnetwork|home-timeline-service|kill|1",
@@ -27,11 +27,11 @@
       "service": "home-timeline-service",
       "fault_type": "kill",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
-      "error": "reset by amendment 1 (2026-09-26): run predates the 1.0 ms degradation floor; blast radius was recomputable from spans but T_rec was not, because recovery-probe windows are not persisted",
-      "updated_at": "2026-09-26T04:58:56.307758+00:00"
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_home-timeline-service_kill_1_2026-09-26T05-05-11.366947+00-00.json",
+      "error": null,
+      "updated_at": "2026-09-26T05:05:11.369861+00:00"
     },
     {
       "id": "socialnetwork|media-service|kill|1",
@@ -39,11 +39,11 @@
       "service": "media-service",
       "fault_type": "kill",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
-      "error": "reset by amendment 1 (2026-09-26): run predates the 1.0 ms degradation floor; blast radius was recomputable from spans but T_rec was not, because recovery-probe windows are not persisted",
-      "updated_at": "2026-09-26T04:58:56.307764+00:00"
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_media-service_kill_1_2026-09-26T05-07-32.155512+00-00.json",
+      "error": null,
+      "updated_at": "2026-09-26T05:07:32.159336+00:00"
     },
     {
       "id": "socialnetwork|post-storage-service|kill|1",
@@ -51,11 +51,11 @@
       "service": "post-storage-service",
       "fault_type": "kill",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_post-storage-service_kill_1_2026-09-26T05-09-51.044105+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T05:09:51.047223+00:00"
     },
     {
       "id": "socialnetwork|social-graph-service|kill|1",
@@ -63,11 +63,11 @@
       "service": "social-graph-service",
       "fault_type": "kill",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_social-graph-service_kill_1_2026-09-26T05-12-08.694278+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T05:12:08.697170+00:00"
     },
     {
       "id": "socialnetwork|text-service|kill|1",
@@ -75,11 +75,11 @@
       "service": "text-service",
       "fault_type": "kill",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_text-service_kill_1_2026-09-26T05-14-28.828401+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T05:14:28.832420+00:00"
     },
     {
       "id": "socialnetwork|unique-id-service|kill|1",
@@ -87,11 +87,11 @@
       "service": "unique-id-service",
       "fault_type": "kill",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_unique-id-service_kill_1_2026-09-26T05-16-50.339953+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T05:16:50.343286+00:00"
     },
     {
       "id": "socialnetwork|url-shorten-service|kill|1",
@@ -99,11 +99,11 @@
       "service": "url-shorten-service",
       "fault_type": "kill",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_url-shorten-service_kill_1_2026-09-26T05-19-08.421585+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T05:19:08.436981+00:00"
     },
     {
       "id": "socialnetwork|user-mention-service|kill|1",
@@ -111,11 +111,11 @@
       "service": "user-mention-service",
       "fault_type": "kill",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_user-mention-service_kill_1_2026-09-26T05-21-32.379160+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T05:21:32.389547+00:00"
     },
     {
       "id": "socialnetwork|user-service|kill|1",
@@ -123,11 +123,11 @@
       "service": "user-service",
       "fault_type": "kill",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_user-service_kill_1_2026-09-26T05-23-53.182296+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T05:23:53.195232+00:00"
     },
     {
       "id": "socialnetwork|user-timeline-service|kill|1",
@@ -135,11 +135,11 @@
       "service": "user-timeline-service",
       "fault_type": "kill",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_user-timeline-service_kill_1_2026-09-26T05-26-12.044661+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T05:26:12.056486+00:00"
     },
     {
       "id": "socialnetwork|compose-post-service|latency|1",
@@ -147,11 +147,11 @@
       "service": "compose-post-service",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "censored",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_compose-post-service_latency_1_2026-09-26T05-31-41.737771+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T05:31:41.751672+00:00"
     },
     {
       "id": "socialnetwork|home-timeline-service|latency|1",
@@ -159,11 +159,11 @@
       "service": "home-timeline-service",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_home-timeline-service_latency_1_2026-09-26T05-34-02.175663+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T05:34:02.190368+00:00"
     },
     {
       "id": "socialnetwork|media-service|latency|1",
@@ -171,11 +171,11 @@
       "service": "media-service",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_media-service_latency_1_2026-09-26T05-36-41.701210+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T05:36:41.703673+00:00"
     },
     {
       "id": "socialnetwork|post-storage-service|latency|1",
@@ -183,11 +183,11 @@
       "service": "post-storage-service",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_post-storage-service_latency_1_2026-09-26T05-39-11.654392+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T05:39:11.665185+00:00"
     },
     {
       "id": "socialnetwork|social-graph-service|latency|1",
@@ -195,11 +195,11 @@
       "service": "social-graph-service",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_social-graph-service_latency_1_2026-09-26T05-41-46.896514+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T05:41:46.907064+00:00"
     },
     {
       "id": "socialnetwork|text-service|latency|1",
@@ -207,11 +207,11 @@
       "service": "text-service",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_text-service_latency_1_2026-09-26T05-44-22.266994+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T05:44:22.272519+00:00"
     },
     {
       "id": "socialnetwork|unique-id-service|latency|1",
@@ -219,11 +219,11 @@
       "service": "unique-id-service",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_unique-id-service_latency_1_2026-09-26T05-46-31.694270+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T05:46:31.700154+00:00"
     },
     {
       "id": "socialnetwork|url-shorten-service|latency|1",
@@ -231,11 +231,11 @@
       "service": "url-shorten-service",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_url-shorten-service_latency_1_2026-09-26T05-49-51.389005+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T05:49:51.396192+00:00"
     },
     {
       "id": "socialnetwork|user-mention-service|latency|1",
@@ -243,11 +243,11 @@
       "service": "user-mention-service",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_user-mention-service_latency_1_2026-09-26T05-52-12.766335+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T05:52:12.790949+00:00"
     },
     {
       "id": "socialnetwork|user-service|latency|1",
@@ -255,11 +255,11 @@
       "service": "user-service",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_user-service_latency_1_2026-09-26T05-54-33.077877+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T05:54:33.092913+00:00"
     },
     {
       "id": "socialnetwork|user-timeline-service|latency|1",
@@ -267,11 +267,11 @@
       "service": "user-timeline-service",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_user-timeline-service_latency_1_2026-09-26T05-56-51.754062+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T05:56:51.768985+00:00"
     },
     {
       "id": "hotelreservation|geo|kill|1",
@@ -279,11 +279,11 @@
       "service": "geo",
       "fault_type": "kill",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_hotelreservation_geo_kill_1_2026-09-26T05-59-48.569064+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T05:59:48.578269+00:00"
     },
     {
       "id": "hotelreservation|profile|kill|1",
@@ -291,11 +291,11 @@
       "service": "profile",
       "fault_type": "kill",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_hotelreservation_profile_kill_1_2026-09-26T06-02-22.507763+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T06:02:22.516495+00:00"
     },
     {
       "id": "hotelreservation|rate|kill|1",
@@ -303,11 +303,11 @@
       "service": "rate",
       "fault_type": "kill",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_hotelreservation_rate_kill_1_2026-09-26T06-04-54.396271+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T06:04:54.408110+00:00"
     },
     {
       "id": "hotelreservation|recommendation|kill|1",
@@ -315,11 +315,11 @@
       "service": "recommendation",
       "fault_type": "kill",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_hotelreservation_recommendation_kill_1_2026-09-26T06-07-39.179761+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T06:07:39.187855+00:00"
     },
     {
       "id": "hotelreservation|reservation|kill|1",
@@ -330,8 +330,8 @@
       "status": "pending",
       "attempts": 0,
       "result_file": null,
-      "error": null,
-      "updated_at": null
+      "error": "INVALID, reset 2026-09-26: container_for('reservation') resolved to hotelreservation-geo-1; this run SIGKILLed geo, not reservation",
+      "updated_at": "2026-09-26T06:29:54.133155+00:00"
     },
     {
       "id": "hotelreservation|search|kill|1",
@@ -342,8 +342,8 @@
       "status": "pending",
       "attempts": 0,
       "result_file": null,
-      "error": null,
-      "updated_at": null
+      "error": "INVALID, reset 2026-09-26: ran with geo dead (and rate therefore untraffricked); baseline topology incomplete",
+      "updated_at": "2026-09-26T06:29:54.135081+00:00"
     },
     {
       "id": "hotelreservation|user|kill|1",
@@ -354,8 +354,8 @@
       "status": "pending",
       "attempts": 0,
       "result_file": null,
-      "error": null,
-      "updated_at": null
+      "error": "INVALID, reset 2026-09-26: ran with geo dead (and rate therefore untraffricked); baseline topology incomplete",
+      "updated_at": "2026-09-26T06:29:54.136916+00:00"
     },
     {
       "id": "hotelreservation|geo|latency|1",
@@ -366,8 +366,8 @@
       "status": "pending",
       "attempts": 0,
       "result_file": null,
-      "error": null,
-      "updated_at": null
+      "error": "reset 2026-09-26: failed because geo had been killed by the mis-targeted reservation run; root cause fixed (label-based container resolution)",
+      "updated_at": "2026-09-26T06:30:12.677857+00:00"
     },
     {
       "id": "hotelreservation|profile|latency|1",
@@ -375,11 +375,11 @@
       "service": "profile",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_hotelreservation_profile_latency_1_2026-09-26T06-22-01.742406+00-00.json",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-09-26T06:22:01.751541+00:00"
     },
     {
       "id": "hotelreservation|rate|latency|1",
@@ -388,10 +388,10 @@
       "fault_type": "latency",
       "repetition": 1,
       "status": "pending",
-      "attempts": 0,
+      "attempts": 1,
       "result_file": null,
-      "error": null,
-      "updated_at": null
+      "error": "reset: campaign was stopped deliberately while this run was in flight",
+      "updated_at": "2026-09-26T06:22:21.758740+00:00"
     },
     {
       "id": "hotelreservation|recommendation|latency|1",
@@ -2182,6 +2182,18 @@
       ],
       "reason": "T_rec is not recomputable for these runs; see PREREGISTRATION.md section 12",
       "originals_preserved_at": "_quarantine/data/campaign/runs_pre_amendment1/"
+    },
+    {
+      "amendment": 2,
+      "date": "2026-09-26T06:29:54.136963+00:00",
+      "summary": "container_for() matched compose services by name substring; 'reservation' resolved to the geo container",
+      "runs_reset": [
+        "hotelreservation|reservation|kill|1",
+        "hotelreservation|search|kill|1",
+        "hotelreservation|user|kill|1"
+      ],
+      "reason": "see PREREGISTRATION.md section 12 amendment 2 and _quarantine item 12",
+      "originals_preserved_at": "_quarantine/data/campaign/runs_mistargeted"
     }
   ]
 }

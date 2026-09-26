@@ -97,13 +97,51 @@ def load_graph(path: Path) -> "nx.DiGraph":
 
 
 def container_for(service: str, docker_exe: str) -> str:
-    out = subprocess.run([docker_exe, "ps", "--format", "{{.Names}}"],
-                         capture_output=True, text=True, check=True).stdout.split()
-    exact = [n for n in out if service in n and "mongodb" not in n and "memcached" not in n]
-    if not exact:
-        raise SystemExit(f"[FAIL] no running container matches '{service}'")
-    # prefer the shortest name, which avoids matching e.g. user-timeline for user
-    return min(exact, key=len)
+    """Resolve a compose service name to its running container, by LABEL not by substring.
+
+    Docker Compose stamps every container with `com.docker.compose.service`, which is an
+    exact value. Matching on that is authoritative. Matching on the container NAME is not,
+    and got this badly wrong:
+
+        container_for("reservation") -> "hotelreservation-geo-1"
+
+    because the compose project is called "hotelReservation", so the project prefix
+    "hotel*reservation*-" contains the substring "reservation" -- every container in the
+    project matched, and `min(key=len)` then picked the shortest, which was `geo`. The
+    2026-09-26 campaign therefore SIGKILLed `geo` while recording the run as a
+    `reservation` fault, and restored `reservation` afterwards, leaving `geo` dead for the
+    two runs that followed. See _quarantine/QUARANTINE_LOG.md item 12.
+
+    Raises rather than guessing. An ambiguous match previously resolved silently to the
+    shortest name; there is no circumstance in which quietly faulting a different service
+    than the one being recorded is better than stopping.
+    """
+    res = subprocess.run(
+        [docker_exe, "ps",
+         "--filter", f"label=com.docker.compose.service={service}",
+         "--format", "{{.Names}}\t{{.Label \"com.docker.compose.service\"}}"],
+        capture_output=True, text=True, check=True)
+
+    matches = []
+    for line in res.stdout.strip().splitlines():
+        if not line.strip():
+            continue
+        name, _, label = line.partition("\t")
+        # Belt and braces: --filter label=k=v is an exact match, but verify it anyway so a
+        # future Docker change in filter semantics cannot reintroduce fuzzy matching.
+        if label.strip() == service:
+            matches.append(name.strip())
+
+    if not matches:
+        raise SystemExit(
+            f"[FAIL] no running container has compose label "
+            f"com.docker.compose.service={service}. The stack is not up, or this service "
+            f"is not running.")
+    if len(matches) > 1:
+        raise SystemExit(
+            f"[FAIL] {len(matches)} running containers claim to be compose service "
+            f"'{service}': {matches}. Refusing to guess which one to fault.")
+    return matches[0]
 
 
 def start_load(cfg: dict, duration: int, users: int) -> subprocess.Popen:

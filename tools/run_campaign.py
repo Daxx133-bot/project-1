@@ -200,24 +200,52 @@ def compose(app: str, *cmd: str, timeout: int = 600) -> subprocess.CompletedProc
                           capture_output=True, text=True, timeout=timeout)
 
 
-def stack_healthy(app: str, timeout_s: float = 240.0) -> bool:
-    """Healthy = Jaeger answers /api/services AND the app gateway answers HTTP.
+def running_services(app: str) -> set[str]:
+    """Compose service names with a running container in this app's project."""
+    docker = find_docker_executable()
+    r = subprocess.run(
+        [docker, "ps", "--format", '{{.Label "com.docker.compose.service"}}'],
+        cwd=str(APPS[app]["compose_dir"]), capture_output=True, text=True, timeout=120)
+    return {ln.strip() for ln in r.stdout.splitlines() if ln.strip()}
 
-    Both are required: Jaeger alone can be up while the application is still starting, and
-    a run started then would collect a baseline from an empty system.
+
+def missing_services(app: str) -> list[str]:
+    """Application services from the canonical graph that have no running container.
+
+    The graph is the authority on which services the experiment depends on. Anything in it
+    that is not running means the topology under measurement is not the topology being
+    reported.
+    """
+    expected = set(load_graph(APPS[app]["graph"]).nodes())
+    return sorted(expected - running_services(app))
+
+
+def stack_healthy(app: str, timeout_s: float = 240.0) -> bool:
+    """Healthy = Jaeger answers, the gateway answers, AND every graph service is running.
+
+    The third condition was added after the 2026-09-26 campaign ran two runs against a
+    stack that had silently lost `geo`: Jaeger and the gateway both answered perfectly, so
+    the first two checks passed and the runs were marked `done` with invalid outcomes. A
+    partial stack is not a healthy stack, and the failure is silent precisely because the
+    gateway keeps serving. See _quarantine/QUARANTINE_LOG.md item 12.
     """
     cfg = APPS[app]
     deadline = time.time() + timeout_s
+    last_missing: list[str] = []
     while time.time() < deadline:
         try:
             j = requests.get(f"{cfg['jaeger']}/api/services", timeout=10)
             if j.ok and (j.json().get("data") or []):
                 a = requests.get(cfg["url"], timeout=10)
                 if a.status_code < 500:
-                    return True
-        except requests.RequestException:
+                    last_missing = missing_services(app)
+                    if not last_missing:
+                        return True
+        except (requests.RequestException, subprocess.SubprocessError):
             pass
         time.sleep(5)
+    if last_missing:
+        log_progress(f"[{now()}] UNHEALTHY {app}: services not running: {last_missing}")
     return False
 
 

@@ -305,3 +305,91 @@ then produced by one code path at one commit.
 **Retained deliberately.** These records are the primary evidence for amendment 1 and are
 cited by `PREREGISTRATION.md` §12. They are not analysed as campaign data and must never be
 pooled with it.
+
+---
+
+## Item 12 — 3 Hotel Reservation campaign runs invalidated by mis-targeted fault injection
+
+**Date:** 2026-09-26
+**Moved from:** `data/campaign/runs/`, `data/spans/`
+**Moved to:** `_quarantine/data/campaign/runs_mistargeted/`,
+`_quarantine/data/spans_mistargeted/`
+
+| Run | Why invalid |
+|---|---|
+| `hotelreservation\|reservation\|kill\|1` | **Faulted the wrong container.** SIGKILLed `geo`, recorded as a `reservation` fault. |
+| `hotelreservation\|search\|kill\|1` | Ran with `geo` dead; baseline topology incomplete (`geo`, `rate` absent from traces). |
+| `hotelreservation\|user\|kill\|1` | Ran with `geo` dead; baseline topology incomplete (`geo`, `rate` absent from traces). |
+
+### Root cause
+
+`tools/run_pilot.container_for()` resolved a compose service name to a container by
+**substring match on the container name**:
+
+```python
+exact = [n for n in out if service in n and "mongodb" not in n and "memcached" not in n]
+return min(exact, key=len)          # "prefer the shortest name"
+```
+
+The compose project is `hotelReservation`, so every container carries the prefix
+`hotelreservation-`, which **contains the substring `reservation`**. For
+`service="reservation"` every container in the project matched, and `min(key=len)` then
+selected the shortest — `hotelreservation-geo-1`.
+
+Verified on the live stack:
+
+```
+container_for('reservation') -> hotelreservation-geo-1        (before the fix)
+container_for('reservation') -> hotelreservation-reservation-1 (after)
+```
+
+### Consequences, in order
+
+1. `reservation|kill|1` (06:12:43) SIGKILLed **geo** and recorded it as a reservation
+   fault. The run was censored — unsurprisingly, since `reservation` was never faulted and
+   the recovery probe was waiting for a service that had not been touched to recover.
+2. Restoration ran `docker compose up -d reservation`, which restarted `reservation`
+   (never down) and left **geo dead**.
+3. `search|kill|1` (06:14:47) and `user|kill|1` (06:19:12) then ran against a stack with
+   no `geo`. `rate` also vanished from their traces, because the HR `search` path is
+   `frontend → search → {geo, rate}` and it fails at `geo` before reaching `rate`.
+   `search|kill|1` recorded `A/D/U = 0/0/0` and `T_rec = 0.0 s`; `user|kill|1` recorded
+   `T_rec = 140.08 s`. Both were marked **`done`**.
+4. `geo|latency|1` (06:19:32) failed with `no running container matches 'geo'`. **This
+   failure is what surfaced the problem** — it was the symptom, three runs after the cause.
+
+### The second defect this exposed
+
+`stack_healthy()` checked only that Jaeger answered `/api/services` and that the gateway
+answered HTTP. Both were true throughout: the gateway serves happily with `geo` dead. A
+partial stack therefore passed the health check and runs were marked `done` on a topology
+that was not the topology being reported.
+
+### Fixes
+
+1. `container_for()` now resolves by the **`com.docker.compose.service` label**, which is
+   an exact value, verifies the returned label anyway, and **raises on zero or on ambiguous
+   matches rather than guessing**. Silently faulting a different service than the one being
+   recorded is never preferable to stopping.
+2. `stack_healthy()` now additionally requires that **every service in the canonical graph
+   has a running container**, and names the missing ones in the progress log.
+3. `tools/audit_run_topology.py` added: it re-derives, from each run's persisted fault-free
+   baseline spans, whether every expected service was present. This is the check that
+   bounded the damage to 3 runs, and it should be run over the campaign output before any
+   analysis.
+4. 21 regression tests in `tests/test_container_resolution.py`, including the exact
+   `reservation` → `geo` case and the partial-stack health case.
+
+### Scope of the damage — bounded and verified
+
+`tools/audit_run_topology.py` over all 30 runs completed before the stop: **2 runs had an
+incomplete baseline topology**, both listed above; the third invalid run is the
+mis-targeted one, identified from its recorded `container` field. **All 22 Social Network
+runs were clean** — the collision cannot occur there, because no Social Network service name
+is a substring of the project name `socialnetwork`. The 5 surviving HR runs (`geo`,
+`profile` ×2, `rate`, `recommendation`) all targeted their own containers and had complete
+baselines.
+
+**Retained deliberately.** These records are the evidence for the root cause and are cited
+by `PREREGISTRATION.md` §12 amendment 2. They are not campaign data and must never be
+pooled with it.
