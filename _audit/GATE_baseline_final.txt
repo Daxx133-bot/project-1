@@ -1,0 +1,14 @@
+====================================================================================================
+BASELINE SANITY GATE
+====================================================================================================
+
+hotelreservation:  n=70  median=12.82 ms  MAD=0.545 ms  min=11.54  max=19.31
+  no run exceeds 3x the median
+
+socialnetwork:  n=110  median=54.74 ms  MAD=0.305 ms  min=51.86  max=56.17
+  no run exceeds 3x the median
+
+====================================================================================================
+VERDICT: 0 of 180 runs have a non-steady-state baseline
+====================================================================================================
+  Every baseline is consistent with its application's steady state.

@@ -147,11 +147,11 @@
       "service": "compose-post-service",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
-      "error": "INVALID, reset 2026-09-26: origin of the leak: pumba netem delay was never removed; the recorded censoring reflects a still-active fault, not a slow recovery",
-      "updated_at": "2026-09-26T13:07:43.263097+00:00"
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_compose-post-service_latency_1_2026-09-26T13-11-04.967236+00-00.json",
+      "error": null,
+      "updated_at": "2026-09-26T13:11:04.972866+00:00"
     },
     {
       "id": "socialnetwork|home-timeline-service|latency|1",
@@ -159,11 +159,11 @@
       "service": "home-timeline-service",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
-      "error": "INVALID, reset 2026-09-26: baseline contaminated by the leaked netem delay on compose-post-service (gateway baseline p95 ~3100-4050 ms vs ~55 ms steady state); ancestor_affected_count systematically under-counted",
-      "updated_at": "2026-09-26T13:07:43.265019+00:00"
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_home-timeline-service_latency_1_2026-09-26T13-13-29.613856+00-00.json",
+      "error": null,
+      "updated_at": "2026-09-26T13:13:29.623480+00:00"
     },
     {
       "id": "socialnetwork|media-service|latency|1",
@@ -171,11 +171,11 @@
       "service": "media-service",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
-      "error": "INVALID, reset 2026-09-26: baseline contaminated by the leaked netem delay on compose-post-service (gateway baseline p95 ~3100-4050 ms vs ~55 ms steady state); ancestor_affected_count systematically under-counted",
-      "updated_at": "2026-09-26T13:07:43.267002+00:00"
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_media-service_latency_1_2026-09-26T13-15-53.035477+00-00.json",
+      "error": null,
+      "updated_at": "2026-09-26T13:15:53.046131+00:00"
     },
     {
       "id": "socialnetwork|post-storage-service|latency|1",
@@ -183,11 +183,11 @@
       "service": "post-storage-service",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
-      "error": "INVALID, reset 2026-09-26: baseline contaminated by the leaked netem delay on compose-post-service (gateway baseline p95 ~3100-4050 ms vs ~55 ms steady state); ancestor_affected_count systematically under-counted",
-      "updated_at": "2026-09-26T13:07:43.268785+00:00"
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_post-storage-service_latency_1_2026-09-26T13-18-16.029461+00-00.json",
+      "error": null,
+      "updated_at": "2026-09-26T13:18:16.040647+00:00"
     },
     {
       "id": "socialnetwork|social-graph-service|latency|1",
@@ -195,11 +195,11 @@
       "service": "social-graph-service",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
-      "error": "INVALID, reset 2026-09-26: baseline contaminated by the leaked netem delay on compose-post-service (gateway baseline p95 ~3100-4050 ms vs ~55 ms steady state); ancestor_affected_count systematically under-counted",
-      "updated_at": "2026-09-26T13:07:43.270569+00:00"
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_social-graph-service_latency_1_2026-09-26T13-20-40.631855+00-00.json",
+      "error": null,
+      "updated_at": "2026-09-26T13:20:40.645459+00:00"
     },
     {
       "id": "socialnetwork|text-service|latency|1",
@@ -207,11 +207,11 @@
       "service": "text-service",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
-      "error": "INVALID, reset 2026-09-26: baseline contaminated by the leaked netem delay on compose-post-service (gateway baseline p95 ~3100-4050 ms vs ~55 ms steady state); ancestor_affected_count systematically under-counted",
-      "updated_at": "2026-09-26T13:07:43.272512+00:00"
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_text-service_latency_1_2026-09-26T13-23-03.528345+00-00.json",
+      "error": null,
+      "updated_at": "2026-09-26T13:23:03.540545+00:00"
     },
     {
       "id": "socialnetwork|unique-id-service|latency|1",
@@ -219,11 +219,11 @@
       "service": "unique-id-service",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
-      "error": "INVALID, reset 2026-09-26: baseline contaminated by the leaked netem delay on compose-post-service (gateway baseline p95 ~3100-4050 ms vs ~55 ms steady state); ancestor_affected_count systematically under-counted",
-      "updated_at": "2026-09-26T13:07:43.274276+00:00"
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_unique-id-service_latency_1_2026-09-26T13-25-25.417427+00-00.json",
+      "error": null,
+      "updated_at": "2026-09-26T13:25:25.428911+00:00"
     },
     {
       "id": "socialnetwork|url-shorten-service|latency|1",
@@ -231,11 +231,11 @@
       "service": "url-shorten-service",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
-      "error": "INVALID, reset 2026-09-26: baseline contaminated by the leaked netem delay on compose-post-service (gateway baseline p95 ~3100-4050 ms vs ~55 ms steady state); ancestor_affected_count systematically under-counted",
-      "updated_at": "2026-09-26T13:07:43.276076+00:00"
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_url-shorten-service_latency_1_2026-09-26T13-27-50.628082+00-00.json",
+      "error": null,
+      "updated_at": "2026-09-26T13:27:50.640430+00:00"
     },
     {
       "id": "socialnetwork|user-mention-service|latency|1",
@@ -243,11 +243,11 @@
       "service": "user-mention-service",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
-      "error": "INVALID, reset 2026-09-26: baseline contaminated by the leaked netem delay on compose-post-service (gateway baseline p95 ~3100-4050 ms vs ~55 ms steady state); ancestor_affected_count systematically under-counted",
-      "updated_at": "2026-09-26T13:07:43.277916+00:00"
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_user-mention-service_latency_1_2026-09-26T13-30-15.767152+00-00.json",
+      "error": null,
+      "updated_at": "2026-09-26T13:30:15.777457+00:00"
     },
     {
       "id": "socialnetwork|user-service|latency|1",
@@ -255,11 +255,11 @@
       "service": "user-service",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
-      "error": "INVALID, reset 2026-09-26: baseline contaminated by the leaked netem delay on compose-post-service (gateway baseline p95 ~3100-4050 ms vs ~55 ms steady state); ancestor_affected_count systematically under-counted",
-      "updated_at": "2026-09-26T13:07:43.280247+00:00"
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_user-service_latency_1_2026-09-26T13-32-47.000576+00-00.json",
+      "error": null,
+      "updated_at": "2026-09-26T13:32:47.012947+00:00"
     },
     {
       "id": "socialnetwork|user-timeline-service|latency|1",
@@ -267,11 +267,11 @@
       "service": "user-timeline-service",
       "fault_type": "latency",
       "repetition": 1,
-      "status": "pending",
-      "attempts": 0,
-      "result_file": null,
-      "error": "INVALID, reset 2026-09-26: baseline contaminated by the leaked netem delay on compose-post-service (gateway baseline p95 ~3100-4050 ms vs ~55 ms steady state); ancestor_affected_count systematically under-counted",
-      "updated_at": "2026-09-26T13:07:43.282043+00:00"
+      "status": "done",
+      "attempts": 1,
+      "result_file": "data/campaign/runs/run_socialnetwork_user-timeline-service_latency_1_2026-09-26T13-35-12.304281+00-00.json",
+      "error": null,
+      "updated_at": "2026-09-26T13:35:12.315239+00:00"
     },
     {
       "id": "hotelreservation|geo|kill|1",

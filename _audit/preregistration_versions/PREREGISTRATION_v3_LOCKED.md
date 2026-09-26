@@ -7,8 +7,8 @@
 in §11. §7.1 was approved as written. Frozen copy:
 `_audit/preregistration_versions/PREREGISTRATION_v3_LOCKED.md`.
 **Code and data state at lock: commit `eaadaf1`.**
-**Amendments after lock: 2, logged in §12. Neither was made after analysing campaign
-data.**
+**Amendments after lock: 3, logged in §12. None was made after analysing campaign data;
+all three were forced by data-validity defects found by the pre-analysis gates.**
 **Supersedes:** every analysis in `_quarantine/` and every number in the current
 manuscript drafts.
 
@@ -805,10 +805,92 @@ answers.**
 
 ---
 
+### Amendment 3 — leaked `pumba netem` rule, and a baseline-sanity gate
+
+| | |
+|---|---|
+| **Date** | 2026-09-26 |
+| **Made after analysing campaign data?** | **No.** Found by the pre-analysis gates immediately after the 180th run completed, before any statistic was computed. |
+| **Sections affected** | §8 (fault removal), §9 (execution requirements) |
+| **Campaign runs invalidated** | 11, quarantined as item 13, reset and re-collected |
+
+**What was found.** `pumba netem delay --time 500 --jitter 100 --duration 30s` was applied to
+`compose-post-service` at 05:31:41. The pumba process exited normally and the runner recorded
+the removal instant from its exit. **The tc rule did not go away with it.** It stayed active
+for the whole remainder of the Social Network latency rep-1 block and was cleared only by the
+stack teardown 28 minutes later.
+
+Evidence, from the persisted **fault-free baseline** spans:
+
+| Window | `compose-post-service` own-span p95, in a baseline |
+|---|---:|
+| 05:31:41, the origin run itself | 8.87 ms |
+| 05:34:02 – 05:56:51, 10 runs | **2153 – 2486 ms** |
+| 07:29:54 onward, rep 2, after a teardown | **9.0 – 9.8 ms** |
+
+Gateway baseline p95 across those 10 runs was **3132 – 4046 ms against a campaign median of
+54.87 ms** — 57–74× the median, 8600–11100 MAD.
+
+**Why it was dangerous rather than merely noisy.** The distortion is **directional**. The rule
+asks whether fault p95 exceeds 2× baseline, so an inflated baseline makes the fault look
+*smaller*. The faulted services' ancestors — `nginx-web-server` and `compose-post-service` —
+were **already degraded in the baseline**, so they could not clear 2× their own inflated
+values and went uncounted. `ancestor_affected_count`, the **primary outcome**, came out low by
+exactly 2 in most of the ten:
+
+| Service | rep 1, contaminated | rep 2, clean |
+|---|---:|---:|
+| home-timeline, media, text, unique-id, user, user-timeline | **0** | 2 |
+| social-graph, url-shorten, user-mention | **1** | 3 |
+| post-storage | **2** | 4 |
+
+Every one of the ten is understated. Analysed as collected, this would have flattened the
+Social Network H1 correlation and been **indistinguishable from genuine measurement noise**.
+No individual run record looked anomalous; only the cross-run comparison exposed it.
+
+The origin run was invalid for a separate reason: it is recorded as censored on `p95`, but the
+fault was **still active throughout its recovery probe**, so its censoring carries no
+information about recovery speed. It was the campaign's only censored observation; the
+corrected dataset has **none**.
+
+**The fixes.**
+
+1. **`one_run` force-recreates the target container after every non-kill fault run**
+   (`docker compose up -d --force-recreate`). A fresh container cannot carry a residual qdisc.
+   It runs *after* the fault window and *after* the recovery probe, so it cannot influence the
+   run that just completed; its only purpose is to guarantee the next run starts clean. Kill
+   runs already received a fresh container by necessity. Recorded per run as `fault_cleanup`.
+2. **`tools/audit_baseline_sanity.py`** — a standing pre-analysis gate. It flags any run whose
+   baseline p95 is an outlier for its application, by median and MAD. This is the check that
+   caught the incident.
+
+**Pre-analysis gates, now mandatory.** Before any statistic is computed, both must report
+zero:
+
+| Gate | Question | Status on the final 180 |
+|---|---|---|
+| `tools/audit_run_topology.py` | Was every expected service present, per run? | **0 of 180 incomplete** |
+| `tools/audit_baseline_sanity.py` | Was each baseline a steady state? | **0 of 180 anomalous** |
+
+**A limitation this creates, stated rather than buried.** Fault removal is inferred from the
+pumba process exiting, and this incident proves that inference can be wrong. The container
+recreation now bounds the *consequence* to a single run, but the runner still cannot prove,
+from within a run, that the rule was gone when the recovery probe started. `T_rec` for latency
+faults therefore carries a residual assumption that the paper must state: **if a netem rule
+leaked within a run, that run's `T_rec` would be inflated and the baseline gate would not
+detect it**, because the run's own baseline precedes the fault. The cross-run baseline gate
+catches leaks that outlive a run, which is the case observed; a leak confined to one run
+remains undetectable with the current instrumentation. Detecting it would require querying
+the container's qdisc directly, which is outside this project's remaining scope and is listed
+as future work.
+
+---
+
 | | |
 |---|---|
 | **Locked by** | Principal investigator, 2026-09-26 (§7.1 approved as written; Q1/Q2/Q3 issued 2026-09-25) |
 | **Date** | 2026-09-26 |
 | **Code and data state at lock** | `eaadaf1` — the commit containing every script the campaign executes, the canonical graphs, and the Q3 live-validation runs |
 | **Frozen copy** | `_audit/preregistration_versions/PREREGISTRATION_v3_LOCKED.md` |
-| **Amendments after lock** | 2 (§12), both 2026-09-26, neither after analysing campaign data |
+| **Amendments after lock** | 3 (§12), all 2026-09-26, none after analysing campaign data |
+| **Campaign collected** | 180/180 runs, 2026-09-26 04:19-13:35 UTC, 0 failed, 0 censored, perfectly balanced (36 cells x 5 reps). Both pre-analysis gates clean. |

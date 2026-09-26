@@ -235,3 +235,20 @@
 [2026-09-26T13:01:43.525518+00:00] DONE     hotelreservation|user|latency|5                  A/D/U=1/0/0  err=0.0  dp95=580.6  T_rec=12.86s | done=179 censored=1 failed=0 pending=0
 [2026-09-26T13:02:03.529155+00:00] STACK DOWN hotelreservation
 [2026-09-26T13:02:08.631513+00:00] CAMPAIGN STOP  | {'pending': 0, 'running': 0, 'done': 179, 'censored': 1, 'failed': 0}
+[2026-09-26T13:08:35.012519+00:00] CAMPAIGN START  11 run(s) to go | {'pending': 11, 'running': 0, 'done': 169, 'censored': 0, 'failed': 0}
+[2026-09-26T13:08:35.013267+00:00] PRE-CLEAN down socialnetwork
+[2026-09-26T13:08:35.310969+00:00] PRE-CLEAN down hotelreservation
+[2026-09-26T13:08:35.531781+00:00] STACK UP   socialnetwork
+[2026-09-26T13:11:04.984143+00:00] DONE     socialnetwork|compose-post-service|latency|1     A/D/U=1/0/0  err=0.0  dp95=3304.5  T_rec=21.7s | done=170 censored=0 failed=0 pending=10
+[2026-09-26T13:13:29.629701+00:00] DONE     socialnetwork|home-timeline-service|latency|1    A/D/U=2/0/0  err=0.0  dp95=2699.1  T_rec=14.86s | done=171 censored=0 failed=0 pending=9
+[2026-09-26T13:15:53.052509+00:00] DONE     socialnetwork|media-service|latency|1            A/D/U=2/0/0  err=0.0  dp95=567.7  T_rec=14.32s | done=172 censored=0 failed=0 pending=8
+[2026-09-26T13:18:16.046950+00:00] DONE     socialnetwork|post-storage-service|latency|1     A/D/U=4/0/0  err=0.0  dp95=2487.7  T_rec=15.33s | done=173 censored=0 failed=0 pending=7
+[2026-09-26T13:20:40.651998+00:00] DONE     socialnetwork|social-graph-service|latency|1     A/D/U=3/0/0  err=0.0  dp95=1692.1  T_rec=15.42s | done=174 censored=0 failed=0 pending=6
+[2026-09-26T13:23:03.548022+00:00] DONE     socialnetwork|text-service|latency|1             A/D/U=2/0/0  err=0.0  dp95=1082.5  T_rec=13.78s | done=175 censored=0 failed=0 pending=5
+[2026-09-26T13:25:25.435640+00:00] DONE     socialnetwork|unique-id-service|latency|1        A/D/U=2/0/0  err=0.0  dp95=486.6  T_rec=12.59s | done=176 censored=0 failed=0 pending=4
+[2026-09-26T13:27:50.647126+00:00] DONE     socialnetwork|url-shorten-service|latency|1      A/D/U=3/0/0  err=0.0  dp95=775.8  T_rec=15.49s | done=177 censored=0 failed=0 pending=3
+[2026-09-26T13:30:15.784298+00:00] DONE     socialnetwork|user-mention-service|latency|1     A/D/U=3/0/0  err=0.0  dp95=565.5  T_rec=15.67s | done=178 censored=0 failed=0 pending=2
+[2026-09-26T13:32:47.019467+00:00] DONE     socialnetwork|user-service|latency|1             A/D/U=2/0/0  err=0.0  dp95=541.5  T_rec=22.27s | done=179 censored=0 failed=0 pending=1
+[2026-09-26T13:35:12.321258+00:00] DONE     socialnetwork|user-timeline-service|latency|1    A/D/U=2/0/0  err=0.0  dp95=2416.3  T_rec=14.86s | done=180 censored=0 failed=0 pending=0
+[2026-09-26T13:35:32.324302+00:00] STACK DOWN socialnetwork
+[2026-09-26T13:35:38.716220+00:00] CAMPAIGN STOP  | {'pending': 0, 'running': 0, 'done': 180, 'censored': 0, 'failed': 0}

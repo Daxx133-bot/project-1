@@ -1,0 +1,44 @@
+============================================================================================
+BASELINE per-service p95, across 182 fault-free baseline windows
+============================================================================================
+app              service                   n     min     max  max/min  quanta  note
+--------------------------------------------------------------------------------------------
+hotelreservatio  frontend                 72   11.58   15.83     1.37  1157.6  
+hotelreservatio  geo                      72    0.46    0.61     1.33    45.5  sub-ms
+hotelreservatio  profile                  72    1.24    1.82     1.47   123.6  
+hotelreservatio  rate                     72    2.19    3.29     1.50   219.3  
+hotelreservatio  recommendation           72    0.09    0.18     1.94     9.4  sub-ms
+hotelreservatio  reservation              72    2.41    4.63     1.92   240.7  
+hotelreservatio  search                   72    5.17    7.96     1.54   517.2  
+hotelreservatio  user                     72    0.03    0.06     2.14     2.7  sub-ms, BASELINE ALONE EXCEEDS 2x
+socialnetwork    compose-post-service    110    6.74    9.88     1.47   673.8  
+socialnetwork    home-timeline-service   110    1.86    2.66     1.43   186.1  
+socialnetwork    media-service           110    0.01    0.02     1.43     1.5  sub-ms
+socialnetwork    nginx-web-server        110   51.84   56.17     1.08  5183.7  
+socialnetwork    post-storage-service    110    1.03    3.01     2.93   102.6  BASELINE ALONE EXCEEDS 2x
+socialnetwork    social-graph-service    110    1.33    1.92     1.44   132.9  
+socialnetwork    text-service            110    1.67    2.36     1.42   166.8  
+socialnetwork    unique-id-service       110    0.03    0.05     1.55     3.1  sub-ms
+socialnetwork    url-shorten-service     110    0.01    0.06     4.07     1.5  sub-ms, BASELINE ALONE EXCEEDS 2x
+socialnetwork    user-mention-service    110    0.01    0.05     3.70     1.4  sub-ms, BASELINE ALONE EXCEEDS 2x
+socialnetwork    user-service            110    0.02    0.03     1.57     1.6  sub-ms
+socialnetwork    user-timeline-service   110    2.12    5.52     2.60   212.2  BASELINE ALONE EXCEEDS 2x
+
+  services with baseline per-service p95 < 1 ms : 8 of 20
+  services whose BASELINE-only variation already exceeds the 2x threshold: 5
+    hotelreservation user                    0.03 -> 0.06 ms  (2.14x) with NO fault present
+    socialnetwork    post-storage-service    1.03 -> 3.01 ms  (2.93x) with NO fault present
+    socialnetwork    url-shorten-service     0.01 -> 0.06 ms  (4.07x) with NO fault present
+    socialnetwork    user-mention-service    0.01 -> 0.05 ms  (3.70x) with NO fault present
+    socialnetwork    user-timeline-service   2.12 -> 5.52 ms  (2.60x) with NO fault present
+
+============================================================================================
+VERDICT
+============================================================================================
+  The purely multiplicative threshold is NOT SAFE at this scale. At least one
+  service exceeds it between two fault-free windows, so the rule will report
+  'degraded' for services nothing happened to. Any count built on it -- and
+  ancestor_affected_count is the PRIMARY outcome -- is contaminated.
+
+  The error-rate branch of the same rule already carries an absolute floor
+  (+0.05 absolute). The latency branch needs the equivalent.
