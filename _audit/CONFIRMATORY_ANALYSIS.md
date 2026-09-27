@@ -132,6 +132,12 @@ Source: `ancestor_saturation.csv`.
 
 HR\* = Hotel Reservation, **directional only — not confirmatory** (§7.2). Source: `confirmatory_family_kill.csv`.
 
+> **Two caveats on the hazard ratios, applying wherever they appear.**
+>
+> **1. A hazard ratio is per ONE UNIT of the raw predictor, and several predictors never span one unit.** `hybrid_criticality` runs from 0.036 to 0.302 across the Social Network analysis set, so a one-unit increase is about four times the entire observed range and the fitted HR extrapolates far outside the data. The same holds for every normalised centrality (`degree`, `closeness`, `pagerank`, `betweenness`, `eigenvector`, `composite_score`). Hazard ratios are therefore **not comparable across predictors on different scales**, and an HR of 0.01 or 28 means "steep on an unstandardised scale", not a 100-fold or 28-fold effect. Only the count-valued predictors (`ancestor_count`, `descendant_count`, `dominator_subtree_size`) have HRs where one unit is a meaningful step.
+>
+> **2. Cluster-robust standard errors with 7-11 clusters are likely anti-conservative.** The Cox models are fitted at run level (n = 55 SN, n = 35 HR) with errors clustered on 11 and 7 services. Sandwich estimators need many clusters to be calibrated; with this few they under-state uncertainty. Several Cox p-values below are 1e-8 to 1e-10 while the primary Spearman test of the same hypothesis is not significant at all. **The primary test governs**: §7's promotion rule makes Spearman primary at 0% censoring. These survival models are reported alongside so the contrast is visible rather than hidden; the small Cox p-values are not treated as evidence for H1 and are not FDR-corrected.
+
 ## 4. Replication family — latency faults
 
 #### Primary outcome: `ancestor_affected_count`
