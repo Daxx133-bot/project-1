@@ -799,6 +799,44 @@ def deviations_table() -> pd.DataFrame:
             "record": "section 7 as written; this file",
             "detected_by": "the dataset (0 of 180 censored)",
         },
+        {
+            "n": 9, "date": "2026-09-28",
+            "title": ("Primary test's raw p superseded by exact enumeration "
+                      "(Monte-Carlo -> exact)"),
+            "stage": "after the confirmatory analysis was complete and committed",
+            "what_happened": (
+                "The Social Network tests used 10,000 Monte-Carlo permutations because "
+                "11! = 39,916,800 exceeded the enumeration limit in fast_stats. That limit "
+                "was avoidable: the permutation null distribution of Spearman's rho depends "
+                "only on the two rank vectors, so permuting the vector with MORE ties "
+                "enumerates the identical null distribution from far fewer distinct "
+                "arrangements. For the primary test the predictor's tie structure reduces "
+                "39,916,800 permutations to 9,240 distinct arrangements. The exact raw p is "
+                "64/9,240 = 0.00692641; the locked Monte-Carlo value was 0.0080. An "
+                "intermediate supplementary note (blind_recompute.md) quoted 0.006883 from "
+                "2,000,000 Monte-Carlo pairings and called it high-resolution; that too is "
+                "an estimate, not the exact value, and is superseded here."),
+            "what_changed": (
+                "Nothing in the locked analysis. The exact p-values and a BH-FDR rerun "
+                "using them are written to a separate supplementary file, "
+                "analysis/final/exact_p_supplement.csv, which refines 43 of the 44 "
+                "confirmatory tests (the 44th has an undefined p, its predictor being "
+                "constant). The primary test's BH-adjusted p moves from 0.3451 to 0.3048. "
+                "The verdict is unchanged: 0 of 44 confirmatory tests significant at "
+                "q = 0.05, before and after. No locked output was overwritten or "
+                "regenerated. This is a precision refinement of p-values already computed, "
+                "not a new test, a new hypothesis or a re-analysis, and it was carried out "
+                "with the confirmatory result already known -- it could not have changed "
+                "which hypothesis was tested."),
+            "outcome_affected": ("raw and BH-adjusted p-values only; no rho, CI, effect "
+                                 "size, outcome or verdict changed"),
+            "runs_invalidated": 0,
+            "runs_disposition": "not applicable",
+            "record": ("PREREGISTRATION.md section 12 deviation 9; "
+                       "analysis/final/exact_p_supplement.csv and .md"),
+            "detected_by": ("the analyst, while reconciling the reported raw p against an "
+                            "independent recomputation"),
+        },
     ])
 
 

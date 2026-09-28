@@ -884,6 +884,74 @@ remains undetectable with the current instrumentation. Detecting it would requir
 the container's qdisc directly, which is outside this project's remaining scope and is listed
 as future work.
 
+### Deviation 9 — primary test's raw p superseded by exact enumeration
+
+**This is a deviation record, not an amendment.** Amendments 1–3 above changed the
+specification, and all three were made before any campaign data was analysed. This entry
+changes nothing in the specification and was made *after* the confirmatory analysis was
+complete, committed and reported. It is logged here so that §12 remains the single place
+where every post-lock departure is recorded, and it is reported in
+`analysis/final/deviations.csv` as deviation 9.
+
+| | |
+|---|---|
+| **Date** | 2026-09-28 |
+| **Made before any campaign data was analysed?** | **No.** Made after the full analysis was complete and its verdict known. See the safeguard note below. |
+| **Sections affected** | None. §3 and §7.2 already mandate the exact permutation test; this brings the computation into line with them. |
+| **Campaign runs invalidated** | 0 |
+
+**What was found.** §3 and §7.2 mandate exact permutation tests. The implementation
+enumerated exactly only when `n! ≤ 200,000`, so Hotel Reservation (7! = 5,040) was exact
+but Social Network (11! = 39,916,800) fell back to 10,000 Monte-Carlo permutations. The
+locked raw p for the primary test is therefore a Monte-Carlo estimate, **0.0080**, where
+§3 asks for an exact value.
+
+**Why the fallback was unnecessary.** The permutation null distribution of Spearman's ρ
+depends only on the two rank vectors. Permuting the vector carrying *more ties* generates
+the identical null distribution from far fewer **distinct arrangements**. The primary
+test's predictor has tie multiset {1×1, 2×6, 3×3, 4×1}, which reduces 39,916,800
+permutations to **9,240 distinct arrangements** — trivially enumerable. Choosing which
+vector to permute is a computational decision with no statistical content.
+
+**The exact value.**
+
+| quantity | value |
+|---|---:|
+| Spearman ρ | 0.785119 (unchanged) |
+| raw p, locked (10,000 Monte-Carlo) | 0.0080 |
+| raw p, **exact enumeration** | **64 / 9,240 = 0.00692641** |
+| BH-adjusted p, locked | 0.3451 |
+| BH-adjusted p, exact substituted | **0.3048** |
+| significant at q = 0.05 | **No → No** |
+
+A supplementary note issued earlier the same day (`analysis/final/blind_recompute.md`)
+quoted **0.006883** from 2,000,000 Monte-Carlo pairings and described it as
+high-resolution. That is also an estimate, not an exact value, and is superseded by
+0.00692641. The gap, 4.3 × 10⁻⁵, is within Monte-Carlo error at that resample count.
+
+**What changed, and what did not.** Nothing in the locked analysis. The exact p-values and
+a BH-FDR rerun using them are written to a *separate supplementary file*,
+`analysis/final/exact_p_supplement.csv` (and `.md`), which refines **43 of the 44**
+confirmatory tests — the 44th has an undefined p, its predictor being constant. No locked
+output was overwritten or regenerated. No ρ, confidence interval, effect size, outcome
+definition, service, predictor or verdict changed. **0 of 44 confirmatory tests are
+significant at q = 0.05, before and after.**
+
+**Safeguard, stated because this was done with the result already known.** A p-value
+refinement made after seeing a null result is exactly the shape of a rescue attempt, so
+the guards are recorded explicitly. The refinement was applied to **all 43 testable tests
+in the family, not to the primary test alone**, so it could not be targeted. It is a
+change of *computation*, not of hypothesis, test statistic, analysis unit, outcome or
+family membership — the same test on the same data, enumerated instead of sampled. It
+moves the primary test's adjusted p from 0.3451 to 0.3048, still roughly an order of
+magnitude above the threshold, and the direction of the change was not knowable in advance
+(the Monte-Carlo estimate could have been low as easily as high; an independent
+10,000-resample run with a different seed gave 0.0059, on the other side). Had it changed
+the verdict, that would itself have been reportable as a deviation and the locked result
+would still stand as the preregistered one.
+
+---
+
 ---
 
 | | |
@@ -893,4 +961,5 @@ as future work.
 | **Code and data state at lock** | `eaadaf1` — the commit containing every script the campaign executes, the canonical graphs, and the Q3 live-validation runs |
 | **Frozen copy** | `_audit/preregistration_versions/PREREGISTRATION_v3_LOCKED.md` |
 | **Amendments after lock** | 3 (§12), all 2026-09-26, none after analysing campaign data |
+| **Deviations after analysis** | 1 (§12 deviation 9, 2026-09-28): the primary test's raw p refined from Monte-Carlo to exact enumeration, in a supplementary file only. Verdict unchanged. |
 | **Campaign collected** | 180/180 runs, 2026-09-26 04:19-13:35 UTC, 0 failed, 0 censored, perfectly balanced (36 cells x 5 reps). Both pre-analysis gates clean. |
