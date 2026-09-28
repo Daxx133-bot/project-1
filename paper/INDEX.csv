@@ -1,5 +1,6 @@
 file,produced_by,bytes
 paper/CLAIMS_LEDGER.md,"hand-written, validated by paper/check_ledger.py",15672
+paper/INDEX.csv,paper/build_all.py,2455
 paper/build_all.py,source,2697
 paper/build_numbers.py,source,26415
 paper/check_ledger.py,source,3783
