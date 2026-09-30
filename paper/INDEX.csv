@@ -1,9 +1,19 @@
 file,produced_by,bytes
 paper/CLAIMS_LEDGER.md,"hand-written, validated by paper/check_ledger.py",15672
-paper/INDEX.csv,paper/build_all.py,2455
+paper/INDEX.csv,paper/build_all.py,2496
 paper/build_all.py,source,2697
-paper/build_numbers.py,source,26415
+paper/build_numbers.py,source,35301
+paper/check_draft_ids.py,source,5341
 paper/check_ledger.py,source,3783
+paper/draft/audit_disclosure.md,unknown,11152
+paper/draft/limitations.md,unknown,9226
+paper/draft/method.md,unknown,20971
+paper/draft/outline_abstract.md,unknown,3810
+paper/draft/outline_conclusion.md,unknown,2816
+paper/draft/outline_discussion.md,unknown,6991
+paper/draft/outline_intro.md,unknown,5285
+paper/draft/outline_related_work.md,unknown,7480
+paper/draft/results.md,unknown,14048
 paper/emit_macros.py,source,3649
 paper/figures/fig_leave_one_out.pdf,paper/make_figures.py,18556
 paper/figures/fig_leave_one_out.png,paper/make_figures.py,148202
@@ -20,9 +30,9 @@ paper/figures/fig_rank_inversion_data.csv,paper/make_figures.py,470
 paper/figures/figures_index.csv,paper/make_figures.py,1085
 paper/make_figures.py,source,14750
 paper/make_tables.py,source,11901
-paper/numbers.csv,paper/build_numbers.py,31393
-paper/numbers.json,paper/emit_macros.py,53363
-paper/numbers.tex,paper/emit_macros.py,24180
+paper/numbers.csv,paper/build_numbers.py,37054
+paper/numbers.json,paper/emit_macros.py,63672
+paper/numbers.tex,paper/emit_macros.py,29096
 paper/tables/tables_index.csv,paper/make_tables.py,1771
 paper/tables/tbl_deviations.csv,paper/make_tables.py,13046
 paper/tables/tbl_deviations.md,paper/make_tables.py,13273

@@ -1,6 +1,6 @@
 %% paper/numbers.tex -- AUTO-GENERATED from paper/numbers.csv. DO NOT EDIT.
 %% Regenerate: python paper/build_numbers.py && python paper/emit_macros.py
-% Generated at repository commit 114831e. 173 macros.
+% Generated at repository commit a4652a5. 210 macros.
 
 % Total fault-injection runs in the final campaign (analysis/final/run_level_data.csv)
 \newcommand{\NumCampaignRunsTotal}{180}
@@ -348,3 +348,77 @@
 \newcommand{\NumTrecMaxS}{156.27}
 % Services in the Social Network analysis set (analysis/final/sn_predictor_ranks.csv)
 \newcommand{\NumSnAnalysisSetSize}{11}
+% Injected network delay for latency faults (faultinjection/fault_config.py)
+\newcommand{\NumFaultLatencyDelayMs}{500}
+% Jitter around the injected delay (faultinjection/fault_config.py)
+\newcommand{\NumFaultLatencyJitterMs}{100}
+% Signal used for kill faults (faultinjection/fault_config.py)
+\newcommand{\NumFaultKillSignal}{SIGKILL}
+% Relative p95 threshold for flagging a service as latency-degraded (measurement/metrics_collector.py)
+\newcommand{\NumThresholdDegradationFactor}{2.0}
+% Absolute p95 rise required alongside the relative threshold (measurement/metrics_collector.py)
+\newcommand{\NumThresholdDegradationFloorMs}{1.0}
+% Absolute error-rate rise for flagging a service (measurement/metrics_collector.py)
+\newcommand{\NumThresholdErrorRateAbs}{0.05}
+% Hybrid metric weight on in-degree centrality (fixed a priori; never fitted to outcome data) (centrality/metric_constants.py)
+\newcommand{\NumHybridWIn}{0.4}
+% Hybrid metric weight on fan-out-scaled out-degree centrality (fixed a priori; never fitted to outcome data) (centrality/metric_constants.py)
+\newcommand{\NumHybridWOut}{0.4}
+% Hybrid metric weight on betweenness centrality (fixed a priori; never fitted to outcome data) (centrality/metric_constants.py)
+\newcommand{\NumHybridWBtw}{0.2}
+% Whether the hybrid metric's weights were tuned against outcome data (a weight lockfile exists) (centrality/output/tuned_weights.lock.json)
+\newcommand{\NumHybridWeightsTuned}{no}
+% Warm-up before the baseline window (tools/run_campaign.py)
+\newcommand{\NumProtocolWarmupS}{60}
+% Fault hold duration (tools/run_campaign.py)
+\newcommand{\NumProtocolFaultDurationS}{30}
+% Recovery probe cap, beyond which a run is censored (tools/run_campaign.py)
+\newcommand{\NumProtocolRecoveryCapS}{180}
+% Confirmation period a recovered state must hold (tools/run_campaign.py)
+\newcommand{\NumProtocolConfirmS}{5}
+% Lag applied to the probe window, to avoid partially written spans (tools/run_campaign.py)
+\newcommand{\NumProtocolProbeLagS}{5}
+% Minimum traces before a probe sample may vote for recovery (tools/run_campaign.py)
+\newcommand{\NumProtocolMinTraces}{20}
+% Concurrent load-generator users (tools/run_campaign.py)
+\newcommand{\NumProtocolLoadUsers}{25}
+% Cooldown after each run (tools/run_campaign.py)
+\newcommand{\NumProtocolCooldownS}{20}
+% Baseline measurement window, as actually recorded in every run (data/campaign/runs/*.json)
+\newcommand{\NumProtocolBaselineWindowS}{60}
+% Distinct baseline window lengths across the campaign (data/campaign/runs/*.json)
+\newcommand{\NumProtocolBaselineWindowDistinct}{1}
+% Services in the reconstructed socialnetwork dependency graph (data/graphs/sn_CANONICAL.json)
+\newcommand{\NumGraphSnNodes}{12}
+% Observed call edges in the socialnetwork dependency graph (data/graphs/sn_CANONICAL.json)
+\newcommand{\NumGraphSnEdges}{17}
+% Traces examined to reconstruct the socialnetwork graph (data/graphs/sn_CANONICAL.json)
+\newcommand{\NumGraphSnTracesExamined}{2449}
+% Spans examined to reconstruct the socialnetwork graph (data/graphs/sn_CANONICAL.json)
+\newcommand{\NumGraphSnSpansExamined}{32847}
+% Services in the reconstructed hotelreservation dependency graph (data/graphs/hr_CANONICAL.json)
+\newcommand{\NumGraphHrNodes}{8}
+% Observed call edges in the hotelreservation dependency graph (data/graphs/hr_CANONICAL.json)
+\newcommand{\NumGraphHrEdges}{7}
+% Traces examined to reconstruct the hotelreservation graph (data/graphs/hr_CANONICAL.json)
+\newcommand{\NumGraphHrTracesExamined}{3446}
+% Spans examined to reconstruct the hotelreservation graph (data/graphs/hr_CANONICAL.json)
+\newcommand{\NumGraphHrSpansExamined}{31155}
+% DeathStarBench commit the benchmarks were built from (data/graphs/hr_CANONICAL.json)
+\newcommand{\NumDsbCommit}{6ecb097}
+% Call edges the published Hotel Reservation architecture implies (sdg/hotel_expected_services.py)
+\newcommand{\NumHrManifestExpectedEdges}{8}
+% Manifest edges recovered by trace reconstruction (data/graphs/{hr,sn}_CANONICAL.json)
+\newcommand{\NumHrManifestEdgesRecovered}{6}
+% Manifest edges never observed under this workload (data/graphs/{hr,sn}_CANONICAL.json)
+\newcommand{\NumHrManifestEdgesMissed}{2}
+% Which manifest edges were never observed (data/graphs/{hr,sn}_CANONICAL.json)
+\newcommand{\NumHrManifestEdgesMissedNames}{reservation->user; search->profile}
+% Observed edges the manifest does not list (data/graphs/{hr,sn}_CANONICAL.json)
+\newcommand{\NumHrManifestEdgesExtra}{frontend->profile}
+% Services the published architecture lists (sdg/hotel_expected_services.py)
+\newcommand{\NumHrExpectedServicesManifest}{8}
+% Observed callers of the Hotel Reservation user service (data/graphs/{hr,sn}_CANONICAL.json)
+\newcommand{\NumHrUserObservedCallers}{frontend}
+% Number of observed callers of user (data/graphs/{hr,sn}_CANONICAL.json)
+\newcommand{\NumHrUserObservedCallerCount}{1}

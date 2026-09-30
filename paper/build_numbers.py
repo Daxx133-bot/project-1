@@ -17,6 +17,7 @@ Run order:  python paper/build_numbers.py  &&  python paper/emit_macros.py
 """
 from __future__ import annotations
 
+import json
 import os
 import re
 import subprocess
@@ -65,6 +66,159 @@ def add(claim_id, description, value, source_file, source_script, unit="", fmt=N
         "value_raw": raw, "unit": unit, "source_file": source_file,
         "source_script": source_script, "commit": COMMIT,
     })
+
+
+def protocol_and_topology_numbers():
+    """Method-section constants, read from the code and data that produced the campaign.
+
+    These are protocol parameters rather than results, but the manuscript cites them, so
+    they are extracted here rather than typed into prose. Sources are the runner's own
+    configuration objects, the graph files, and the run records themselves -- never a
+    literal copied from documentation.
+    """
+    import ast
+    import glob as _glob
+    import importlib.util
+    import sys
+
+    if REPO not in sys.path:          # the runner's modules import each other by package
+        sys.path.insert(0, REPO)
+
+    F_GRAPH = "data/graphs/{hr,sn}_CANONICAL.json"
+    S_SELF = "paper/build_numbers.py"
+
+    def load(rel, name):
+        spec = importlib.util.spec_from_file_location(name, os.path.join(REPO, rel))
+        m = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(m)
+        return m
+
+    # ---- fault parameters, from the dataclass the runner instantiates -------
+    fc = load("faultinjection/fault_config.py", "_fc")
+    spec = fc.FaultSpec(fault_type=fc.FaultType.LATENCY)
+    add("fault_latency_delay_ms", "Injected network delay for latency faults",
+        int(spec.latency_ms), "faultinjection/fault_config.py", S_SELF, "ms")
+    add("fault_latency_jitter_ms", "Jitter around the injected delay",
+        int(spec.latency_jitter_ms), "faultinjection/fault_config.py", S_SELF, "ms")
+    add("fault_kill_signal", "Signal used for kill faults", "SIGKILL",
+        "faultinjection/fault_config.py", S_SELF)
+
+    # ---- degradation thresholds, from the single rule the runner uses -------
+    mc = load("measurement/metrics_collector.py", "_mc")
+    add("threshold_degradation_factor", "Relative p95 threshold for flagging a service "
+        "as latency-degraded", float(mc.DEGRADATION_FACTOR),
+        "measurement/metrics_collector.py", S_SELF, "x", "%.1f")
+    add("threshold_degradation_floor_ms", "Absolute p95 rise required alongside the "
+        "relative threshold", float(mc.DEGRADATION_FLOOR_MS),
+        "measurement/metrics_collector.py", S_SELF, "ms", "%.1f")
+    add("threshold_error_rate_abs", "Absolute error-rate rise for flagging a service",
+        float(mc.ERROR_RATE_ABS_THRESHOLD), "measurement/metrics_collector.py",
+        S_SELF, "", "%.2f")
+
+    # ---- hybrid metric weights, fixed a priori and never tuned -------------
+    wk = load("centrality/metric_constants.py", "_wk")
+    for field, cid, desc in (
+            ("w_in", "hybrid_w_in", "Hybrid metric weight on in-degree centrality"),
+            ("w_out", "hybrid_w_out",
+             "Hybrid metric weight on fan-out-scaled out-degree centrality"),
+            ("w_btw", "hybrid_w_btw", "Hybrid metric weight on betweenness centrality")):
+        add(cid, desc + " (fixed a priori; never fitted to outcome data)",
+            float(getattr(wk.FIXED_WEIGHTS, field)), "centrality/metric_constants.py",
+            S_SELF, "", "%.1f")
+    lock = os.path.join(REPO, "centrality", "output", "tuned_weights.lock.json")
+    add("hybrid_weights_tuned", "Whether the hybrid metric's weights were tuned against "
+        "outcome data (a weight lockfile exists)", os.path.isfile(lock),
+        "centrality/output/tuned_weights.lock.json", S_SELF)
+
+    # ---- run protocol, from the campaign runner's RunArgs -------------------
+    src = open(os.path.join(REPO, "tools", "run_campaign.py"), encoding="utf-8").read()
+    tree = ast.parse(src)
+    ra = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ClassDef) and node.name == "RunArgs":
+            for stmt in node.body:
+                if isinstance(stmt, ast.Assign) and isinstance(stmt.value, ast.Constant):
+                    ra[stmt.targets[0].id] = stmt.value.value
+    for key, cid, desc, unit in (
+            ("warmup", "protocol_warmup_s", "Warm-up before the baseline window", "s"),
+            ("fault_duration", "protocol_fault_duration_s", "Fault hold duration", "s"),
+            ("max_wait", "protocol_recovery_cap_s",
+             "Recovery probe cap, beyond which a run is censored", "s"),
+            ("confirm", "protocol_confirm_s",
+             "Confirmation period a recovered state must hold", "s"),
+            ("lag", "protocol_probe_lag_s",
+             "Lag applied to the probe window, to avoid partially written spans", "s"),
+            ("min_traces", "protocol_min_traces",
+             "Minimum traces before a probe sample may vote for recovery", "traces"),
+            ("users", "protocol_load_users", "Concurrent load-generator users", "users"),
+            ("cooldown", "protocol_cooldown_s", "Cooldown after each run", "s")):
+        if key in ra:
+            v = ra[key]
+            add(cid, desc, int(v) if float(v).is_integer() else float(v),
+                "tools/run_campaign.py", S_SELF, unit)
+
+    # ---- baseline window length, measured from the run records themselves ---
+    runs = pd.read_csv(os.path.join(FINAL, "run_level_data.csv"))
+    lens = []
+    for rf in _glob.glob(os.path.join(REPO, "data", "campaign", "runs", "*.json")):
+        r = json.load(open(rf, encoding="utf-8"))
+        w = r.get("baseline_window_us")
+        if w:
+            lens.append((w[1] - w[0]) / 1e6)
+    if lens:
+        vals = sorted(set(round(v, 3) for v in lens))
+        add("protocol_baseline_window_s", "Baseline measurement window, as actually "
+            "recorded in every run", float(vals[0]),
+            "data/campaign/runs/*.json", S_SELF, "s", "%.0f")
+        add("protocol_baseline_window_distinct", "Distinct baseline window lengths across "
+            "the campaign", len(vals), "data/campaign/runs/*.json", S_SELF, "values")
+
+    # ---- dependency graph provenance and topology --------------------------
+    manifest = load("sdg/hotel_expected_services.py", "_hm")
+    expected_edges = set(manifest.HOTEL_EXPECTED_EDGES)
+    for app, lab, gf in (("socialnetwork", "sn", "sn_CANONICAL.json"),
+                         ("hotelreservation", "hr", "hr_CANONICAL.json")):
+        g = json.load(open(os.path.join(REPO, "data", "graphs", gf), encoding="utf-8"))
+        meta = g["graph"]
+        add(f"graph_{lab}_nodes", f"Services in the reconstructed {app} dependency graph",
+            len(g["nodes"]), f"data/graphs/{gf}", S_SELF, "services")
+        add(f"graph_{lab}_edges", f"Observed call edges in the {app} dependency graph",
+            len(g["edges"]), f"data/graphs/{gf}", S_SELF, "edges")
+        add(f"graph_{lab}_traces_examined", f"Traces examined to reconstruct the {app} "
+            f"graph", int(meta["traces_examined"]), f"data/graphs/{gf}", S_SELF, "traces")
+        add(f"graph_{lab}_spans_examined", f"Spans examined to reconstruct the {app} graph",
+            int(meta["spans_examined"]), f"data/graphs/{gf}", S_SELF, "spans")
+    add("dsb_commit", "DeathStarBench commit the benchmarks were built from",
+        json.load(open(os.path.join(REPO, "data", "graphs", "hr_CANONICAL.json"),
+                       encoding="utf-8"))["graph"]["deathstarbench"]["short"],
+        "data/graphs/hr_CANONICAL.json", S_SELF)
+
+    # Hotel Reservation: observed graph against the published architecture manifest.
+    hr = json.load(open(os.path.join(REPO, "data", "graphs", "hr_CANONICAL.json"),
+                        encoding="utf-8"))
+    observed = {(e["source"], e["target"]) for e in hr["edges"]}
+    recovered = expected_edges & observed
+    missed = expected_edges - observed
+    extra = observed - expected_edges
+    add("hr_manifest_expected_edges", "Call edges the published Hotel Reservation "
+        "architecture implies", len(expected_edges), "sdg/hotel_expected_services.py",
+        S_SELF, "edges")
+    add("hr_manifest_edges_recovered", "Manifest edges recovered by trace reconstruction",
+        len(recovered), F_GRAPH, S_SELF, "edges")
+    add("hr_manifest_edges_missed", "Manifest edges never observed under this workload",
+        len(missed), F_GRAPH, S_SELF, "edges")
+    add("hr_manifest_edges_missed_names", "Which manifest edges were never observed",
+        "; ".join("%s->%s" % e for e in sorted(missed)), F_GRAPH, S_SELF)
+    add("hr_manifest_edges_extra", "Observed edges the manifest does not list",
+        "; ".join("%s->%s" % e for e in sorted(extra)) or "none", F_GRAPH, S_SELF)
+    add("hr_expected_services_manifest", "Services the published architecture lists",
+        len(manifest.HOTEL_EXPECTED_SERVICES), "sdg/hotel_expected_services.py",
+        S_SELF, "services")
+    ucallers = sorted(s for s, t in observed if t == "user")
+    add("hr_user_observed_callers", "Observed callers of the Hotel Reservation user "
+        "service", "; ".join(ucallers) or "none", F_GRAPH, S_SELF)
+    add("hr_user_observed_caller_count", "Number of observed callers of user",
+        len(ucallers), F_GRAPH, S_SELF, "callers")
 
 
 def main():
@@ -433,6 +587,8 @@ def main():
     add("sn_analysis_set_size", "Services in the Social Network analysis set",
         int(sn_ranks.in_analysis_set.sum()), "analysis/final/sn_predictor_ranks.csv", RCA,
         "services")
+
+    protocol_and_topology_numbers()
 
     df = pd.DataFrame(ROWS)
     dupes = df[df.claim_id.duplicated(keep=False)]
