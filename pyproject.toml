@@ -9,8 +9,10 @@ description = "Identifying failure-prone microservices using graph centrality me
 requires-python = ">=3.11"
 dependencies = [
     "networkx>=3.1",
+    "numpy>=1.26",
     "pandas>=2.0",
     "scipy>=1.11",
+    "statsmodels>=0.14",
     "matplotlib>=3.7",
     "seaborn>=0.12",
     "requests>=2.31",
