@@ -1,19 +1,19 @@
 file,produced_by,bytes
 paper/CLAIMS_LEDGER.md,"hand-written, validated by paper/check_ledger.py",15672
-paper/INDEX.csv,paper/build_all.py,2496
-paper/build_all.py,source,2697
+paper/INDEX.csv,paper/build_all.py,2932
+paper/build_all.py,source,2869
 paper/build_numbers.py,source,35301
 paper/check_draft_ids.py,source,5341
 paper/check_ledger.py,source,3783
-paper/draft/audit_disclosure.md,unknown,11152
-paper/draft/limitations.md,unknown,9226
-paper/draft/method.md,unknown,20971
-paper/draft/outline_abstract.md,unknown,3810
-paper/draft/outline_conclusion.md,unknown,2816
-paper/draft/outline_discussion.md,unknown,6991
-paper/draft/outline_intro.md,unknown,5285
-paper/draft/outline_related_work.md,unknown,7480
-paper/draft/results.md,unknown,14048
+paper/draft/audit_disclosure.md,"hand-written, markers validated by paper/check_draft_ids.py",11152
+paper/draft/limitations.md,"hand-written, markers validated by paper/check_draft_ids.py",9226
+paper/draft/method.md,"hand-written, markers validated by paper/check_draft_ids.py",20971
+paper/draft/outline_abstract.md,"hand-written, markers validated by paper/check_draft_ids.py",3810
+paper/draft/outline_conclusion.md,"hand-written, markers validated by paper/check_draft_ids.py",2816
+paper/draft/outline_discussion.md,"hand-written, markers validated by paper/check_draft_ids.py",6991
+paper/draft/outline_intro.md,"hand-written, markers validated by paper/check_draft_ids.py",5285
+paper/draft/outline_related_work.md,"hand-written, markers validated by paper/check_draft_ids.py",7480
+paper/draft/results.md,"hand-written, markers validated by paper/check_draft_ids.py",14048
 paper/emit_macros.py,source,3649
 paper/figures/fig_leave_one_out.pdf,paper/make_figures.py,18556
 paper/figures/fig_leave_one_out.png,paper/make_figures.py,148202

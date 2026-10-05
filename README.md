@@ -91,12 +91,22 @@ repository.
 ```bash
 python -m pip install -r requirements.txt
 
-# Unit tests (114 tests; the 23 Docker-dependent ones are deselected by the marker)
+# Unit tests. 114 selected, 23 Docker-dependent ones deselected by the marker.
+# In a fresh clone 100 pass and 14 fail; see the note below.
 python -m pytest -q -m "not integration"
 
 # Rebuild every number, table and figure the paper cites, from analysis/final/
 python paper/build_all.py
 ```
+
+**The 14 failures are expected in a fresh clone and are not analysis failures.** They are
+all in `tests/test_campaign_runner.py`, which exercises the campaign runner's Docker
+orchestration. The runner locates the benchmark stacks at `<repo parent>/DeathStarBench`,
+so those tests need that checkout to exist as a sibling of the repository, and they fail
+with `NotADirectoryError` when it does not. They are not marked `integration` even though
+they depend on external infrastructure. The remaining 100 tests, which cover the statistics,
+the metric definitions and the container-resolution logic, pass with nothing but this
+repository present.
 
 `paper/build_all.py` regenerates `paper/numbers.csv`, `paper/numbers.tex`,
 `paper/numbers.json`, `paper/tables/`, `paper/figures/` and `paper/INDEX.csv`, then
@@ -120,9 +130,26 @@ python analysis/final/blind_recompute.py      # independent recomputation from r
 python paper/check_draft_ids.py               # verifies the drafting markers in paper/draft/
 ```
 
-All commands above were run from a clean clone of this repository and completed
-successfully. `run_confirmatory_analysis.py` takes roughly a minute; the others are faster,
-except `blind_recompute.py`, which reads all 366 span files and takes a few minutes.
+Every command in this section was executed from a fresh clone of this repository at a
+different filesystem location, with no network access and nothing outside the clone present.
+`paper/build_all.py` and `analysis/final/run_confirmatory_analysis.py` both reproduced their
+outputs exactly: the primary correlation came out at rho = 0.785119 with a BH-adjusted p of
+0.3451, and 0 of 44 confirmatory and 0 of 44 replication tests significant, identical to the
+committed values. `run_confirmatory_analysis.py` takes roughly a minute; `leave_one_out.py`
+and `blind_recompute.py` take several minutes each, the first because it enumerates
+permutations exactly and the second because it reads all 366 span files.
+
+### Cloning on Windows
+
+Four tracked paths are 131 to 135 characters long, all under `_quarantine/`. Windows
+applies a 260-character limit to the full path unless long-path support is enabled, so a
+clone into a deeply nested directory can fail part-way with `Filename too long` and leave an
+incomplete checkout. Cloning into a short path such as `C:\projects\` avoids this. To remove
+the limit instead:
+
+```bash
+git config --global core.longpaths true
+```
 
 ### Data collection — requires Docker
 

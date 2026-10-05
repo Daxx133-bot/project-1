@@ -57,6 +57,9 @@ def main() -> int:
                 produced_by = "paper/make_tables.py"
             elif base.startswith("figures/"):
                 produced_by = "paper/make_figures.py"
+            elif base.startswith("draft/"):
+                produced_by = ("hand-written, markers validated by "
+                               "paper/check_draft_ids.py")
             else:
                 produced_by = PRODUCER.get(fn, "unknown")
             rows.append({"file": rel, "produced_by": produced_by,
