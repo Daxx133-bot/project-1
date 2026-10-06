@@ -952,6 +952,133 @@ would still stand as the preregistered one.
 
 ---
 
+### Deviations 10–12 — recorded 2026-10-06 by a read-only verification
+
+**These are deviation records, not amendments.** All three were found on 2026-10-06, after
+the confirmatory analysis was complete and its verdict known. None changes the
+specification, any locked output, or any stored outcome. Each is also a row of
+`analysis/final/deviations.csv`.
+
+#### Deviation 10 — the cross-architecture weight protocol in §3 was not executed
+
+| | |
+|---|---|
+| **Date recorded** | 2026-10-06 |
+| **Made before any campaign data was analysed?** | The departure was in code before the lock; it was **not recorded** until after the campaign data had been analysed. |
+| **Sections affected** | §3 (weight protocol), §2 and H1b (the hybrid metric's weights) |
+| **Campaign runs invalidated** | 0 |
+
+**What §3 required.** Tune $(w_{in}, w_{out}, w_{btw})$ on Social Network over a 0.05 grid,
+freeze the winner to `centrality/output/tuned_weights.lock.json`, and evaluate once on
+Hotel Reservation.
+
+**What happened.** That protocol was never run, and no lockfile exists. The analysis used
+`FIXED_WEIGHTS = (0.4, 0.4, 0.2)` from `centrality/metric_constants.py`. That file's own
+changelog says the values were carried over from the previous implementation's default,
+which `centrality/compute_centrality.py` documents as "optimised empirically via
+hybrid_weight_optimizer.py", a search run on the withdrawn dataset. The weights are
+therefore **not a priori**.
+
+**Timeline, from git.**
+
+| Commit | Time (UTC) | Event |
+|---|---|---|
+| `9e4bda4` | 2026-09-23 06:52 | `metric_constants.py` created, with the changelog note that the weights' provenance is not clean and "needs a decision". |
+| `6e598ce` | 2026-09-23 06:55 | v1 draft leaves the weight protocol as open question 1: (a) cross-arch, (b) fixed and disclosed, (c) fixed and a priori only. No answer to it is recorded anywhere. |
+| `d755a23` | 2026-09-24 23:53 | `tools/build_predictor_table.py` computes the hybrid metric with `FIXED_WEIGHTS`. |
+| `95d37e5` | 2026-09-26 04:17 | v3 locked with §3 still specifying cross-arch. |
+| `dc03920` | 2026-09-27 16:34 | Confirmatory analysis runs on the fixed weights, without noting the discrepancy. |
+
+The manuscript drafts then described the weights as set a priori and never fitted.
+
+**What changed.** No locked output was changed, and the weights were not re-tuned on
+campaign data. The paper text and the claims ledger now state the weights' provenance as
+above. The numbers.csv id `hybrid_weights_tuned`, which only tested whether a lockfile
+exists, is renamed `hybrid_weights_lockfile_exists`. A new id,
+`hybrid_weights_reoptimised_on_campaign`, is added.
+
+**Direction of possible bias.** The original search was designed to favour the metric. The
+inherited weights are therefore unlikely to explain a failure to find an association.
+
+#### Deviation 11 — Social Network per-service latency used all of a service's spans
+
+| | |
+|---|---|
+| **Date recorded** | 2026-10-06 |
+| **Made before any campaign data was analysed?** | No. Found after the analysis; the sensitivity replay is post hoc. |
+| **Sections affected** | §6.1 (per-service metric semantics) |
+| **Campaign runs invalidated** | 0 |
+
+**What was found.** §6.1 defines a service's latency over the server spans it emits.
+`measurement.metrics_collector.select_spans` identifies those spans by the `span.kind` tag.
+When a service's spans carry no such tag, it falls back to all of them.
+
+No Social Network span carries `span.kind`, because the C++ Jaeger client does not emit it.
+So every Social Network per-service sample used the fallback: 2,598 of 2,598 baseline and
+fault-window samples in the persisted spans, and by construction every recovery-probe
+sample. 268,839 of the 540,433 spans selected (49.7%) were `*_client` spans. A client span
+measures a callee's latency as seen by the caller, which is exactly the re-attribution §6.1
+was written to exclude.
+
+The run records still label every such sample `scope = "service_server_spans:<service>"`,
+and no record carries a fallback flag. §6.1 disclosed that the fallback exists. It did not
+disclose that it applied to every Social Network sample, or that the scope label was wrong.
+Hotel Reservation is unaffected: 0 of its 1,168 samples fell back.
+
+**Sensitivity replay (post hoc).** `analysis/final/sn_server_only_replay.py` replays the
+blast-radius rule for all 110 Social Network runs from their persisted spans, with two
+changes and nothing else:
+
+- Per-service latency uses only `*_server` operations.
+- `nginx-web-server`, whose operations are HTTP routes, keeps the existing handling.
+
+The degradation rule, error-rate rule and classification are unchanged.
+
+The replay was validated before it was used. With the existing rule it reproduces the stored
+ancestor/descendant/unrelated counts for 70 of 70 Hotel Reservation runs and 109 of 110
+Social Network runs.
+
+**Results.** Compared with an existing-rule replay of the same bytes:
+
+- 2 of 110 runs change: `compose-post-service` kill rep 3 (descendants 2 → 1) and
+  `post-storage-service` latency rep 3 (ancestors 3 → 4).
+- No service-level median changes. The Social Network primary test is therefore unchanged
+  for both fault types (ρ 0.785119, exact p 0.00692641).
+- `user-service` still registers 2 of its 4 ancestors in all 10 of its runs.
+
+Full output: `analysis/final/sn_server_only_replay.md`.
+
+**Not replayable.** Recovery-probe windows were not persisted, so Social Network $T_{rec}$
+cannot be replayed under the server-only rule. It stands as measured under the fallback.
+
+#### Deviation 12 — `hotelreservation|rate|latency|1` was attempted twice
+
+| | |
+|---|---|
+| **Date recorded** | 2026-10-06 (event: 2026-09-26) |
+| **Made before any campaign data was analysed?** | The event was during collection; it was not documented until 2026-10-06. |
+| **Sections affected** | §9 (campaign execution) |
+| **Campaign runs invalidated** | 0 |
+
+The manifest records `attempts: 2` for this run.
+
+**First attempt.** It ran after the `geo|latency|1` failure and stack restore (06:19 UTC).
+It injected its netem fault and persisted its spans
+(`data/spans/spans_hotelreservation_rate_latency_rep1_20260926T062355Z_*.json.gz`). It was
+interrupted during its recovery probe when the campaign was stopped for the defect that
+became amendment 2; `data/campaign/campaign_stdout.log` ends inside that probe. It wrote no
+run record.
+
+**Second attempt.** After every stack was brought down and Hotel Reservation brought back up
+(06:31:48 UTC), the run was attempted again. It completed at 06:45:05 UTC, and it is the only
+record analysed.
+
+The interrupted attempt was not listed among amendment 2's resets, in the quarantine log, or
+in the deviation table. No outcome from it was ever computed or used. Its span files remain
+in `data/spans/` and are identified here so they are not mistaken for an analysed run.
+
+---
+
 ---
 
 | | |
@@ -963,3 +1090,6 @@ would still stand as the preregistered one.
 | **Amendments after lock** | 3 (§12), all 2026-09-26, none after analysing campaign data |
 | **Deviations after analysis** | 1 (§12 deviation 9, 2026-09-28): the primary test's raw p refined from Monte-Carlo to exact enumeration, in a supplementary file only. Verdict unchanged. |
 | **Campaign collected** | 180/180 runs, 2026-09-26 04:19-13:35 UTC, 0 failed, 0 censored, perfectly balanced (36 cells x 5 reps). Both pre-analysis gates clean. |
+| **Deviations recorded 2026-10-06** | 3 (§12 deviations 10-12): the §3 cross-arch weight protocol was not executed and inherited weights were used; Social Network per-service latency used all spans under a "server spans" label (post-hoc replay: no service-level change); one undocumented second attempt of `hotelreservation\|rate\|latency\|1`. No locked output or stored outcome changed. |
+| **Campaign span, reconciled 2026-10-06** | The 04:19-13:35 UTC window above includes the 3 rehearsal runs later quarantined (item 11). The 180 kept runs span 05:02-13:35 UTC by their end-timestamps (8.5 h, `campaign_duration_hours`). |
+| **Text as locked** | `_audit/preregistration_versions/PREREGISTRATION_v3_FROZEN_95d37e5.md`. The file named `..._LOCKED.md` is the lock plus amendment log; see that directory's README. |
