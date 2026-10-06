@@ -370,19 +370,24 @@ def supplementary_numbers(conf, h1b, devs, runs):
         "deviations")
 
     # ---- campaign span including the rehearsal -----------------------------
+    # The progress log is not part of every copy of the repository (the share copy omits
+    # it). Where it is absent the value is recorded as missing, never estimated.
     log = os.path.join(REPO, "data", "campaign", "progress.log")
     first = None
-    with open(log, encoding="utf-8") as fh:
-        for line in fh:
-            if "CAMPAIGN START" in line:
-                first = pd.Timestamp(line[1:line.index("]")])
-                break
+    if os.path.isfile(log):
+        with open(log, encoding="utf-8") as fh:
+            for line in fh:
+                if "CAMPAIGN START" in line:
+                    first = pd.Timestamp(line[1:line.index("]")])
+                    break
     ts = pd.to_datetime(runs.timestamp, format="mixed", utc=True)
     add("campaign_duration_incl_rehearsal_hours", "Elapsed time from the first CAMPAIGN "
         "START in the progress log (the pre-launch rehearsal) to the last kept run's "
-        "end-timestamp", (ts.max() - first).total_seconds() / 3600.0,
+        "end-timestamp",
+        (ts.max() - first).total_seconds() / 3600.0 if first is not None
+        else "SOURCE NOT FOUND",
         "data/campaign/progress.log; analysis/final/run_level_data.csv", S_SELF, "hours",
-        "%.1f")
+        "%.1f" if first is not None else None)
 
     # ---- recovery-probe polling resolution ---------------------------------
     nominal, med = set(), []
