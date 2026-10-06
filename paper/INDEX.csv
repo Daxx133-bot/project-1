@@ -1,8 +1,8 @@
 file,produced_by,bytes
 paper/CLAIMS_LEDGER.md,"hand-written, validated by paper/check_ledger.py",16656
-paper/INDEX.csv,paper/build_all.py,3418
+paper/INDEX.csv,paper/build_all.py,3419
 paper/build_all.py,source,2869
-paper/build_numbers.py,source,52452
+paper/build_numbers.py,source,52762
 paper/check_draft_ids.py,source,5341
 paper/check_ledger.py,source,3783
 paper/draft/audit_disclosure.md,"hand-written, markers validated by paper/check_draft_ids.py",13551
