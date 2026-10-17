@@ -60,14 +60,14 @@ percentiles were still end-to-end values in the tens of milliseconds, but the co
 per-service definition of §3.5 moved 8 of 20 services into the range below 0.6 ms
 %[tbl:tbl_deviations — deviation 1], where a multiplicative threshold responds to scheduler
 noise rather than to anything physical. The
-evidence was direct: a service moved from 0.02 ms to 0.06 ms between two consecutive
-*fault-free* baseline windows, a factor of three, and the rehearsal duly flagged it as
+evidence was direct: a service's p95 rose threefold between two consecutive
+*fault-free* baseline windows, and the rehearsal duly flagged it as
 degraded. We added the 1.0 ms %[id:threshold_degradation_floor_ms] absolute floor described
 in §3.6 and discarded the three rehearsal runs. No campaign data existed at the time and
 none had been analysed.
 
 **During collection.** Two defects surfaced while the campaign was running. The first, found
-79 minutes in %[tbl:tbl_deviations — deviation 2, stage], was in how the runner resolved a
+79 minutes in %[id:deviation_2_found_after_min], was in how the runner resolved a
 service name to a container. It matched by substring and took the shortest match, and
 because the Hotel Reservation compose project
 prefixes every container with `hotelreservation-`, which contains the substring
@@ -114,9 +114,8 @@ alongside but are not separately corrected, since they test the same hypotheses 
 tests they accompany.
 
 **Implementation and documentation.** The reference implementation of the rank statistic
-costs roughly 1.4 ms per call, and the analysis requires on the order of 2.5 million
-evaluations, so we reimplemented the statistic, the permutation test and the bootstrap in
-vectorised form, reducing a run from about an hour to 25 seconds. The replacement is
+was too slow for the number of evaluations the analysis requires, so we reimplemented the
+statistic, the permutation test and the bootstrap in vectorised form. The replacement is
 algebraic rather than approximate, and an equivalence test suite pins it against the
 reference implementation, including on the tie-heavy inputs this dataset actually contains.
 We also record an internal inconsistency in the locked document itself: the p-value its power

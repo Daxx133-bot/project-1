@@ -222,8 +222,8 @@ at least 0.05 %[id:threshold_error_rate_abs] in absolute terms.
 The absolute floor alongside the multiplicative threshold is necessary once percentiles are
 genuinely per-service. Several services in these applications have baseline p95 values in
 the hundredths of a millisecond, and at that scale a purely multiplicative rule responds to
-scheduler noise: a service moving from 0.02 ms to 0.06 ms between two consecutive fault-free
-windows, a threefold rise, satisfies a 2× test while representing no physically meaningful
+scheduler noise: a service whose p95 rises threefold between two consecutive fault-free
+windows satisfies a 2× test while representing no physically meaningful
 change %[tbl:tbl_deviations — deviation 1, recorded evidence]. Both conditions are evaluated
 at full floating-point precision, with rounding applied only for display. Rounding
 percentiles to two decimals before the comparison would put the quantisation step at 0.01 ms
