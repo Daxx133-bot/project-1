@@ -1,0 +1,22 @@
+# DRAFT -- not valid for release. Rename to CITATION.cff only after every [TO FILL] is
+# resolved, a licence is chosen, and a DOI exists. Do not mirror to the share copy.
+cff-version: 1.2.0
+message: "DRAFT. If you use this software or data, please cite it using these metadata."
+type: software
+title: "[TITLE TO WRITE]"
+authors:
+  - family-names: "Tank"
+    given-names: "Dakshrajsinh"
+    affiliation: "Vellore Institute of Technology, [TO FILL department]"
+    orcid: "[TO FILL]"
+  - name: "[TO FILL: other authors]"
+license: "[TO CHOOSE: SPDX identifier, see LICENSE_OPTIONS.DRAFT.md]"
+version: "[TO FILL: release tag]"
+doi: "[TO FILL: Zenodo DOI after archiving]"
+date-released: "[TO FILL: YYYY-MM-DD]"
+repository-code: "[TO CONFIRM: https://github.com/Daxx133-bot/proj-1-updated (the share copy's git remote)]"
+keywords:
+  - microservices
+  - fault injection
+  - dependency graph
+  - preregistration
