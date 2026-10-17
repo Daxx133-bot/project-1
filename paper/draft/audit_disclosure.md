@@ -1,10 +1,10 @@
-# 6. Audit and deviations from the preregistration
+# 7. Audit and Deviations
 
 > **Drafting note (strip before submission).** Trailing `%[id:...]` comments name the
 > `paper/numbers.csv` claim_id each number comes from. Table 8 is
 > `paper/tables/tbl_deviations.csv`.
 
-## 6.1 Why this study was rebuilt
+## 7.1 Why this study was rebuilt
 
 An earlier version of this work was submitted for project review. A subsequent self-audit of
 its analysis pipeline found that parts of its reported results did not come from measurement.
@@ -41,7 +41,7 @@ We state this history because a reader assessing the present results is entitled
 and because the safeguards described throughout §3 are only meaningful in light of what they
 were built to prevent.
 
-## 6.2 Deviations from the locked specification
+## 7.2 Deviations from the locked specification
 
 Twelve deviations from the locked plan are recorded (Table 8) %[id:deviations_total]. Across
 all of them, 17 runs %[id:deviations_runs_invalidated] were invalidated; every one was
@@ -101,7 +101,7 @@ record looked anomalous, and only the cross-run comparison exposed it. Eleven ru
 invalidated and re-collected. We now force-recreate the target container after every non-kill
 run, which cannot affect the run just completed but guarantees the next starts clean, and we
 added the baseline-sanity gate that caught the incident as a standing pre-analysis check.
-§5.5 states the residual limitation this leaves.
+§6.5 states the residual limitation this leaves.
 
 **Specification gaps and analysis decisions.** Two points required a decision the locked text
 did not make: the level at which the survival models should run, and which fault types each
@@ -123,7 +123,7 @@ We also record an internal inconsistency in the locked document itself: the p-va
 section quotes for the Hotel Reservation ceiling is the asymptotic value, which the same
 document forbids for inference. Under the exact test it mandates, that ceiling p-value is
 0.0952 %[id:power_hr_ceiling_p] rather than the 0.034 %[id:power_hr_prereg_stated_p] stated.
-This sharpens the preregistration's own conclusion rather than contradicting it, and §5.2
+This sharpens the preregistration's own conclusion rather than contradicting it, and §6.2
 gives the consequence. No analysis in this paper used the asymptotic value.
 
 **After the analysis was complete.** Deviation 9 was made after the results were known, and
@@ -155,7 +155,7 @@ cross-architecture protocol that tuned the weights on Social Network and froze t
 Reservation. It was not carried out. The analysis used the weights 0.4 %[id:hybrid_w_in], 0.4
 %[id:hybrid_w_out] and 0.2 %[id:hybrid_w_btw] inherited from the withdrawn analysis, where an
 empirical search had chosen them, and they were not re-tuned on the campaign data
-%[id:hybrid_weights_reoptimised_on_campaign] (§3.3, §6.1). The fixed weights were already in
+%[id:hybrid_weights_reoptimised_on_campaign] (§3.3, §7.1). The fixed weights were already in
 the analysis code before the lock, but the departure was not recorded until this
 verification.
 
@@ -165,14 +165,14 @@ included, while the run records labelled the samples as server spans (§3.5). A 
 replay on server-only spans changed 2 %[id:replay_runs_changed] of 110 %[id:replay_runs]
 run-level outcomes and no service-level median %[id:replay_service_medians_changed], and left
 the primary result identical %[id:replay_primary_identical]. Social Network recovery times
-could not be replayed, because the recovery probe's windows were not stored (§5.8).
+could not be replayed, because the recovery probe's windows were not stored (§6.8).
 
 Deviation 12 concerns one Hotel Reservation latency run, which was attempted twice. The
 first attempt was interrupted during its recovery probe when the campaign was stopped for
 deviation 2. Its spans were saved, but it wrote no run record and was never analysed; the
 completed second attempt is the run reported.
 
-## 6.3 Verification
+## 7.3 Verification
 
 Two checks beyond the preregistered analysis are reported as supplementary. The first is the
 leave-one-out recomputation of §4.1, which we mark post-hoc throughout. The second is an

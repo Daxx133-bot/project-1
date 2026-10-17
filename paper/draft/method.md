@@ -63,7 +63,7 @@ we are trying to measure undefined rather than merely small. Both gateways remai
 paper as labelled qualitative examples. The exclusion leaves 11 services
 %[id:sn_services] in Social Network and 7 %[id:hr_services] in Hotel Reservation, and it
 costs Hotel Reservation its highest-fan-out service, which we note as a scope limitation in
-§5 rather than as a finding.
+§6 rather than as a finding.
 
 ## 3.3 Predictors
 
@@ -138,7 +138,7 @@ rather than hoped for: a run whose telemetry is incomplete is discarded and re-r
 same cell, never topped up elsewhere and never analysed as zeros. In the same way, 17
 %[id:deviations_runs_invalidated] runs invalidated by deviations 1, 2 and 4 (3
 %[id:deviation_1_runs_invalidated], 3 %[id:deviation_2_runs_invalidated] and 11
-%[id:deviation_4_runs_invalidated] runs respectively; §6.2) were re-collected in their own
+%[id:deviation_4_runs_invalidated] runs respectively; §7.2) were re-collected in their own
 cells. Measured from the first to the last end-timestamp of the kept runs, the campaign ran
 from 2026-09-26 05:02 %[id:campaign_start_utc] to 13:35 UTC %[id:campaign_end_utc], a span
 of 8.5 hours %[id:campaign_duration_hours], with 0 %[id:campaign_runs_failed] runs lost to
@@ -294,7 +294,7 @@ including the hypotheses, the primary predictor and outcome, the analysis unit, 
 statistic, the correction procedure and the reporting commitments. The locked document is
 reproduced as supplementary material, and every change made to it after the lock timestamp
 is logged in its own amendment log with a date and a statement of whether campaign data had
-been analysed at the time. §6 discusses those changes.
+been analysed at the time. §7 discusses those changes.
 
 Associations between a graph predictor and a measured outcome are tested with Spearman's ρ
 at the service level, aggregating each service's repetitions by their median. Significance
