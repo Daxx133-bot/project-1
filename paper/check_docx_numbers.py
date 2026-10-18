@@ -87,7 +87,7 @@ def draft_sentence_ids():
         if not (prose and os.path.isfile(os.path.join(bd.DRAFT, prose))):
             continue
         for kind, raw in bd.blocks(bd.read(prose)):
-            if kind not in ("p", "quote"):
+            if kind not in ("p", "quote", "li"):
                 continue
             ids = []
 
