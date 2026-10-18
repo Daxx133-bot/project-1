@@ -77,7 +77,7 @@ Social Network and freezing them for Hotel Reservation, and that step was never 
 
 Two predictor-architecture pairs were declared degenerate in advance, because the predictor
 is constant across the analysis set and Spearman's ρ is then undefined %[prereg:§5.1].
-Eigenvector centrality is 0 for every analysed Social Network service, the reconstructed graph
+Eigenvector centrality is 0 %[id:degenerate_sn_value] for every analysed Social Network service, the reconstructed graph
 being acyclic, and every Hotel Reservation service has the same in-degree, each having exactly
 one caller. Both pairs are left out of the test family. A degenerate graph property is not a
 null result, and entering it as one would dilute the false-discovery-rate correction. That
@@ -182,10 +182,10 @@ at least 0.05 %[id:threshold_error_rate_abs] in absolute terms.
 The absolute floor became necessary once percentiles were truly per-service. Some services
 here have baseline p95 values in the hundredths of a millisecond, and at that scale a purely
 multiplicative rule reacts to scheduler noise. A service whose p95 rises threefold between
-two consecutive fault-free windows passes a 2× test without any physically meaningful change
+two consecutive fault-free windows passes a 2× %[id:threshold_degradation_factor] test without any physically meaningful change
 %[tbl:tbl_deviations — deviation 1, recorded evidence]. Both conditions are evaluated at full
-floating-point precision, and values are rounded only for display, since rounding to two decimals first would make 0.01 ms the smallest change the rule could see %[tbl:tbl_deviations — deviation 1],
-about the size of the whole signal for the fastest services. The run executor and the recovery probe share a single implementation of the latency rule, which the offline replay tool also calls. The
+floating-point precision, and values are rounded only for display, since rounding to two decimals first would leave a step about as large as the whole signal of the fastest services
+%[tbl:tbl_deviations — deviation 1]. The run executor and the recovery probe share a single implementation of the latency rule, which the offline replay tool also calls. The
 error-rate rule is repeated in three modules with the same value
 %[src:_audit/VERIFICATION_2026-10-06.md §3].
 

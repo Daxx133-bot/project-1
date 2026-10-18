@@ -113,8 +113,7 @@ Measurement sides with the caller-based ranking. Faulting `compose-post-service`
 one degraded ancestor in every run. In each of its 5 %[id:composepost_kill_reps] kill
 repetitions the minimum and maximum were both 1 %[id:composepost_kill_min]
 %[id:composepost_kill_max], and the latency runs gave the same result
-%[id:composepost_latency_mean] %[id:composepost_latency_min] %[id:composepost_latency_max]. A post-hoc breakdown shows that in all 10 %[id:composepost_runs_only_gateway_ancestor] %[id:composepost_runs_total] runs that ancestor was `nginx-web-server`, the gateway. Kill repetition 3 also recorded two degraded
-descendants %[id:descendant_affected_max_in_any_run] %[id:descendant_affected_exception_run],
+%[id:composepost_latency_mean] %[id:composepost_latency_min] %[id:composepost_latency_max]. A post-hoc breakdown shows that in all 10 %[id:composepost_runs_only_gateway_ancestor] %[id:composepost_runs_total] runs that ancestor was `nginx-web-server`, the gateway. The third kill repetition also recorded two degraded descendants %[id:descendant_affected_max_in_any_run] %[id:descendant_affected_exception_run],
 the only such run in the campaign (§4.5). On the preregistered outcome, the service the
 original metric rates most critical is the lowest in its application. That outcome counts
 degraded services; it does not measure requests or functionality lost.
