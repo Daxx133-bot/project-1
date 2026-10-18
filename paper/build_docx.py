@@ -111,9 +111,9 @@ COUNT_UNITS = {
     "distinct_arrangements": "arrangements", "ancestor_count_levels_actual": "levels",
     "ancestor_count_levels_preregistered": "levels",
 }
-# Hazard ratios and their intervals are per one-unit increase in ancestor_count.
-PER_UNIT = {"cox_run_hr": "per ancestor", "cox_run_ci_95": "per ancestor",
-            "cox_service_hr": "per ancestor", "cox_service_ci_95": "per ancestor"}
+# Hazard ratios and their intervals are per one-unit increase of the predictor.
+PER_UNIT = {c: "per unit of predictor" for c in ("cox_run_hr", "cox_run_ci_95",
+                                                 "cox_service_hr", "cox_service_ci_95")}
 TABLE_NOTE = ("Units are given in parentheses in the column headers; columns without a "
               "unit are dimensionless or categorical.")
 

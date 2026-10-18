@@ -196,7 +196,7 @@ size, not from anything we measured.
 
 No run was censored %[id:campaign_runs_censored], so under the preregistered rule the Spearman
 rank test is the primary test for recovery time, and the Cox and log-rank models are secondary
-and uncorrected (Deviation 6); Table 10 gives all three for both predictors. No recovery-time
+and uncorrected (Deviation 6). Table 10 gives all three for both predictors. No recovery-time
 test is significant after correction in either family %[id:trec_conf_significant]
 %[id:trec_repl_significant]. The log-rank test is undefined for 10 of the 22 recovery-time
 tests in each family %[id:trec_conf_logrank_undefined] %[id:trec_repl_logrank_undefined]

@@ -1,8 +1,8 @@
 file,produced_by,bytes
 paper/CLAIMS_LEDGER.md,"hand-written, validated by paper/check_ledger.py",19285
-paper/INDEX.csv,paper/build_all.py,5757
+paper/INDEX.csv,paper/build_all.py,6246
 paper/build_all.py,source,4057
-paper/build_docx.py,source,25399
+paper/build_docx.py,source,25409
 paper/build_numbers.py,source,59974
 paper/check_docx_numbers.py,source,13273
 paper/check_draft_ids.py,source,5341
@@ -41,10 +41,11 @@ paper/figures/fig_rank_inversion.pdf,paper/make_figures.py,25851
 paper/figures/fig_rank_inversion.png,paper/make_figures.py,590366
 paper/figures/fig_rank_inversion_data.csv,paper/make_figures.py,470
 paper/figures/figures_index.csv,paper/make_figures.py,1085
-paper/make_checklist.py,source,7542
+paper/make_checklist.py,source,7667
 paper/make_figures.py,source,15619
-paper/make_tables.py,source,14152
-paper/manuscript.docx,paper/build_docx.py,62739
+paper/make_tables.py,source,14521
+paper/manuscript.docx,paper/build_docx.py,62738
+paper/manuscript.pdf,"exported from manuscript.docx by Microsoft Word, for reading only; not part of the submission",384394
 paper/number_audit.txt,paper/check_docx_numbers.py,2304
 paper/numbers.csv,paper/build_numbers.py,98031
 paper/numbers.json,paper/emit_macros.py,165160
@@ -58,7 +59,7 @@ paper/submission/Figure 3.pdf,paper/build_docx.py,19090
 paper/submission/Figure 3.png,paper/build_docx.py,360934
 paper/submission/Figure 4.pdf,paper/build_docx.py,25851
 paper/submission/Figure 4.png,paper/build_docx.py,590366
-paper/submission/SUBMISSION_CHECKLIST.md,paper/make_checklist.py,3805
+paper/submission/SUBMISSION_CHECKLIST.md,paper/make_checklist.py,3834
 paper/submission/Table 1.docx,paper/build_docx.py,37856
 paper/submission/Table 10.docx,paper/build_docx.py,45569
 paper/submission/Table 2.docx,paper/build_docx.py,37600
@@ -68,12 +69,12 @@ paper/submission/Table 5.docx,paper/build_docx.py,37236
 paper/submission/Table 6.docx,paper/build_docx.py,37912
 paper/submission/Table 7.docx,paper/build_docx.py,37466
 paper/submission/Table 8.docx,paper/build_docx.py,37421
-paper/submission/Table 9.docx,paper/build_docx.py,37812
+paper/submission/Table 9.docx,paper/build_docx.py,38030
 paper/submission/cover_letter.docx,paper/build_docx.py,37765
 paper/submission/cover_page.docx,paper/build_docx.py,36924
 paper/submission/figure_legends.docx,paper/build_docx.py,36993
-paper/submission/manuscript.docx,paper/build_docx.py,62739
-paper/tables/tables_index.csv,paper/make_tables.py,2243
+paper/submission/manuscript.docx,paper/build_docx.py,62738
+paper/tables/tables_index.csv,paper/make_tables.py,2366
 paper/tables/tbl_deviations.csv,paper/make_tables.py,19916
 paper/tables/tbl_deviations.md,paper/make_tables.py,20199
 paper/tables/tbl_family_summary.csv,paper/make_tables.py,315
@@ -92,5 +93,5 @@ paper/tables/tbl_primary_by_family.csv,paper/make_tables.py,829
 paper/tables/tbl_primary_by_family.md,paper/make_tables.py,1038
 paper/tables/tbl_primary_exact_p_supplementary.csv,paper/make_tables.py,349
 paper/tables/tbl_primary_exact_p_supplementary.md,paper/make_tables.py,442
-paper/tables/tbl_trec.csv,paper/make_tables.py,1082
-paper/tables/tbl_trec.md,paper/make_tables.py,1389
+paper/tables/tbl_trec.csv,paper/make_tables.py,1321
+paper/tables/tbl_trec.md,paper/make_tables.py,1628
