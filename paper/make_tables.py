@@ -211,6 +211,40 @@ def main():
          "Preregistered power table reproduced from the actual analysis sets",
          "analysis/final/power_table.csv", RCA)
 
+    # ---- 6b. recovery time (T_rec) ------------------------------------------
+    # Spearman is primary for T_rec (no censoring, deviation 6). Cox and log-rank are
+    # secondary and uncorrected. Cox is shown for ancestor_count only: hazard ratios are per
+    # unit of the predictor, and the hybrid metric spans far less than one unit.
+    rows = []
+    for fam, df in (("confirmatory (kill)", conf), ("replication (latency)", repl)):
+        t = df[(df.outcome == "T_rec") &
+               (df.predictor.isin(["ancestor_count", "hybrid_criticality"]))]
+        for _, r in t.sort_values(["architecture", "predictor"],
+                                  ascending=[False, True]).iterrows():
+            cox = r.predictor == "ancestor_count"
+            rows.append({
+                "family": fam, "architecture": r.architecture_label,
+                "predictor": r.predictor,
+                "spearman_rho": f(r.spearman_rho, 3), "p_raw": f(r.p_permutation, 4),
+                "p_bh_adjusted": f(r.p_bh_adjusted, 4),
+                "cox_run_hr": f(r.cox_run_hr, 3) if cox else "",
+                "cox_run_ci_95": ("%s to %s" % (f(r.cox_run_ci_lo, 3), f(r.cox_run_ci_hi, 3))
+                                  if cox else ""),
+                "cox_run_p": f(r.cox_run_p, 4) if cox else "",
+                "cox_service_hr": f(r.cox_service_hr, 3) if cox else "",
+                "cox_service_ci_95": ("%s to %s" % (f(r.cox_service_ci_lo, 3),
+                                                    f(r.cox_service_ci_hi, 3)) if cox else ""),
+                "cox_service_p": f(r.cox_service_p, 4) if cox else "",
+                "logrank_p": "undefined" if pd.isna(r.logrank_p) else f(r.logrank_p, 4),
+            })
+    emit("tbl_trec", pd.DataFrame(rows),
+         "Recovery time: Spearman (primary, BH-corrected within family), Cox and log-rank "
+         "(secondary, uncorrected) for ancestor_count and hybrid_criticality. Cox hazard "
+         "ratios are per unit of ancestor_count, run level with SEs clustered by service "
+         "and service level; log-rank is undefined where the predictor has fewer than two "
+         "distinct terciles",
+         "analysis/final/confirmatory_family_kill.csv + replication_family_latency.csv", RCA)
+
     # ---- 7. deviations ------------------------------------------------------
     d = devs.sort_values("n")[["n", "date", "title", "stage", "what_happened",
                                "what_changed", "outcome_affected", "runs_invalidated",
