@@ -432,7 +432,7 @@ after a warm-up. Manuscript text before 2026-10-20 described a 60 s warm-up foll
 60 s baseline, which the code does not do.
 `protocol_warmup_s`, `protocol_baseline_window_s`, `protocol_baseline_window_distinct`
 *Source: `tools/run_pilot.py` one_run (`baseline_start_us = baseline_end_us - warmup`), and
-the `baseline_window_us` of every run record. The preregistration lists "60 s warm-up →
+the baseline-window timestamps stored in every run record. The preregistration lists "60 s warm-up →
 baseline"; whether the code's reading is a deviation is not settled here and it is not
 recorded as one.*
 
