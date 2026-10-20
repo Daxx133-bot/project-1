@@ -403,7 +403,8 @@ def fig_pipeline():
             % nums["campaign_runs_total"], ha="center", fontsize=7.5, style="italic")
     save(fig, "fig_pipeline",
          "Methodology pipeline in execution order; each box names the repository files "
-         "that carry out the step (steps 7 to 10 repeat for every run)",
+         "that carry out the step, and the steps from fault injection to the recovery probe "
+         "repeat for every run",
          "paper/figures/fig_pipeline_data.csv", "repository files listed in the figure",
          "paper/make_figures.py")
 

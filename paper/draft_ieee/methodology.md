@@ -5,10 +5,10 @@
 > ledger exempts (§7.1); `%[prereg:§n]` points at the locked preregistration. A fenced
 > ```algorithm block renders as Algorithm 1.
 
-Figure 1 shows the pipeline in the order the campaign executed it. Steps 1 to 6 built the
-dependency graphs and the predictors and locked the analysis plan before any campaign data
-existed. Steps 7 to 10 repeated in every run, and steps 11 and 12 ran once the campaign was
-complete. Each box names the repository files that carry out the step.
+Figure 1 shows the pipeline in the order the campaign executed it. The six steps in the first
+column built the dependency graphs and the predictors and locked the analysis plan before any
+campaign data existed. The next four repeated in every run, and the last two ran once the
+campaign was complete. Each box names the repository files that carry out the step.
 
 ## A. Testbed
 
@@ -84,11 +84,10 @@ dropped. Centralities follow the standard definitions [@freeman1978], and betwee
 computed with the algorithm of Brandes as implemented in NetworkX [@brandes2001; @hagberg2008].
 
 The hybrid weights of 0.4 %[id:hybrid_w_in], 0.4 %[id:hybrid_w_out] and 0.2 %[id:hybrid_w_btw]
-were inherited from the project's original proposal, where an empirical search had selected
-them, so they were not fixed independently of all data. The locked plan called for tuning the
+come from the project's original proposal, in which an empirical search chose them; they were
+therefore not fixed independently of all data. The locked plan called for tuning the
 weights on Social Network and freezing them for Hotel Reservation, and that step was never run
-(Deviation 10) %[id:hybrid_weights_lockfile_exists]. The weights were not re-tuned on campaign
-data %[id:hybrid_weights_reoptimised_on_campaign]. A sensitivity analysis over every weighting
+(Deviation 10) %[id:hybrid_weights_lockfile_exists]. No re-tuning on campaign data took place %[id:hybrid_weights_reoptimised_on_campaign]. A sensitivity analysis over every weighting
 on the preregistered grid, run after the confirmatory results were known, is reported in
 Section V-J %[id:hybrid_weights_grid_evaluated_post_hoc].
 
@@ -144,9 +143,9 @@ original data instead of being re-run. Several analyses in this paper depend on 
 
 ## F. Fault Injection with Pumba
 
-Faults are injected with Pumba (https://github.com/alexei-led/pumba), which runs as a short-lived
-container from the untagged image `ghcr.io/alexei-led/pumba` and acts on the target container
-through the Docker socket. The runner issues every command through the Docker 29.8.0
+Faults are injected with Pumba (https://github.com/alexei-led/pumba), which the runner starts as
+a short-lived container (image `ghcr.io/alexei-led/pumba`, with no version tag) that acts on the
+target container through the Docker socket. The runner issues every command through the Docker 29.8.0
 %[id:version_docker_client] client (https://www.docker.com). Table 2 lists the command lines,
 generated from the runner code. A kill fault sends SIGKILL %[id:fault_kill_signal], which ends
 the process without letting it drain connections or answer requests in flight. A latency fault
@@ -156,8 +155,8 @@ the container's network interface for 30 seconds %[id:protocol_fault_duration_s]
 what happens when a dependency vanishes; the delay asks what happens when it stays up but stops
 being timely.
 
-The target container is resolved from the service name by an exact match on the
-`com.docker.compose.service` label that Docker Compose sets on every container. The runner
+To find the target container, the runner looks for the one whose `com.docker.compose.service`
+label, which Docker Compose sets on every container, equals the service name exactly. The runner
 stops if no running container or more than one matches, so a fault cannot land on a different
 service from the one recorded (Deviation 2). The Social Network gateway reports itself to
 Jaeger as `nginx-web-server` but runs as the compose service `nginx-thrift`, and the runner

@@ -203,8 +203,8 @@ the Appendix.
 
 ## J. Post Hoc Weight Sensitivity
 
-This analysis was specified and run after the confirmatory results were known, and it belongs to
-no preregistered family. It asks how much the hybrid metric's association with the outcome
+The confirmatory results were already known when this analysis was specified and run, and it
+belongs to no preregistered family. It asks how much the hybrid metric's association with the outcome
 depends on its weights. The metric was recomputed for all 231 %[id:ws_triplets] weight triplets
 on the preregistered grid, with step 0.05 %[id:ws_grid_step] and weights summing to one, using
 the same code, the same service medians and the same permutation tests. Each set of 231 tests was
@@ -231,16 +231,16 @@ significant association with degraded callers in either direction.
 Against the gateway's error rate under kill faults, an exploratory outcome, the picture on Social
 Network differs. ρ was positive for all 231 %[id:ws_sn_kill_err_triplets_rho_positive] triplets,
 from 0.229 %[id:ws_sn_kill_err_rho_min] to 0.832 %[id:ws_sn_kill_err_rho_max] with a median of
-0.753 %[id:ws_sn_kill_err_rho_median]. Of these, 145 %[id:ws_sn_kill_err_triplets_p_raw_below_05]
-had an uncorrected p below 0.05 %[id:fdr_q] and 128 %[id:ws_sn_kill_err_triplets_significant_bh]
-passed correction within the 231; the p-values come from 10,000 %[id:ws_mc_permutations] random
+0.753 %[id:ws_sn_kill_err_rho_median]. Of these, 145 %[id:ws_sn_kill_err_triplets_p_raw_below_05] had uncorrected p-values under 0.05
+%[id:fdr_q], and 128 %[id:ws_sn_kill_err_triplets_significant_bh] remained significant after
+correction within the 231; the p-values come from 10,000 %[id:ws_mc_permutations] random
 permutations, because this outcome has too many distinct orderings to enumerate. At the
 reported weights ρ was 0.786 %[id:ws_sn_kill_err_reported_rho]. The largest value, 0.832
 %[id:ws_sn_kill_err_rho_max], is the best of 231 tries on one dataset and not a finding. On
 Hotel Reservation every defined triplet gave ρ = −0.204 %[id:ws_hr_kill_err_rho_min] and none was
-significant %[id:ws_hr_kill_err_triplets_significant_bh]. The preregistered exploratory test at
-the reported weights was not significant after correction within its own family (adjusted
-p = 0.0913 %[id:uf_test_sn_hybrid_bh_p]), and Section VI-C shows that this association follows
+significant %[id:ws_hr_kill_err_triplets_significant_bh]. At the reported weights, the preregistered exploratory test of this association did not
+survive the correction applied across its exploratory family (adjusted p = 0.0913
+%[id:uf_test_sn_hybrid_bh_p]), and Section VI-C shows that this association follows
 the metric's in-degree term.
 
 ## K. Verification

@@ -21,7 +21,7 @@ latency-fault replication agreed %[id:repl_family_significant]. Much of the corr
 definitional, since ten of the eleven services degraded every caller they had
 %[id:saturation_sn_kill_service]. The fan-out metric correlated negatively in all four
 architecture-by-fault cells %[id:h1b_all_negative] and was distinguishable from zero in none
-%[id:h1b_any_distinguishable]; a post hoc sweep of 231 %[id:ws_triplets] weightings found none
-significant %[id:ws_sn_kill_anc_triplets_significant_bh] %[id:ws_hr_kill_anc_triplets_significant_bh].
+%[id:h1b_any_distinguishable]; a post hoc sweep of 231 %[id:ws_triplets] weightings found no
+significant association with degraded callers %[id:ws_sn_kill_anc_triplets_significant_bh] %[id:ws_hr_kill_anc_triplets_significant_bh].
 Degradation reached callers and almost never callees: no descendant of the faulted service
 degraded in 179 of 180 runs %[id:descendant_affected_runs_zero].

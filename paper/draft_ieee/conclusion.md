@@ -13,7 +13,8 @@ survived in either family, the 44 %[id:conf_family_size] confirmatory and the 44
 %[id:repl_family_significant]. The fan-out-weighted metric this project began with showed a
 negative correlation in every cell %[id:h1b_all_negative] and could not be separated from zero in
 any %[id:h1b_any_distinguishable], and a post hoc sweep over 231 %[id:ws_triplets] weightings found
-no weighting with a significant association %[id:ws_sn_kill_anc_triplets_significant_bh]
+no weighting with a significant association with degraded callers
+%[id:ws_sn_kill_anc_triplets_significant_bh]
 %[id:ws_hr_kill_anc_triplets_significant_bh].
 
 What did hold is structural. Failures reached callers and almost never callees: no descendant

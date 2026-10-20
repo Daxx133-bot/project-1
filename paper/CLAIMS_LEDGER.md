@@ -408,7 +408,10 @@ spawn rate of 10 users per second.
 `testbed_containers_hr`, `version_docker_desktop`, `version_docker_compose`,
 `version_docker_client`, `version_jaeger`, `testbed_jaeger_storage`, `version_locust`,
 `protocol_load_users`, `protocol_spawn_rate`
+The Docker client binary was last written on 2026-09-20, before the campaign; no record from
+the campaign days confirms the host OS build or the Docker Desktop version.
 *Sources: `data/environment/testbed.txt` (queried by `tools/record_testbed.py`),
+`data/environment/tool_versions.txt` (Docker client),
 `data/environment/docker_vm.txt` (lines from the 2026-09-24 record).*
 
 **13.2 SUPPORTED** — Fault injection. Pumba runs as a container from the untagged image

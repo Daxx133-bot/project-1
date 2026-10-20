@@ -177,8 +177,8 @@ def main():
             lambda b: "yes" if b else "no"),
     })
     emit("tbl_h1b", h,
-         "H2 (H1b in the preregistration): hybrid_criticality vs ancestor_affected_count "
-         "in all four architecture-by-fault cells", "analysis/final/h1b_hybrid_metric.csv",
+         "hybrid_criticality vs ancestor_affected_count in all four architecture-by-fault "
+         "cells (the preregistration's H1b)", "analysis/final/h1b_hybrid_metric.csv",
          RCA)
 
     # ---- 5. leave-one-out ---------------------------------------------------
