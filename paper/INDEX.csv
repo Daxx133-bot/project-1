@@ -1,9 +1,10 @@
 file,produced_by,bytes
 paper/CLAIMS_LEDGER.md,"hand-written, validated by paper/check_ledger.py",19285
 paper/INDEX.csv,paper/build_all.py,6650
-paper/build_all.py,source,4158
+paper/build_all.py,source,4300
 paper/build_docx.py,source,26618
 paper/build_numbers.py,source,60284
+paper/build_review_pdf.py,source,28789
 paper/check_docx_numbers.py,source,13510
 paper/check_draft_ids.py,source,5341
 paper/check_ledger.py,source,3783
@@ -51,6 +52,9 @@ paper/numbers.csv,paper/build_numbers.py,98259
 paper/numbers.json,paper/emit_macros.py,165514
 paper/numbers.tex,paper/emit_macros.py,78644
 paper/references.csv,keys and DOIs hand-entered; bibliographic fields from Crossref via paper/check_references.py; only rows a person marks VERIFIED are rendered,5190
+paper/review/Manuscript_review_copy.docx,paper/build_review_pdf.py (run separately; needs Microsoft Word),1914109
+paper/review/Manuscript_review_copy.pdf,paper/build_review_pdf.py (run separately; needs Microsoft Word),1091638
+paper/review/review_checks.txt,paper/build_review_pdf.py (run separately; needs Microsoft Word),2053
 paper/submission/FORM_ANSWERS.md,paper/make_checklist.py,1190
 paper/submission/Figure 1.pdf,paper/build_docx.py,21317
 paper/submission/Figure 1.png,paper/build_docx.py,603219

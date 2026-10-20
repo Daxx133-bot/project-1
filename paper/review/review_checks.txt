@@ -1,0 +1,17 @@
+review_checks.txt -- written by paper/build_review_pdf.py
+Review copy: paper/review/Manuscript_review_copy.pdf (54 pages in Word) and .docx
+
+Text identity, docx: 190 submission paragraphs, 190 review paragraphs, 0 differences
+Text identity, PDF text layer: 190 of 190 submission paragraphs found in order
+Number audit (review docx): URL 10, WEAK MATCH 7, affiliation 1, affiliation marker 1, date 1, deviation number 24, marked in sentence 139, numbers.csv value 99, numbers.csv value (string) 11, reference entry 90, section number 88, table cell 932, table of contents entry 97, table/figure number 29, year 27
+  WEAK MATCH [4.1 The confirmatory test] 0.05 | Family sizes and how many tests survive BH-FDR at q=0.05
+  WEAK MATCH [4.1 The confirmatory test] 1.0 | If every service's measured blast radius equalled its graph ancestor count, a correlation of 1.0 would follow by construction and would test
+  WEAK MATCH [4.1 The confirmatory test] 1.0 | Its run-level saturation is 0.909 under kill faults, which is why ρ is 0.785 and not 1.0.
+  WEAK MATCH [6.2 Hotel Reservation could not have reached significance] 1.0 | Under the exact permutation test the plan mandates, a perfect result with the observed ties, ρ = 1.0, yields p = 0.0952.
+  WEAK MATCH [6.2 Hotel Reservation could not have reached significance] 0.05 | That is above the conventional 0.05 threshold before any correction for multiplicity.
+  WEAK MATCH [6.4 The primary predictor is close to definitional] 1.0 | The whole gap between ρ = 0.785 and a correlation of exactly 1.0 therefore rests on one service.
+  WEAK MATCH [Data Availability] 4.0 | Code is released under the MIT licence; data and figures are released under CC BY 4.0.
+Floats: 4 figures and 10 tables in the body, each once, in citation order, directly after the paragraph that first cites it; appendix tables: ['Table A1']; problems: 0
+References: 15 VERIFIED, 15 listed, 15 cited
+Layout: 54 pages; problems: 0
+Placeholders (highlighted): [TO FILL: corresponding author name and email]; [TO FILL]
