@@ -463,7 +463,7 @@ def ws_table():
 
 
 # ---- IEEE Access tables (2026-10-20) -------------------------------------------
-# Display versions for paper/build_ieee.py: plain-language headers with units, no code names
+# Display versions for paper/build_latex.py: plain-language headers with units, no code names
 # or underscores, rho and centralities to 3 decimals, p-values to 4 (or <0.0001), times to
 # 1, and one "95% CI" column. Each is formatted from the raw analysis values, never from an
 # already rounded table. *X* and <sub>..</sub> are inline markup that the build renders.

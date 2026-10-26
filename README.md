@@ -41,7 +41,7 @@ there should not be made from this repository's results.
 | `data/spans/` | Raw Jaeger spans persisted per run, gzipped, for both the baseline and the fault window. ~53 MB across 366 files. These make every metric definition replayable without re-running the experiment. |
 | `data/graphs/` | The frozen service dependency graphs reconstructed from traces. Every structural predictor is computed from these files. |
 | `analysis/final/` | The preregistered analysis: `run_confirmatory_analysis.py` and its outputs, plus the supplementary leave-one-out, exact-p and blind-recomputation checks. |
-| `paper/` | Everything the manuscript cites. `numbers.csv` holds one row per citable number with its source file and producing script; `tables/` and `figures/` hold the table- and figure-ready outputs; `draft/` holds section drafts; `CLAIMS_LEDGER.md` holds the claim-by-claim verdict. |
+| `paper/` | Everything the manuscript cites. `numbers.csv` holds one row per citable number with its source file and producing script; `tables/` and `figures/` hold the table- and figure-ready outputs; `draft/` holds the PeerJ section drafts; `latex/` holds the IEEE Access manuscript in LaTeX, built by `paper/build_latex.py`; `CLAIMS_LEDGER.md` holds the claim-by-claim verdict. |
 | `_audit/` | The research-integrity audit: the audit report, the locked preregistration and its version history, and the validation records for individual measurement decisions. |
 | `_quarantine/` | Withdrawn files, preserved rather than deleted, with `QUARANTINE_LOG.md` recording what each item is and why it was removed. |
 
@@ -60,7 +60,7 @@ by a grid search maximising that same correlation against the same outcome the m
 then reported, with no held-out data.
 
 Those results were withdrawn in full. The affected scripts and outputs were **not deleted**;
-they were moved to `_quarantine/`, which holds 13 numbered items, each documented in
+they were moved to `_quarantine/`, which holds 14 numbered items, each documented in
 `_quarantine/QUARANTINE_LOG.md` with what was removed and why. The findings themselves are
 written up in `_audit/AUDIT_REPORT.md`.
 
@@ -74,7 +74,7 @@ data. The preregistered protocol, which tuned weights on Social Network and froz
 Hotel Reservation, was not carried out (Deviation 10). Because the original search favoured
 the metric, this is unlikely to explain a failure to find an association. Deviations from
 the locked plan are logged in `PREREGISTRATION.md` §12 and tabulated in
-`paper/tables/tbl_deviations.csv`; there are twelve, and the 17 runs invalidated across them
+`paper/tables/tbl_deviations.csv`; there are thirteen, and the 17 runs invalidated across them
 were quarantined and re-collected rather than analysed or dropped.
 
 `EVIDENCE_FREEZE/` is a read-only forensic snapshot taken on 2026-09-20, before the current
