@@ -1,0 +1,6 @@
+report 8-grams: 6505
+paper LaTeX sections                     3.0% (198 shared)
+paper Markdown drafts (public)           1.6% (101 shared)
+README and PREREGISTRATION (public)      0.1% (5 shared)
+Review-2 draft report                    0.4% (23 shared)
+university templates (sample text)       2.0% (133 shared)
