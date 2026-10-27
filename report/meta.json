@@ -1,10 +1,16 @@
 {
-  "_source": "title-page particulars as the author entered them in the Review-2 report (2026-09-09). Semester and Head of Department are not on record: fill them in before submission",
+  "_source": "title-page particulars as the author entered them in the Review-2 report (2026-09-09). Semester and Head of Department are not on record: fill them in before submission. Department line under the HoD name is not on record either",
   "title": "Identifying Failure-Prone Microservices Using Graph Centrality Metrics",
   "programme": "Computer Science and Engineering with Specialization in Data Science",
-  "students": [["23BDS0299", "Dakshrajsinh Tank"]],
+  "students": [
+    [
+      "23BDS0299",
+      "Dakshrajsinh Tank"
+    ]
+  ],
   "guide": "Dr. Badrinath N",
   "guide_designation": "Associate Professor",
   "semester": "Fall Semester 2026-27",
-  "head_of_department": "[Head of the Department]"
+  "head_of_department": "[Head of the Department]",
+  "department": "[Department of the Head of the Department]"
 }

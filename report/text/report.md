@@ -1,7 +1,7 @@
 ::lists
 
 ::abbreviations
-ABBR | MEANING
+Abbreviation | Full Form
 BCa | Bias-corrected and accelerated (bootstrap interval)
 BH | Benjamini-Hochberg (false discovery rate procedure)
 CSV | Comma-separated values
@@ -14,6 +14,21 @@ RPC | Remote procedure call
 SN | Social Network (DeathStarBench application)
 SRE | Site reliability engineering
 WSL | Windows Subsystem for Linux
+
+::symbols
+Symbol | Meaning
+*X* | Caller count: the number of transitive callers (ancestors) of a service
+*Y* | Primary outcome: the median number of degraded callers when the service is faulted
+HC | Hybrid criticality metric (fan-out-weighted centrality)
+ρ | Spearman's rank correlation coefficient
+*p* | p-value of a permutation test
+*q* | False discovery rate level of the Benjamini-Hochberg procedure
+H1, H2 | Hypotheses of the study (Section 2.4)
+*u* → *v* | Edge of the call graph: service *u* calls service *v*
+W | Warm-up and baseline window of a run
+H | Time for which a fault is held
+P | Interval of the recovery probe
+C | Cap on the measured recovery time
 
 ::abstract
 
@@ -74,6 +89,25 @@ The preliminary results of the Review-2 draft are therefore withdrawn. The affec
 **Failure diagnosis.** Pinpoint addressed problem determination in large Internet services [@chen2002]. For microservices, Microscope locates performance problems using causal graphs [@lin2018], MicroRCA ranks candidate root causes on a graph of the running system [@wu2020], and Seer applies large-scale data analysis to performance debugging [@gan2019seer]. Soldani and Brogi survey anomaly detection and root-cause analysis for service-based cloud applications [@soldani2022]. These methods start after an anomaly has begun; this project asks whether graph structure alone, before any fault, indicates which services matter most.
 
 **Statistical method.** Preregistration separates planned analyses from those found after seeing the data [@nosek2018]. The Benjamini-Hochberg procedure controls the false discovery rate across a family of tests [@benjamini1995]. Permutation p-values should never be zero, which is ensured by adding one to both counts [@phipson2010]. Bias-corrected and accelerated bootstrap intervals [@efron1987] and the Cox proportional hazards model [@cox1972] complete the toolkit used here.
+
+[[tbl_literature]] compares the works closest to this project.
+
+::grid tbl_literature | Comparison of the works closest to this project | 0.9,3.2,2.7,2.9,3.1,2.7
+S.No | Paper | Objective | Methodology | Pros/Cons | Key Findings
+# | @freeman1978 | Clarify what makes a node central in a network | Conceptual analysis of degree, betweenness and closeness, with normalised forms | Pro: defines measures used as predictors here. Con: no link to failures or load | Different notions of centrality capture different structural roles
+# | @albert2000 | Study how complex networks tolerate random failures and targeted attacks | Removal of nodes from model and real networks while tracking connectivity | Pro: classic link between structure and robustness. Con: failure is node removal, not latency and errors in a running system | Scale-free networks tolerate random failures but break quickly when the most connected nodes are removed
+# | @motter2002 | Examine attacks that act through cascades of overload | Load-redistribution model on networks with uneven load | Pro: shows one failure can spread. Con: simulated load, no measurement | Removing one highly loaded node can set off a large cascade
+# | @zimmermann2008 | Predict defect-prone components from dependency graphs | Network measures on the dependency graph of a large commercial system, compared with complexity metrics | Pro: graph position carried risk information. Con: outcome is defects, not run-time failure spread | Network measures identified defect-prone binaries better than complexity metrics alone
+# | @gan2019 | Provide open benchmark applications built from microservices | Several end-to-end applications studied for hardware and software implications | Pro: realistic, open applications, used as the test bed here. Con: synthetic workloads | Microservice performance is sensitive to network processing and tail latency, and slowdowns can spread across dependent services
+# | @basiri2016 | Describe chaos engineering at Netflix | Controlled fault-injection experiments on production systems | Pro: fault injection as a way to learn how a system fails. Con: aims at confidence, not at ranking services | Experiments on live systems build confidence that they tolerate failure
+# | @heorhiadi2016 | Test the resilience of microservice applications | Gremlin injects faults into messages between services and checks recovery behaviour | Pro: service-level fault injection. Con: checks fallbacks, not impact ranking | Systematic fault injection exposes missing or faulty failure handling
+# | @sigelman2010 | Trace requests across a large distributed system | Dapper: spans with parent links, sampling and always-on collection | Pro: span model gives the caller-to-callee edges used here. Con: traces alone do not say which service matters most | Low-overhead tracing is practical at production scale
+# | @luo2021 | Characterise microservice call graphs in production | Analysis of large-scale production traces from Alibaba | Pro: real call graphs at scale. Con: no fault injection | Call graphs are highly dynamic and vary between requests and over time
+# | @lin2018 | Locate the cause of performance problems in microservices | Microscope builds a causal graph from service communication and ranks root causes | Pro: uses graph structure for diagnosis. Con: works only after an anomaly begins | Causal graphs help pinpoint the services behind performance anomalies
+# | @wu2020 | Rank candidate root causes of performance issues | MicroRCA: attributed graph of the running system ranked with personalised PageRank | Pro: combines centrality with run-time metrics. Con: needs an anomaly and metrics | Graph-based ranking located root causes in a benchmark microservice system
+# | @soldani2022 | Survey anomaly detection and root-cause analysis for service-based cloud applications | Systematic review of published techniques | Pro: maps the diagnosis field. Con: diagnosis, not prediction before faults | Techniques are grouped by whether they use logs, distributed traces or monitored metrics
+# | @nosek2018 | Argue for preregistering research plans | Position paper separating confirmatory from exploratory analysis | Pro: basis for locking the plan here. Con: general, not specific to systems research | Preregistration separates prediction from postdiction and makes results more credible
+# | @benjamini1995 | Control errors when many hypotheses are tested | Step-up procedure on ordered p-values | Pro: used for every test family here. Con: original proof assumes independent tests | Controlling the false discovery rate gives more power than family-wise error control
 
 ## 2.2 Research Gap
 
@@ -316,9 +350,28 @@ Measurement also taught lessons. Attributing latency per service, rather than ch
 
 The main threats to validity are the small number of services, the single benchmark suite and workload, a call graph that depends on the traffic used to build it, and fault types limited to a kill and a delay.
 
-## 7.7 Cost Analysis
+## 7.7 Objective Attainment
 
-The project incurred no monetary cost. All software is open source or free for educational use, and the experiments ran on the author's laptop without cloud resources. The main cost was machine time: the campaign itself took about {{campaign_duration_hours}} hours, and the full analysis can be rerun from the stored data without Docker.
+::grid tbl_objectives | Status of the project objectives | 5.0,3.0,7.5
+Objective | Status | Evidence
+Reconstruct the call graph of each application from traces and freeze it | Achieved | Graphs of {{graph_sn_nodes}} and {{graph_hr_nodes}} services built from traces (Section 5.1.1)
+Compute the caller count, the hybrid metric and comparator measures | Achieved | Predictor table; {{testable_pairs}} testable predictor-outcome pairs (Section 5.1.2)
+Lock the plan before data collection and log every change | Achieved | Plan locked before the campaign; {{deviations_total}} dated deviations ([[tbl_ieee_deviations]])
+Run a fully crossed, balanced fault-injection campaign | Achieved | {{campaign_runs_total}} runs in {{campaign_cells}} balanced cells, none lost (Section 7.1)
+Measure each service on its own spans and classify degraded services | Achieved | Per-service attribution ([[fig_q3_artifact]]); callers, callees and unrelated services counted separately
+Test H1 and H2 with permutation tests and correction | Achieved; neither hypothesis supported | H1 not confirmed (adjusted p = {{primary_p_bh_locked}}); the hybrid metric was not distinguishable from zero (Section 7.2 and Section 7.3)
+Make every number reproducible from logged data | Achieved | One build command regenerates every number, table and figure (Chapter 6)
+
+## 7.8 Cost Analysis
+
+The project incurred no monetary cost ([[tbl_cost]]). The main cost was machine time: the campaign itself took about {{campaign_duration_hours}} hours, and the full analysis can be rerun from the stored data without Docker.
+
+::grid tbl_cost | Project cost | 9.5,6.0
+Item | Cost
+Software (Docker, Jaeger, Locust, Pumba, Python, NetworkX, SciPy, statsmodels) | Free and open source, or free for educational use
+Computing (the author's own laptop) | No additional cost
+Cloud resources | Not used
+Total | No monetary cost
 
 # 8. CONCLUSION
 

@@ -42,7 +42,7 @@ Sincerely,
 
 Dakshrajsinh Tank, B.Tech student
 
-Dr. Badrinath N, Assistant Professor
+Dr. Badrinath N, Associate Professor
 
 {affiliation}
 

@@ -37,7 +37,6 @@ import re
 import sys
 
 from docx import Document
-from docx.enum.section import WD_SECTION
 from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK
 from docx.oxml import OxmlElement
@@ -47,7 +46,7 @@ from docx.shared import Cm, Pt, RGBColor
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
 sys.path.insert(0, os.path.join(REPO, "paper"))
-from build_docx import add_runs, load_refs  # noqa: E402
+from build_docx import add_runs, author_label, load_refs  # noqa: E402
 
 FONT = "Times New Roman"
 OUT = os.path.join(HERE, "out", "Project_Report.docx")
@@ -77,6 +76,8 @@ def load_values():
 
 
 def table_label(block):
+    if block.startswith("::grid"):
+        return block[len("::grid"):].split("|")[0].strip()
     parts = [s.strip() for s in block[len("::table"):].split("|")]
     return parts[0] + (parts[2][:12] if len(parts) > 2 and parts[2] else "")
 
@@ -90,6 +91,10 @@ class Report:
         self.problems = []
         with open(os.path.join(HERE, "meta.json"), encoding="utf-8") as fh:
             self.meta = json.load(fh)
+        self.counts = {}                 # floats per (kind, chapter)
+        self.toc, self.figlist, self.tbllist = [], [], []
+        self.made = {"toc": 0, "fig": 0, "tbl": 0}
+        self.bm = 0
         self.doc = Document()
         self.style()
 
@@ -134,7 +139,7 @@ class Report:
                 self.problems.append("unknown cross-reference %s" % name)
                 return name
             kind, n = self.labels[name]
-            return ("Fig. %d" if kind == "fig" else "Table %d") % n
+            return ("Fig. %s" if kind == "fig" else "Table %s") % n
 
         text = TOKEN.sub(tok, text)
         text = CITE.sub(cite, text)
@@ -188,9 +193,9 @@ class Report:
         r.font.size, r.bold = Pt(size), bold
         return p
 
-    def field(self, par, instr):
+    def field(self, par, instr, shown="Right-click and choose Update Field"):
         for kind, text in (("begin", None), (None, instr), ("separate", None),
-                           (None, "Right-click and choose Update Field"), ("end", None)):
+                           (None, shown), ("end", None)):
             r = par.add_run()
             if kind:
                 el = OxmlElement("w:fldChar")
@@ -204,39 +209,69 @@ class Report:
                 el.text = text
             r._r.append(el)
 
-    def page_numbers(self, section, fmt):
-        section.footer.is_linked_to_previous = False
-        p = section.footer.paragraphs[0]
-        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        self.field(p, "PAGE")
-        pg = OxmlElement("w:pgNumType")
-        pg.set(qn("w:fmt"), fmt)
-        pg.set(qn("w:start"), "1")
-        section._sectPr.append(pg)
+    def page_header(self, section):
+        """'N | Page' at the top right of every page, counted from the title page, as in the
+        sample final report."""
+        p = section.header.paragraphs[0]
+        p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+        self.field(p, "PAGE", "1")
+        p.add_run(" | ")
+        r = p.add_run("Page")
+        r.font.color.rgb = RGBColor(0x7F, 0x7F, 0x7F)
+        sp = OxmlElement("w:spacing")
+        sp.set(qn("w:val"), "60")
+        r._r.get_or_add_rPr().append(sp)
 
-    def table(self, rows, caption, widths=None, size=9):
-        n = self.labels_add("tbl", caption[0])
-        cap = self.doc.add_paragraph(style="Table Caption")
-        add_runs(cap, "Table %d. %s" % (n, self.resolve(caption[1], "caption")))
+    def bookmark(self, par, name):
+        self.bm += 1
+        start = OxmlElement("w:bookmarkStart")
+        start.set(qn("w:id"), str(self.bm))
+        start.set(qn("w:name"), name)
+        end = OxmlElement("w:bookmarkEnd")
+        end.set(qn("w:id"), str(self.bm))
+        par._p.insert(1 if par._p.pPr is not None else 0, start)
+        par._p.append(end)
+
+    def mark(self, par, kind):
+        """Bookmark the next heading or caption of this kind for its PAGEREF in the lists."""
+        self.made[kind] += 1
+        self.bookmark(par, "_%s%03d" % (kind, self.made[kind]))
+
+    def grid(self, rows, widths=None, size=10, header=True, borders=True):
         t = self.doc.add_table(rows=len(rows), cols=len(rows[0]))
-        t.style = "Table Grid"
+        if borders:
+            t.style = "Table Grid"
         t.alignment = WD_TABLE_ALIGNMENT.CENTER
         for i, row in enumerate(rows):
             for j, val in enumerate(row):
                 c = t.cell(i, j)
                 c.paragraphs[0].paragraph_format.space_after = Pt(0)
                 c.paragraphs[0].paragraph_format.line_spacing = 1.0
-                add_runs(c.paragraphs[0], val)
+                if callable(val):
+                    val(c.paragraphs[0])
+                else:
+                    add_runs(c.paragraphs[0], val)
                 for r in c.paragraphs[0].runs:
                     r.font.size = Pt(size)
-                    r.bold = r.bold or i == 0
+                    r.bold = r.bold or (header and i == 0)
                 if widths:
                     c.width = Cm(widths[j])
+        return t
+
+    def table(self, rows, caption, widths=None, size=9):
+        n = self.labels[caption[0]][1]
+        cap = self.doc.add_paragraph(style="Table Caption")
+        add_runs(cap, "Table %s: %s" % (n, self.resolve(caption[1], "caption")))
+        cap.paragraph_format.keep_with_next = True
+        self.mark(cap, "tbl")
+        self.grid(rows, widths, size)
         self.doc.add_paragraph().paragraph_format.space_after = Pt(2)
 
-    def labels_add(self, kind, name):
+    def labels_add(self, kind, name, chapter):
+        """Floats are numbered within their chapter (Fig. 4.2, Table 7.1)."""
         if name not in self.labels:
-            self.labels[name] = (kind, 1 + sum(1 for k, _ in self.labels.values() if k == kind))
+            k = self.counts[(kind, chapter)] = self.counts.get((kind, chapter), 0) + 1
+            self.labels[name] = (kind, "%s.%d" % (chapter, k))
         return self.labels[name][1]
 
     def figure(self, path, caption, name, width=15.5):
@@ -244,12 +279,14 @@ class Report:
         if not os.path.isfile(full):
             self.problems.append("missing figure %s" % path)
             return
-        n = self.labels_add("fig", name)
+        n = self.labels[name][1]
         p = self.doc.add_paragraph()
         p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p.paragraph_format.keep_with_next = True
         p.add_run().add_picture(full, width=Cm(width))
         cap = self.doc.add_paragraph(style="Figure Caption")
-        add_runs(cap, "Fig. %d. %s" % (n, self.resolve(caption, "caption")))
+        add_runs(cap, "Fig. %s: %s" % (n, self.resolve(caption, "caption")))
+        self.mark(cap, "fig")
 
     # ── pages ──
     def title_page(self):
@@ -271,7 +308,8 @@ class Report:
                 r.bold, r.font.size = True, Pt(13)
         self.centred("", space=12)
         self.centred("Under the Supervision of", 12, True, space=6)
-        self.centred(m["guide"], 13, True, space=0)
+        self.centred(re.sub(r"^(Dr\.\s*)?(.*)$", lambda g: (g.group(1) or "") + g.group(2).upper(),
+                            m["guide"]), 13, True, space=0)
         self.centred(m["guide_designation"], 12, space=0)
         self.centred("School of Computer Science and Engineering (SCOPE)", 12, space=24)
         p = self.doc.add_paragraph()
@@ -316,8 +354,9 @@ class Report:
             "institute or any other institute or university. The project fulfills the "
             "requirements and regulations of the University and in my opinion meets the "
             "necessary standards for submission."],
-            ["", "Signature of the Guide", "", "Examiner(s)", "",
-             m["head_of_department"], m["programme"]])
+            ["", "Signature of the Guide", "", "Signature of Examiner(s)"])
+        for line in ("", m["head_of_department"], m["department"]):
+            self.para(line, align=WD_ALIGN_PARAGRAPH.LEFT)
         self.doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
         self.centred("ACKNOWLEDGEMENTS", 16, True, space=18)
         with open(os.path.join(HERE, "text", "acknowledgements.md"), encoding="utf-8") as fh:
@@ -326,15 +365,15 @@ class Report:
         self.para(m["students"][0][1], align=WD_ALIGN_PARAGRAPH.RIGHT)
         self.doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
 
-    def abbreviations(self, block):
-        self.centred("LIST OF ABBREVIATIONS", 14, True)
-        rows = [l.split("|", 1) for l in block.splitlines()[1:] if "|" in l]
-        rows.sort(key=lambda r: r[0].strip().lower())
-        t = self.doc.add_table(rows=len(rows), cols=2)
-        for i, (a, b) in enumerate(rows):
-            t.cell(i, 0).paragraphs[0].add_run(a.strip()).bold = True
-            t.cell(i, 1).paragraphs[0].add_run(b.strip())
-            t.cell(i, 0).width, t.cell(i, 1).width = Cm(3), Cm(12)
+    def two_column_page(self, heading, block, sort):
+        """LIST OF ABBREVIATIONS and SYMBOLS AND NOTATIONS: a heading line 'A | B' names the
+        columns, then one row per line."""
+        self.centred(heading, 14, True)
+        lines = [l.split("|", 1) for l in block.splitlines()[1:] if "|" in l]
+        head, rows = [s.strip() for s in lines[0]], [[s.strip() for s in r] for r in lines[1:]]
+        if sort:
+            rows.sort(key=lambda r: r[0].lower())
+        self.grid([head] + rows, widths=[3.5, 11.5], size=11)
         self.doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
 
     def code(self, path, func):
@@ -354,11 +393,27 @@ class Report:
             r.font.name, r.font.size = "Courier New", Pt(8.5)
 
     def lists(self):
-        for heading, instr in (("TABLE OF CONTENTS", 'TOC \\o "1-3" \\h \\z \\u'),
-                               ("LIST OF FIGURES", 'TOC \\h \\z \\t "Figure Caption,1"'),
-                               ("LIST OF TABLES", 'TOC \\h \\z \\t "Table Caption,1"')):
+        """Contents, figures and tables as three-column tables, as in the sample final report.
+        Page numbers are PAGEREF fields to bookmarks on the headings and captions; Word fills
+        them when it updates fields on opening."""
+        def page(kind, i):
+            return lambda par: self.field(par, "PAGEREF _%s%03d \\h" % (kind, i), "")
+
+        def plain(text):
+            return re.sub(r"[*`]", "", text)
+        pages = (
+            ("TABLE OF CONTENTS", ["Sl.No", "Contents", "Page No."],
+             [[n, ("**%s**" % plain(t)) if lvl <= 1 else plain(t), page("toc", i)]
+              for i, (n, t, lvl) in enumerate(self.toc, 1)]),
+            ("LIST OF FIGURES", ["Figure No.", "Title", "Page No."],
+             [[n, plain(t), page("fig", i)] for i, (n, t) in enumerate(self.figlist, 1)]),
+            ("LIST OF TABLES", ["Table No.", "Title", "Page No."],
+             [[n, plain(t), page("tbl", i)] for i, (n, t) in enumerate(self.tbllist, 1)]))
+        for heading, head, rows in pages:
             self.centred(heading, 14, True)
-            self.field(self.doc.add_paragraph(), instr)
+            t = self.grid([head] + rows, widths=[2.2, 11.3, 2.0], size=11, borders=False)
+            for row in t.rows:
+                row.cells[2].paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.RIGHT
             self.doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
 
     def references(self):
@@ -397,19 +452,69 @@ class Report:
             p.paragraph_format.first_line_indent = Cm(-0.9)
 
     # ── body ──
-    def number_floats(self, text):
-        """Assign figure and table numbers before the text is rendered, so that a
-        cross-reference may precede its figure or table."""
+    def scan(self, text):
+        """Number figures and tables within chapters and collect the contents entries before
+        the text is rendered, so that cross-references and the lists at the front can point
+        forward."""
+        def caption(s):
+            return TOKEN.sub(lambda m: self.vals.get(m.group(1), m.group(0)), s)
+        chapter = None
         for block in re.split(r"\n\s*\n", text.strip()):
             block = block.strip()
+            if block.startswith("::abstract"):
+                self.toc.append(("", "ABSTRACT", 1))
+                continue
+            m = re.match(r"^(#{1,3}) (.+)$", block)
+            if m:
+                level, title = len(m.group(1)), m.group(2)
+                num = re.match(r"^(\d+(?:\.\d+)*)\.? (.+)$", title)
+                if level == 1:
+                    chapter = num.group(1) if num else "A"
+                if num:
+                    self.toc.append((num.group(1) + ("." if level == 1 else ""), num.group(2),
+                                     level))
+                else:
+                    self.toc.append(("", title, level))
+                continue
             if block.startswith("::figure"):
-                path = block[len("::figure"):].split("|", 1)[0].strip()
-                self.labels_add("fig", os.path.splitext(os.path.basename(path))[0])
-            elif block.startswith("::table"):
-                self.labels_add("tbl", table_label(block))
+                path, cap = [s.strip() for s in block[len("::figure"):].split("|", 1)]
+                n = self.labels_add("fig", os.path.splitext(os.path.basename(path))[0], chapter)
+                self.figlist.append((n, caption(cap)))
+            elif block.startswith("::table") or block.startswith("::grid"):
+                name = table_label(block.splitlines()[0])
+                cap = block.splitlines()[0].split("|")[1].strip()
+                self.tbllist.append((self.labels_add("tbl", name, chapter), caption(cap)))
+
+    def paper_cell(self, key):
+        """Literature-table cell for one work: authors (year), title [n], from
+        paper/references.csv."""
+        if key not in self.refs:
+            self.problems.append("citation %s is not VERIFIED" % key)
+            return key
+        e = self.refs[key]
+        return "%s (%s), %s %s" % (author_label(e).replace(" & ", " and "), e["year"],
+                                   e["title"], self.resolve("[@%s]" % key, "table"))
+
+    def grid_block(self, block):
+        """::grid name | caption | widths, then a header line and rows, cells split by ' | '.
+        A cell holding only @key renders the cited work."""
+        lines = block.splitlines()
+        parts = [s.strip() for s in lines[0][len("::grid"):].split("|")]
+        name, cap = parts[0], parts[1]
+        widths = [float(w) for w in parts[2].split(",")] if len(parts) > 2 and parts[2] else None
+        rows = [[c.strip() for c in l.split(" | ")] for l in lines[1:]]
+
+        def cell(c, i):
+            if c == "#":                                 # serial number of the row
+                return "%d." % i
+            if re.fullmatch(r"@[a-z0-9]+", c):
+                return self.paper_cell(c[1:])
+            return self.resolve(c, "table " + name)
+        rows = [rows[0]] + [[cell(c, i) for c in r] for i, r in enumerate(rows[1:], 1)]
+        self.table(rows, (name, cap), widths, size=9)
 
     def body(self, text):
-        self.number_floats(text)
+        self.scan(text)
         heading, words = None, 0
         bullets = []
 
@@ -426,7 +531,7 @@ class Report:
             if block.startswith("::abstract"):
                 close_limit()
                 heading, words = "ABSTRACT", 0
-                self.centred("ABSTRACT", 14, True)
+                self.mark(self.centred("ABSTRACT", 14, True), "toc")
                 continue
             if block.startswith("::lists"):
                 close_limit()
@@ -434,14 +539,18 @@ class Report:
                 self.lists()
                 continue
             if block.startswith("::body"):
-                sec = self.doc.add_section(WD_SECTION.NEW_PAGE)
-                self.page_numbers(sec, "decimal")
                 continue
             if block.startswith("::references"):
                 self.references()
                 continue
             if block.startswith("::abbreviations"):
-                self.abbreviations(block)
+                self.two_column_page("LIST OF ABBREVIATIONS", block, sort=True)
+                continue
+            if block.startswith("::symbols"):
+                self.two_column_page("SYMBOLS AND NOTATIONS", block, sort=False)
+                continue
+            if block.startswith("::grid"):
+                self.grid_block(block)
                 continue
             if block.startswith("::code"):
                 path, func = [s.strip() for s in block[len("::code"):].split("|")]
@@ -472,12 +581,12 @@ class Report:
                 close_limit()
                 level = len(m.group(1))
                 heading, words = m.group(2).split(" ", 1)[-1], 0
-                chap = re.match(r"^(\d+)\. ", m.group(2))
+                chap = re.match(r"^\d+\. ", m.group(2))
                 if level == 1:
                     self.doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
-                    if chap:
-                        self.centred("CHAPTER %s" % chap.group(1), 14, True, space=0)
-                self.doc.add_heading(m.group(2), level=level)
+                h = self.doc.add_heading(("CHAPTER " if level == 1 and chap else "") + m.group(2),
+                                         level=level)
+                self.mark(h, "toc")
                 continue
             lines = block.splitlines()
             if all(l.startswith("- ") for l in lines):
@@ -493,9 +602,8 @@ class Report:
         del bullets
 
     def build(self):
+        self.page_header(self.doc.sections[0])
         self.title_page()
-        sec = self.doc.add_section(WD_SECTION.NEW_PAGE)
-        self.page_numbers(sec, "lowerRoman")
         self.front_matter()
         with open(os.path.join(HERE, "text", "report.md"), encoding="utf-8") as fh:
             self.body(fh.read())
